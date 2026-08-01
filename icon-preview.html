@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>图标预览 - 渐变底色</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: #07090F; color: #E8EDF5; font-family: -apple-system, "PingFang SC", sans-serif; padding: 20px; min-height: 100vh; }
+h1 { text-align: center; font-size: 22px; margin-bottom: 8px; background: linear-gradient(135deg, #A78BFA, #22D3EE); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+.subtitle { text-align: center; color: #64748B; font-size: 14px; margin-bottom: 30px; }
+.grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 24px; max-width: 800px; margin: 0 auto; }
+.card { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); border-radius: 20px; padding: 24px; text-align: center; width: 220px; transition: all 0.2s; }
+.card:hover { border-color: rgba(139,92,246,0.3); transform: translateY(-2px); }
+.card img { width: 160px; height: 160px; border-radius: 36px; object-fit: cover; margin-bottom: 14px; }
+.card h2 { font-size: 17px; margin-bottom: 6px; }
+.card p { font-size: 12px; color: #94A3B8; line-height: 1.6; }
+.badge { display: inline-block; padding: 4px 12px; border-radius: 999px; font-size: 11px; font-weight: 700; margin-top: 10px; }
+.g1 .badge { background: rgba(139,92,246,0.15); color: #A78BFA; }
+.g2 .badge { background: rgba(6,182,212,0.15); color: #22D3EE; }
+.g3 .badge { background: rgba(16,185,129,0.15); color: #10B981; }
+</style>
+</head>
+<body>
+<h1>水晶纸飞机 · 不同渐变底色</h1>
+<p class="subtitle">同一架水晶飞机 · 三种底色渐变方案</p>
+<div class="grid">
+  <div class="card g1">
+    <img src="icon-bg1.jpg" alt="G1">
+    <h2>底色 G-1</h2>
+    <p>对角渐变<br>深紫 → 深青黑<br>紫青双色辉光</p>
+    <span class="badge">紫青对角</span>
+  </div>
+  <div class="card g2">
+    <img src="icon-bg2.jpg" alt="G2">
+    <h2>底色 G-2</h2>
+    <p>径向渐变<br>深蓝中心 → 纯黑边缘<br>霓虹轮廓发光</p>
+    <span class="badge">径向深蓝</span>
+  </div>
+  <div class="card g3">
+    <img src="icon-bg3.jpg" alt="G3">
+    <h2>底色 G-3</h2>
+    <p>垂直渐变<br>深藏青 → 深青绿<br>横向光带</p>
+    <span class="badge">垂直渐变</span>
+  </div>
+</div>
+</body>
+</html>
