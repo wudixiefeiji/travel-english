@@ -15,7 +15,7 @@
 <link rel="icon" type="image/png" sizes="512x512" href="icon-512.png?v8">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png?v8">
 <link rel="manifest" href="manifest.json">
-<meta name="version" content="te_v10">
+<meta name="version" content="te_v11">
 <title>旅行英语 · 39天计划</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
 <style>
@@ -616,6 +616,53 @@ input,textarea{font-family:inherit}
 
 /* ===== V10: Import file input ===== */
 .import-hidden{display:none}
+
+/* ===== V11: Pronunciation scoring ===== */
+.pron-btn{display:inline-flex;align-items:center;gap:4px;padding:6px 14px;border-radius:var(--rp);
+  background:rgba(139,92,246,.12);border:1px solid rgba(139,92,246,.25);color:var(--purp2);
+  font-size:12px;font-weight:700;cursor:pointer;transition:all .2s}
+.pron-btn:active{transform:scale(.95);background:rgba(139,92,246,.25)}
+.pron-result{margin-top:10px;padding:14px;border-radius:var(--rs);background:rgba(255,255,255,.03);
+  border:1px solid rgba(255,255,255,.06);text-align:center;animation:pronFadeIn .3s}
+.pron-score{font-size:28px;font-weight:900;margin-bottom:4px}
+.pron-grade{font-size:13px;color:var(--t2);font-weight:600;margin-bottom:8px}
+.pron-detail{text-align:left;font-size:12px;line-height:1.6}
+.pron-target{color:var(--t2)}
+.pron-target b,.pron-recognized b{color:var(--t3);font-weight:600}
+.pron-recognized{color:var(--cyan2);margin-top:4px}
+.pron-recording{padding:14px;text-align:center;color:var(--purp2);font-weight:700;font-size:14px;
+  animation:pronPulse 1s infinite}
+.pron-error{padding:10px;text-align:center;color:var(--red);font-size:13px}
+.pron-summary{display:flex;flex-direction:column;align-items:center;gap:4px;margin-bottom:14px}
+.pron-avg{font-size:42px;font-weight:900;line-height:1}
+.pron-avg-label{font-size:12px;color:var(--t3)}
+.pron-recent{display:flex;flex-direction:column;gap:6px}
+.pron-recent-item{font-size:12px;color:var(--t2);padding:6px 10px;background:rgba(255,255,255,.03);border-radius:8px;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+@keyframes pronPulse{0%,100%{opacity:1}50%{opacity:.5}}
+@keyframes pronFadeIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
+
+/* ===== V11: Word frequency chart ===== */
+.freq-chart{display:flex;flex-direction:column;gap:8px}
+.freq-row{display:flex;align-items:center;gap:8px}
+.freq-word{width:80px;font-size:12px;color:var(--t2);font-weight:600;text-align:right;flex-shrink:0;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.freq-bar-wrap{flex:1;height:18px;background:rgba(255,255,255,.04);border-radius:4px;overflow:hidden}
+.freq-bar{height:100%;border-radius:4px;background:linear-gradient(90deg,#8B5CF6,#22D3EE);transition:width .5s}
+.freq-count{width:24px;font-size:11px;color:var(--t3);font-weight:700;text-align:center;flex-shrink:0}
+
+/* ===== V11: Weak topics chart ===== */
+.weak-chart{display:flex;flex-direction:column;gap:8px}
+.weak-row{display:flex;align-items:center;gap:8px;padding:6px;border-radius:8px;cursor:pointer;transition:background .2s}
+.weak-row:active{background:rgba(255,255,255,.03)}
+.weak-day{width:50px;font-size:11px;font-weight:700;color:var(--org);flex-shrink:0}
+.weak-title{flex:1;font-size:12px;color:var(--t2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.weak-bar-wrap{width:60px;height:14px;background:rgba(255,255,255,.04);border-radius:3px;overflow:hidden;flex-shrink:0}
+.weak-bar{height:100%;border-radius:3px;transition:width .5s}
+.weak-bar.high{background:linear-gradient(90deg,#EF4444,#F97316)}
+.weak-bar.mid{background:linear-gradient(90deg,#F97316,#FBBF24)}
+.weak-bar.low{background:linear-gradient(90deg,#FBBF24,#34D399)}
+.weak-count{width:32px;font-size:11px;color:var(--t3);font-weight:700;text-align:center;flex-shrink:0}
 </style>
 </head>
 <body>
@@ -817,7 +864,7 @@ input,textarea{font-family:inherit}
         <div class="settings-group-title">关于</div>
         <div class="settings-row">
           <div class="settings-label">版本</div>
-          <div class="settings-value">te_v10</div>
+          <div class="settings-value">te_v11</div>
         </div>
       </div>
     </div>
@@ -846,10 +893,10 @@ const DATA = [{"day":1,"dayTitle":"机场基础","daySubtitle":"Airport Basics",
 
 
 
-const SK = 'te_v10';
-const VERSION = 'te_v10';
+const SK = 'te_v11';
+const VERSION = 'te_v11';
 // Migrate data from v8
-try { ['done','lastStudy'].forEach(function(k){ var ov=localStorage.getItem('te_v8_'+k); if(ov && !localStorage.getItem('te_v10_'+k)) localStorage.setItem('te_v10_'+k, ov); }); } catch(e) {}
+try { ['done','lastStudy','studyLog','notebook','reviews','ttsSettings','pronScores','topicErrors'].forEach(function(k){ var ov=localStorage.getItem('te_v10_'+k); if(ov && !localStorage.getItem('te_v11_'+k)) localStorage.setItem('te_v11_'+k, ov); }); } catch(e) {}
 // V9: Clean up old imported data
 try { localStorage.removeItem('te_v8_extra'); } catch(e) {}
 
@@ -857,7 +904,7 @@ try { localStorage.removeItem('te_v8_extra'); } catch(e) {}
 const Store = (function() {
   var idb = null;
   var idbReady = false;
-  var DB_NAME = 'te_v10_db';
+  var DB_NAME = 'te_v11_db';
   var STORE_NAME = 'kv';
   var cache = {};
   var KNOWN_KEYS = ['done', 'lastStudy', 'studyLog', 'notebook', 'reviews', 'ttsSettings'];
@@ -1289,6 +1336,8 @@ function renderCard() {
     html += '</div></div>';
   }
 
+  html += '<div style="margin-top:12px"><button class="pron-btn" onclick="startPronunciation(\'' + w.word.replace(/'/g,"\\'") + '\', document.getElementById(\'pron-result-' + wIdx + '\'))">🎤 跟读评分</button><div id="pron-result-' + wIdx + '"></div></div>';
+
   // V10: Ebbinghaus status badge
   var ebStatus = getWordEbbinghausStatus(w.word);
   if (ebStatus === 'due') {
@@ -1357,6 +1406,7 @@ function checkDict() {
     const hint = document.getElementById('dict-hint');
     if (hint.textContent === '') hint.innerHTML = '再试试，注意拼写';
     addToNotebook(w.word, w.translation, curDay ? curDay.day : 0);
+    logError(curDay ? curDay.day : 0);
   }
 }
 
@@ -1423,6 +1473,7 @@ function answerQuiz(el, picked, correct) {
     el.classList.add('wrong');
     document.querySelectorAll('.qo')[correct].classList.add('correct');
     if (q) addToNotebook(q.word, q.translation, curDay ? curDay.day : 0);
+    logError(curDay ? curDay.day : 0);
   }
   setTimeout(() => { quizState.round++; renderWords(); }, 800);
 }
@@ -1443,6 +1494,7 @@ function openDlg() {
     html += '<div class="dl-line"><div class="dl-role ' + (isYou?'you':'other') + '">' + (line.role||'') + '</div>';
     html += '<div class="dl-text" onclick="speakText(this)" data-text="' + escAttr(line.textEn||'') + '">';
     html += '<div class="en">' + makeClickableWords(line.textEn||'') + '</div><div class="cn">' + esc(line.textCn||'') + '</div></div></div>';
+    html += '<div style="margin-top:6px"><button class="pron-btn" onclick="event.stopPropagation();startPronunciation(\'' + (line.textEn||'').replace(/'/g,"\\'") + '\', this.nextElementSibling)">🎤 跟读</button><div></div></div>';
   });
   html += '<div style="margin-top:16px"><button class="btn cyan" onclick="speakDlg()">🔊 朗读全部对话</button>';
   html += '<div class="btn-row"><button class="btn sec" onclick="speakRole()">🎤 朗读我的台词</button></div></div>';
@@ -1479,6 +1531,7 @@ function openEssay() {
     if (!s) return;
     html += '<div class="es-item" onclick="speakSentence(this)" data-text="' + escAttr(s.en||'') + '">';
     html += '<div class="en">' + makeClickableWords(s.en||'') + '</div><div class="cn">' + esc(s.cn||'') + '</div></div>';
+    html += '<div style="margin-top:6px"><button class="pron-btn" onclick="event.stopPropagation();startPronunciation(\'' + (s.en||'').replace(/'/g,"\\'") + '\', this.nextElementSibling)">🎤 跟读</button><div></div></div>';
   });
   html += '</div>';
   html += '<button class="btn cyan" onclick="speakEssay()">🔊 朗读全文</button>';
@@ -1689,6 +1742,21 @@ function renderStats() {
   html += '<div class="total-item"><div class="total-num">' + totalEssay + '</div><div class="total-label">阅读句</div></div>';
   html += '</div></div>';
 
+  // V11: Pronunciation score summary
+  html += '<div class="stats-section"><div class="stats-section-title">发音评分</div>';
+  html += renderPronStats();
+  html += '</div>';
+
+  // V11: Weak topic identification
+  html += '<div class="stats-section"><div class="stats-section-title">薄弱话题</div>';
+  html += renderWeakTopics();
+  html += '</div>';
+
+  // V11: Word frequency analysis
+  html += '<div class="stats-section"><div class="stats-section-title">词频分析</div>';
+  html += renderWordFreq();
+  html += '</div>';
+
   // V10: Heatmap
   html += '<div class="stats-section"><div class="stats-section-title">学习热力图</div>';
   html += renderHeatmap();
@@ -1809,6 +1877,183 @@ function speak(text) {
 function esc(s) {
   if (!s) return '';
   return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// ===== V11: Pronunciation scoring =====
+var recognition = null;
+var currentPronTarget = null;
+
+function startPronunciation(targetText, resultEl) {
+  var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SR) { showToast('浏览器不支持语音识别'); return; }
+  // Stop any existing recognition
+  if (recognition) { try { recognition.stop(); } catch(e){} }
+  currentPronTarget = targetText;
+  recognition = new SR();
+  recognition.lang = 'en-US';
+  recognition.interimResults = false;
+  recognition.maxAlternatives = 3;
+  // Show recording UI
+  resultEl.innerHTML = '<div class="pron-recording">🎤 正在聆听...</div>';
+  recognition.onresult = function(event) {
+    var bestScore = 0;
+    var bestText = '';
+    for (var i = 0; i < event.results[0].length; i++) {
+      var transcript = event.results[0][i].transcript.trim().toLowerCase();
+      var confidence = event.results[0][i].confidence || 0.5;
+      var score = calculatePronScore(targetText.toLowerCase(), transcript, confidence);
+      if (score > bestScore) { bestScore = score; bestText = transcript; }
+    }
+    showPronResult(resultEl, bestScore, bestText, targetText);
+    // Save score
+    savePronScore(targetText, bestScore);
+  };
+  recognition.onerror = function(event) {
+    if (event.error === 'not-allowed') {
+      resultEl.innerHTML = '<div class="pron-error">请允许麦克风权限</div>';
+    } else if (event.error === 'no-speech') {
+      resultEl.innerHTML = '<div class="pron-error">未检测到语音，请重试</div>';
+    } else {
+      resultEl.innerHTML = '<div class="pron-error">识别失败: ' + event.error + '</div>';
+    }
+  };
+  recognition.onend = function() {
+    recognition = null;
+  };
+  recognition.start();
+}
+
+// Levenshtein distance for text comparison
+function levenshtein(a, b) {
+  var m = a.length, n = b.length;
+  var d = [];
+  for (var i = 0; i <= m; i++) d[i] = [i];
+  for (var j = 0; j <= n; j++) d[0][j] = j;
+  for (var i = 1; i <= m; i++) {
+    for (var j = 1; j <= n; j++) {
+      var cost = a[i-1] === b[j-1] ? 0 : 1;
+      d[i][j] = Math.min(d[i-1][j]+1, d[i][j-1]+1, d[i-1][j-1]+cost);
+    }
+  }
+  return d[m][n];
+}
+
+function calculatePronScore(target, recognized, confidence) {
+  // Normalize: remove punctuation, extra spaces
+  target = target.replace(/[^a-z\s']/g, '').replace(/\s+/g, ' ').trim();
+  recognized = recognized.replace(/[^a-z\s']/g, '').replace(/\s+/g, ' ').trim();
+  if (!target || !recognized) return 0;
+  var targetWords = target.split(' ');
+  var recWords = recognized.split(' ');
+  // Word-level accuracy
+  var dist = levenshtein(target, recognized);
+  var accuracy = Math.max(0, 1 - dist / Math.max(target.length, recognized.length));
+  // Word match ratio
+  var matched = 0;
+  var recSet = {};
+  recWords.forEach(function(w) { recSet[w] = (recSet[w]||0)+1; });
+  targetWords.forEach(function(w) { if (recSet[w] > 0) { matched++; recSet[w]--; } });
+  var wordMatch = matched / targetWords.length;
+  // Combined score: 60% word match + 30% accuracy + 10% confidence
+  var score = Math.round((wordMatch * 0.6 + accuracy * 0.3 + confidence * 0.1) * 100);
+  return Math.min(100, Math.max(0, score));
+}
+
+function showPronResult(el, score, recognized, target) {
+  var grade, color, emoji;
+  if (score >= 90) { grade='优秀'; color='#34D399'; emoji='🌟'; }
+  else if (score >= 75) { grade='良好'; color='#22D3EE'; emoji='👍'; }
+  else if (score >= 60) { grade='及格'; color='#FBBF24'; emoji='💪'; }
+  else { grade='需练习'; color='#FB923C'; emoji='🔄'; }
+  var html = '<div class="pron-result">';
+  html += '<div class="pron-score" style="color:' + color + '">' + emoji + ' ' + score + '分</div>';
+  html += '<div class="pron-grade">' + grade + '</div>';
+  html += '<div class="pron-detail">';
+  html += '<div class="pron-target">目标: ' + esc(target) + '</div>';
+  html += '<div class="pron-recognized">你说: ' + esc(recognized) + '</div>';
+  html += '</div></div>';
+  el.innerHTML = html;
+}
+
+function savePronScore(text, score) {
+  var scores = Store.get('pronScores', {});
+  scores[text] = { score: score, date: Date.now() };
+  Store.set('pronScores', scores);
+}
+
+// ===== V11: Weak topic logging =====
+function logError(day) {
+  var errors = Store.get('topicErrors', {});
+  if (!errors[day]) errors[day] = 0;
+  errors[day]++;
+  Store.set('topicErrors', errors);
+}
+
+// ===== V11: Stats data visualization =====
+function renderWordFreq() {
+  var freq = {};
+  DATA.forEach(function(d) {
+    if (!d) return;
+    (d.newWords||[]).forEach(function(w) { if (w && w.word) { var k=w.word.toLowerCase(); freq[k]=(freq[k]||0)+1; } });
+    (d.reviewWords||[]).forEach(function(w) { if (w && w.word) { var k=w.word.toLowerCase(); freq[k]=(freq[k]||0)+1; } });
+  });
+  var sorted = Object.keys(freq).map(function(k){return {word:k,count:freq[k]};})
+    .sort(function(a,b){return b.count-a.count;}).slice(0,15);
+  var maxCount = sorted.length ? sorted[0].count : 1;
+  var html = '<div class="freq-chart">';
+  sorted.forEach(function(item) {
+    var pct = Math.round(item.count/maxCount*100);
+    html += '<div class="freq-row"><div class="freq-word">' + esc(item.word) + '</div>';
+    html += '<div class="freq-bar-wrap"><div class="freq-bar" style="width:' + pct + '%"></div></div>';
+    html += '<div class="freq-count">' + item.count + '</div></div>';
+  });
+  html += '</div>';
+  return html;
+}
+
+function renderWeakTopics() {
+  var errors = Store.get('topicErrors', {});
+  var items = Object.keys(errors).map(function(k){
+    var d = DATA.find(function(dd){return dd && dd.day == k;});
+    return { day: parseInt(k), count: errors[k], title: d ? d.dayTitle : '' };
+  }).sort(function(a,b){return b.count-a.count;}).slice(0,8);
+  if (!items.length) return '<div style="color:var(--t3);font-size:13px;text-align:center;padding:20px">暂无练习记录，完成听写和选择题后这里会显示薄弱话题</div>';
+  var maxCount = items[0].count;
+  var html = '<div class="weak-chart">';
+  items.forEach(function(item) {
+    var pct = Math.round(item.count/maxCount*100);
+    var intensity = pct > 75 ? 'high' : pct > 50 ? 'mid' : 'low';
+    html += '<div class="weak-row" onclick="openDayDetail(' + item.day + ')">';
+    html += '<div class="weak-day">Day ' + item.day + '</div>';
+    html += '<div class="weak-title">' + esc(item.title) + '</div>';
+    html += '<div class="weak-bar-wrap"><div class="weak-bar ' + intensity + '" style="width:' + pct + '%"></div></div>';
+    html += '<div class="weak-count">' + item.count + '错</div></div>';
+  });
+  html += '</div>';
+  return html;
+}
+
+function renderPronStats() {
+  var scores = Store.get('pronScores', {});
+  var keys = Object.keys(scores);
+  if (!keys.length) return '<div style="color:var(--t3);font-size:13px;text-align:center;padding:20px">暂无发音评分记录，点击跟读按钮开始练习</div>';
+  var total = 0, count = 0, recent = [];
+  keys.forEach(function(k) {
+    total += scores[k].score; count++;
+    recent.push({ text: k, score: scores[k].score, date: scores[k].date });
+  });
+  recent.sort(function(a,b){return b.date-a.date;});
+  var avg = Math.round(total/count);
+  var html = '<div class="pron-summary">';
+  html += '<div class="pron-avg" style="color:' + (avg>=75?'#34D399':avg>=60?'#FBBF24':'#FB923C') + '">' + avg + '</div>';
+  html += '<div class="pron-avg-label">平均发音评分</div></div>';
+  html += '<div class="pron-recent">';
+  recent.slice(0,8).forEach(function(r) {
+    var color = r.score>=90?'#34D399':r.score>=75?'#22D3EE':r.score>=60?'#FBBF24':'#FB923C';
+    html += '<div class="pron-recent-item"><span style="color:'+color+';font-weight:700">' + r.score + '</span> ' + esc(r.text.substring(0,20)) + (r.text.length>20?'...':'') + '</div>';
+  });
+  html += '</div>';
+  return html;
 }
 
 
@@ -2183,7 +2428,7 @@ function updateRateValue(val) {
 // ===== V10: Export / Import =====
 function exportData() {
   var data = {
-    version: 'te_v10',
+    version: 'te_v11',
     exportDate: new Date().toISOString(),
     done: Store.get('done', {}),
     lastStudy: Store.get('lastStudy', 0),
