@@ -15,7 +15,7 @@
 <link rel="icon" type="image/png" sizes="512x512" href="icon-512.png?v8">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png?v8">
 <link rel="manifest" href="manifest.json">
-<meta name="version" content="te_v12">
+<meta name="version" content="te_v13">
 <title>旅行英语 · 39天计划</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
 <style>
@@ -619,6 +619,56 @@ input,textarea{font-family:inherit}
 .import-hidden{display:none}
 
 
+/* ===== V13: Mixed Review ===== */
+.mixed-review-banner{background:linear-gradient(135deg,rgba(16,185,129,.10) 0%,rgba(6,182,212,.06) 100%);
+  border:1px solid rgba(16,185,129,.2);border-radius:var(--r);padding:18px 20px;margin-bottom:16px;
+  cursor:pointer;transition:all .2s;position:relative;overflow:hidden}
+.mixed-review-banner:active{transform:scale(.98)}
+.mixed-review-banner::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,#10B981,#06B6D4)}
+.mrb-icon{font-size:28px;margin-bottom:8px}
+.mrb-title{font-size:15px;font-weight:800;color:#34D399;margin-bottom:4px}
+.mrb-desc{font-size:12px;color:var(--t3)}
+.mrb-count{position:absolute;top:18px;right:20px;font-size:28px;font-weight:900;color:#10B981}
+
+/* ===== V13: Sentence Builder ===== */
+.sb-container{padding:8px 0}
+.sb-progress{font-size:12px;color:var(--t3);font-weight:600;text-align:center;margin-bottom:12px}
+.sb-prompt{background:linear-gradient(135deg,rgba(139,92,246,.06) 0%,rgba(6,182,212,.03) 100%);
+  border:1px solid rgba(139,92,246,.1);border-radius:var(--r);padding:20px;text-align:center;margin-bottom:16px}
+.sb-prompt-cn{font-size:16px;font-weight:700;color:var(--t1);margin-bottom:6px}
+.sb-prompt-hint{font-size:12px;color:var(--t3)}
+.sb-answer-area{min-height:56px;background:rgba(0,0,0,.2);border:2px dashed rgba(139,92,246,.2);
+  border-radius:var(--r);padding:12px;margin-bottom:14px;display:flex;flex-wrap:wrap;gap:6px;
+  align-items:center;transition:all .3s}
+.sb-answer-area.correct{border-color:#10B981;background:rgba(16,185,129,.06)}
+.sb-answer-area.wrong{border-color:#EF4444;background:rgba(239,68,68,.06)}
+.sb-answer-placeholder{color:var(--t4);font-size:13px;width:100%;text-align:center}
+.sb-word-bank{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:14px}
+.sb-word-chip{padding:8px 14px;border-radius:var(--rp);background:rgba(255,255,255,.06);
+  border:1px solid rgba(255,255,255,.1);font-size:14px;font-weight:600;color:var(--t1);
+  cursor:pointer;transition:all .2s;user-select:none;-webkit-user-select:none}
+.sb-word-chip:active{transform:scale(.92)}
+.sb-word-chip.used{opacity:.25;pointer-events:none}
+.sb-word-chip.in-answer{background:rgba(139,92,246,.15);border-color:rgba(139,92,246,.3);color:var(--purp2)}
+.sb-actions{display:flex;gap:8px;justify-content:center}
+.sb-result{margin-top:12px;padding:14px;border-radius:var(--rs);text-align:center;animation:pronFadeIn .3s}
+.sb-result.correct{background:rgba(16,185,129,.08);border:1px solid rgba(16,185,129,.2)}
+.sb-result.wrong{background:rgba(239,68,68,.06);border:1px solid rgba(239,68,68,.15)}
+.sb-result-icon{font-size:32px;margin-bottom:4px}
+.sb-result-text{font-size:14px;font-weight:700}
+.sb-result-answer{font-size:13px;color:var(--t2);margin-top:4px}
+
+/* ===== V13: Error pool badge ===== */
+.nb-error-section{margin-bottom:14px}
+.nb-error-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.nb-error-title{font-size:13px;font-weight:800;color:var(--org);display:flex;align-items:center;gap:6px}
+.nb-error-count{font-size:12px;font-weight:700;color:var(--t3);background:rgba(249,115,22,.1);
+  padding:2px 8px;border-radius:var(--rp)}
+.nb-error-card{background:rgba(249,115,22,.04);border:1px solid rgba(249,115,22,.12);
+  border-radius:var(--rs);padding:10px 12px;margin-bottom:6px;display:flex;align-items:center;gap:8px}
+.nb-error-card .nbw-day{color:var(--org)}
+.nb-error-actions{display:flex;gap:6px;margin-top:8px}
 /* ===== V12: Daily Sentence ===== */
 .daily-sentence-card{background:linear-gradient(135deg,rgba(139,92,246,.10) 0%,rgba(6,182,212,.06) 100%);
   border:1px solid rgba(139,92,246,.18);border-radius:var(--r);padding:18px 20px;margin-bottom:16px;
@@ -816,8 +866,9 @@ input,textarea{font-family:inherit}
       </div>
     </div>
 
-    <div id="review-banner-container"></div>
     <div id="daily-sentence-container"></div>
+    <div id="mixed-review-container"></div>
+    <div id="review-banner-container"></div>
 
     <div class="search-bar">
       <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
@@ -953,7 +1004,7 @@ input,textarea{font-family:inherit}
         <div class="settings-group-title">关于</div>
         <div class="settings-row">
           <div class="settings-label">版本</div>
-          <div class="settings-value">te_v12</div>
+          <div class="settings-value">te_v13</div>
         </div>
       </div>
     </div>
@@ -991,10 +1042,10 @@ const DATA = [{"day":1,"dayTitle":"机场基础","daySubtitle":"Airport Basics",
 
 
 
-const SK = 'te_v12';
-const VERSION = 'te_v12';
+const SK = 'te_v13';
+const VERSION = 'te_v13';
 // Migrate data from v8
-try { ['done','lastStudy','studyLog','notebook','reviews','ttsSettings','pronScores','topicErrors'].forEach(function(k){ var ov=localStorage.getItem('te_v10_'+k); if(ov && !localStorage.getItem('te_v12_'+k)) localStorage.setItem('te_v12_'+k, ov); }); } catch(e) {}
+try { ['done','lastStudy','studyLog','notebook','reviews','ttsSettings','pronScores','topicErrors'].forEach(function(k){ var ov=localStorage.getItem('te_v10_'+k); if(ov && !localStorage.getItem('te_v13_'+k)) localStorage.setItem('te_v13_'+k, ov); }); } catch(e) {}
 // V9: Clean up old imported data
 try { localStorage.removeItem('te_v8_extra'); } catch(e) {}
 
@@ -1002,7 +1053,7 @@ try { localStorage.removeItem('te_v8_extra'); } catch(e) {}
 const Store = (function() {
   var idb = null;
   var idbReady = false;
-  var DB_NAME = 'te_v12_db';
+  var DB_NAME = 'te_v13_db';
   var STORE_NAME = 'kv';
   var cache = {};
   var KNOWN_KEYS = ['done', 'lastStudy', 'studyLog', 'notebook', 'reviews', 'ttsSettings'];
@@ -1245,6 +1296,75 @@ function nextDailySentence() {
   document.getElementById('ds-text-cn').textContent = s.cn;
 }
 
+// ===== V13: Daily review + Mixed review =====
+function renderDailyReview() {
+  var reviewCount = getTodayReviewCount();
+  var rbc = document.getElementById("review-banner-container");
+  if (rbc) {
+    if (reviewCount > 0) {
+      rbc.innerHTML = '<div class="review-banner" onclick="startReview()"><div class="rb-icon">\uD83D\uDD04</div><div class="rb-info"><div class="rb-title">今日复习</div><div class="rb-desc">基于艾宾浩斯记忆曲线</div></div><div class="rb-count">' + reviewCount + '</div></div>';
+    } else {
+      rbc.innerHTML = '';
+    }
+  }
+}
+
+function renderMixedReview() {
+  var container = document.getElementById("mixed-review-container");
+  if (!container) return;
+  var totalWords = 0;
+  DATA.forEach(function(d) { if (!d) return; totalWords += (d.newWords||[]).length; });
+  if (totalWords < 5) { container.innerHTML = ''; return; }
+  var errorPool = getErrorPoolWords();
+  var reviewCount = getTodayReviewCount();
+  var poolSize = Math.max(errorPool.length, reviewCount, 10);
+  poolSize = Math.min(poolSize, 20);
+  var html = '<div class="mixed-review-banner" onclick="startMixedReview()">';
+  html += '<div class="mrb-icon">\uD83D\uDD00</div>';
+  html += '<div class="mrb-title">混合复习</div>';
+  html += '<div class="mrb-desc">跨天随机抽取 ' + poolSize + ' 词，检验长期记忆</div>';
+  if (errorPool.length > 0) {
+    html += '<div class="mrb-desc" style="color:var(--org);margin-top:4px">\u26A0\uFE0F 包含 ' + errorPool.length + ' 个易错词</div>';
+  }
+  html += '<div class="mrb-count">' + poolSize + '</div>';
+  html += '</div>';
+  container.innerHTML = html;
+}
+
+function startMixedReview() {
+  var pool = [];
+  var seen = {};
+  var errorWords = getErrorPoolWords();
+  errorWords.forEach(function(w) {
+    if (w && w.word && !seen[w.word.toLowerCase()]) { pool.push(w); seen[w.word.toLowerCase()] = true; }
+  });
+  var reviewWords = getReviewWordList();
+  reviewWords.forEach(function(w) {
+    if (w && w.word && !seen[w.word.toLowerCase()]) { pool.push(w); seen[w.word.toLowerCase()] = true; }
+  });
+  var allWords = [];
+  DATA.forEach(function(d) {
+    if (!d) return;
+    (d.newWords||[]).forEach(function(w) {
+      if (w && w.word && !seen[w.word.toLowerCase()]) allWords.push(w);
+    });
+  });
+  allWords.sort(function(){return Math.random()-0.5;});
+  allWords.forEach(function(w) {
+    if (pool.length < 20) { pool.push(w); seen[w.word.toLowerCase()] = true; }
+  });
+  if (!pool.length) { showToast("暂无可复习的词汇"); return; }
+  pool.sort(function(){return Math.random()-0.5;});
+  curWords = pool;
+  curDay = null;
+  wIdx = 0;
+  wMode = "quiz";
+  quizState = null;
+  document.getElementById("w-title").textContent = "混合复习";
+  showPage("pg-words");
+  renderWords();
+}
+
 // ===== HOME =====
 function renderHome() {
   const done = Store.get('done', {});
@@ -1264,6 +1384,8 @@ function renderHome() {
     }
   }
   renderDailySentence();
+  renderDailyReview();
+  renderMixedReview();
   renderPhaseCards();
 }
 
@@ -1446,6 +1568,7 @@ function setWordMode(m) {
   wIdx = 0;
   quizState = null;
   dictResults = null;
+  buildState = null;
   renderWords();
 }
 
@@ -1459,11 +1582,12 @@ function nextWord() {
 function renderWords() {
   const words = curWords;
   const bar = document.getElementById('w-mode-bar');
-  bar.innerHTML = '<button class="' + (wMode==='card'?'active':'') + '" data-mode="card" onclick="setWordMode(this.dataset.mode)">卡片</button><button class="' + (wMode==='dict'?'active':'') + '" data-mode="dict" onclick="setWordMode(this.dataset.mode)">听写</button><button class="' + (wMode==='quiz'?'active':'') + '" data-mode="quiz" onclick="setWordMode(this.dataset.mode)">选择</button>';
+  bar.innerHTML = '<button class="' + (wMode==='card'?'active':'') + '" data-mode="card" onclick="setWordMode(this.dataset.mode)">卡片</button><button class="' + (wMode==='dict'?'active':'') + '" data-mode="dict" onclick="setWordMode(this.dataset.mode)">听写</button><button class="' + (wMode==='quiz'?'active':'') + '" data-mode="quiz" onclick="setWordMode(this.dataset.mode)">选择</button><button class="' + (wMode==='build'?'active':'') + '" data-mode="build" onclick="setWordMode(this.dataset.mode)">造句</button>';
   document.getElementById('w-counter').textContent = (wIdx+1) + '/' + words.length;
 
   if (wMode === 'card') renderCard();
   else if (wMode === 'dict') renderDict();
+  else if (wMode === 'build') renderBuild();
   else renderQuiz();
 }
 
@@ -1659,6 +1783,7 @@ function checkDict() {
     var hint = document.getElementById('dict-hint');
     if (hint.textContent === '') hint.innerHTML = '再试试，注意拼写';
     addToNotebook(w.word, w.translation, curDay ? curDay.day : 0);
+    addToErrorPool(w.word, w.translation, curDay ? curDay.day : 0);
     logError(curDay ? curDay.day : 0);
   }
 }
@@ -1716,6 +1841,178 @@ function renderQuiz() {
   c.innerHTML = html;
 }
 
+// ===== V13: Sentence Builder =====
+var buildState = null;
+
+function renderBuild() {
+  var words = curWords;
+  var c = document.getElementById("w-content");
+  if (!buildState || buildState.round >= buildState.total) {
+    var sentences = [];
+    if (curDay) {
+      var essay = curDay.essay || {};
+      (essay.sentences || []).forEach(function(s) {
+        if (s && s.en && s.en.split(" ").length >= 4 && s.en.split(" ").length <= 12) {
+          sentences.push({ en: s.en, cn: s.cn || "" });
+        }
+      });
+      (curDay.dialog || []).forEach(function(l) {
+        if (l && l.textEn && l.textEn.split(" ").length >= 4 && l.textEn.split(" ").length <= 12) {
+          sentences.push({ en: l.textEn, cn: l.textCn || "" });
+        }
+      });
+    }
+    if (sentences.length < 5) {
+      DATA.forEach(function(d) {
+        if (!d) return;
+        var essay = d.essay || {};
+        (essay.sentences || []).forEach(function(s) {
+          if (s && s.en && s.en.split(" ").length >= 4 && s.en.split(" ").length <= 12) {
+            if (!sentences.find(function(ex){return ex.en === s.en;})) {
+              sentences.push({ en: s.en, cn: s.cn || "" });
+            }
+          }
+        });
+      });
+    }
+    if (!sentences.length) {
+      c.innerHTML = '<div class="empty-state"><div class="es-icon">\uD83D\uDCDD</div><div class="es-title">暂无造句素材</div><div class="es-desc">需要至少一个含4-12个单词的句子</div></div>';
+      return;
+    }
+    sentences.sort(function(){return Math.random()-0.5;});
+    var picked = sentences.slice(0, Math.min(10, sentences.length));
+    buildState = { round: 0, score: 0, total: picked.length, sentences: picked };
+  }
+  if (buildState.round >= buildState.total) {
+    var pct = Math.round(buildState.score / buildState.total * 100);
+    var html = '<div class="empty-state"><div style="font-size:52px;font-weight:900;';
+    html += 'background:var(--ga);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">';
+    html += buildState.score + '/' + buildState.total + '</div>';
+    html += '<div style="color:var(--t2);margin:8px 0 4px;font-size:14px">造句完成 · 正确率 ' + pct + '%</div>';
+    if (pct >= 80) html += '<div style="color:#34D399;font-size:13px;margin-bottom:16px">语法掌握很好！</div>';
+    else if (pct >= 60) html += '<div style="color:#FBBF24;font-size:13px;margin-bottom:16px">不错，注意语序</div>';
+    else html += '<div style="color:#FB923C;font-size:13px;margin-bottom:16px">多读句子，培养语感</div>';
+    html += '<button class="btn primary" onclick="buildState=null;renderWords()">再来一轮</button></div>';
+    c.innerHTML = html;
+    return;
+  }
+  var s = buildState.sentences[buildState.round];
+  if (!s) { buildState.round++; renderWords(); return; }
+  var originalWords = s.en.replace(/[^a-zA-Z\s']/g, "").trim().split(/\s+/).filter(function(w){return w.length>0;});
+  var shuffled = originalWords.slice().sort(function(){return Math.random()-0.5;});
+  var html = '<div class="sb-container">';
+  html += '<div class="sb-progress">第 ' + (buildState.round+1) + ' / ' + buildState.total + ' 句 · 得分 ' + buildState.score + '</div>';
+  html += '<div class="pbar" style="margin-bottom:14px"><div class="pbar-fill" style="width:' + (buildState.round/buildState.total*100) + '%"></div></div>';
+  html += '<div class="sb-prompt">';
+  html += '<div class="sb-prompt-cn">' + esc(s.cn || "请将打乱的单词排列成正确的句子") + '</div>';
+  html += '<div class="sb-prompt-hint">点击下方单词按正确顺序排列</div>';
+  html += '</div>';
+  html += '<div class="sb-answer-area" id="sb-answer-area" onclick="sbUndoLast()">';
+  html += '<div class="sb-answer-placeholder" id="sb-placeholder">点击单词放入此处</div>';
+  html += '</div>';
+  html += '<div class="sb-word-bank" id="sb-word-bank">';
+  shuffled.forEach(function(w, i) {
+    html += '<div class="sb-word-chip" data-word="' + escAttr(w) + '" data-idx="' + i + '" onclick="sbAddWord(this)">' + esc(w) + '</div>';
+  });
+  html += '</div>';
+  html += '<div class="sb-actions">';
+  html += '<button class="btn sec sm" onclick="sbClear()">清空</button>';
+  html += '<button class="btn primary sm" onclick="sbCheck()">检查</button>';
+  html += '<button class="btn sec sm" onclick="sbSkip()">跳过</button>';
+  html += '</div>';
+  html += '<div id="sb-result"></div>';
+  html += '</div>';
+  c.innerHTML = html;
+  buildState.currentSentence = s.en.replace(/[^a-zA-Z\s']/g, "").trim().toLowerCase();
+  buildState.currentCn = s.cn || "";
+  buildState.answerWords = [];
+}
+
+function sbAddWord(chip) {
+  if (chip.classList.contains("used")) return;
+  chip.classList.add("used");
+  var word = chip.getAttribute("data-word");
+  var idx = chip.getAttribute("data-idx");
+  buildState.answerWords.push({ word: word, idx: idx });
+  var area = document.getElementById("sb-answer-area");
+  var placeholder = document.getElementById("sb-placeholder");
+  if (placeholder) placeholder.style.display = "none";
+  var chipEl = document.createElement("div");
+  chipEl.className = "sb-word-chip in-answer";
+  chipEl.textContent = word;
+  chipEl.setAttribute("data-idx", idx);
+  chipEl.onclick = function(e) { e.stopPropagation(); sbRemoveWord(idx); };
+  area.appendChild(chipEl);
+}
+
+function sbRemoveWord(idx) {
+  var removed = false;
+  buildState.answerWords = buildState.answerWords.filter(function(a) {
+    if (!removed && a.idx === idx) { removed = true; return false; }
+    return true;
+  });
+  var bankChips = document.querySelectorAll("#sb-word-bank .sb-word-chip");
+  bankChips.forEach(function(c) { if (c.getAttribute("data-idx") === idx) c.classList.remove("used"); });
+  sbRebuildAnswer();
+}
+
+function sbUndoLast() {
+  if (!buildState.answerWords.length) return;
+  var last = buildState.answerWords.pop();
+  var bankChips = document.querySelectorAll("#sb-word-bank .sb-word-chip");
+  bankChips.forEach(function(c) { if (c.getAttribute("data-idx") === last.idx) c.classList.remove("used"); });
+  sbRebuildAnswer();
+}
+
+function sbRebuildAnswer() {
+  var area = document.getElementById("sb-answer-area");
+  if (!buildState.answerWords.length) {
+    area.innerHTML = '<div class="sb-answer-placeholder" id="sb-placeholder">点击单词放入此处</div>';
+    return;
+  }
+  area.innerHTML = "";
+  buildState.answerWords.forEach(function(a) {
+    var chipEl = document.createElement("div");
+    chipEl.className = "sb-word-chip in-answer";
+    chipEl.textContent = a.word;
+    chipEl.setAttribute("data-idx", a.idx);
+    chipEl.onclick = function(e) { e.stopPropagation(); sbRemoveWord(a.idx); };
+    area.appendChild(chipEl);
+  });
+}
+
+function sbClear() {
+  buildState.answerWords = [];
+  var bankChips = document.querySelectorAll("#sb-word-bank .sb-word-chip");
+  bankChips.forEach(function(c) { c.classList.remove("used"); });
+  sbRebuildAnswer();
+}
+
+function sbCheck() {
+  if (!buildState.answerWords.length) { showToast("请先排列单词"); return; }
+  var userAnswer = buildState.answerWords.map(function(a){return a.word;}).join(" ").toLowerCase();
+  var correct = buildState.currentSentence;
+  var resultEl = document.getElementById("sb-result");
+  var area = document.getElementById("sb-answer-area");
+  if (userAnswer === correct) {
+    buildState.score++;
+    area.classList.add("correct");
+    resultEl.innerHTML = '<div class="sb-result correct"><div class="sb-result-icon">\u2705</div><div class="sb-result-text">正确！</div></div>';
+  } else {
+    area.classList.add("wrong");
+    resultEl.innerHTML = '<div class="sb-result wrong"><div class="sb-result-icon">\u274C</div><div class="sb-result-text">语序不正确</div><div class="sb-result-answer">正确答案: ' + esc(buildState.sentences[buildState.round].en) + '</div></div>';
+    addToErrorPool(buildState.sentences[buildState.round].en, buildState.currentCn, curDay ? curDay.day : 0);
+    if (curDay) logError(curDay.day);
+  }
+  document.querySelectorAll("#sb-word-bank .sb-word-chip").forEach(function(c){c.style.pointerEvents="none";});
+  setTimeout(function() { buildState.round++; renderWords(); }, 2500);
+}
+
+function sbSkip() {
+  buildState.round++;
+  renderWords();
+}
+
 function answerQuiz(el, picked, correct) {
   document.querySelectorAll('.qo').forEach(o => o.disabled = true);
   var q = quizState.questions[quizState.round];
@@ -1725,7 +2022,7 @@ function answerQuiz(el, picked, correct) {
   } else {
     el.classList.add('wrong');
     document.querySelectorAll('.qo')[correct].classList.add('correct');
-    if (q) addToNotebook(q.word, q.translation, curDay ? curDay.day : 0);
+    if (q) { addToNotebook(q.word, q.translation, curDay ? curDay.day : 0); addToErrorPool(q.word, q.translation, curDay ? curDay.day : 0); }
     logError(curDay ? curDay.day : 0);
   }
   setTimeout(() => { quizState.round++; renderWords(); }, 800);
@@ -2432,6 +2729,7 @@ var EB_INTERVALS = [1, 2, 4, 7, 15, 30]; // days
 
 function markWordKnown(word) {
   if (!word) return;
+  removeFromErrorPool(word);
   var reviews = Store.get('reviews', {});
   var key = word.toLowerCase();
   var now = Date.now();
@@ -2552,6 +2850,63 @@ function startReviewFromDay(dayNum) {
   }, 500);
 }
 
+// ===== V13: Error Pool (priority review) =====
+function addToErrorPool(word, translation, day) {
+  if (!word) return;
+  var pool = Store.get("errorPool", []);
+  var key = word.toLowerCase();
+  for (var i = 0; i < pool.length; i++) {
+    if (pool[i] && pool[i].word && pool[i].word.toLowerCase() === key) {
+      pool[i].errorCount = (pool[i].errorCount || 1) + 1;
+      pool[i].lastError = Date.now();
+      Store.set("errorPool", pool);
+      return;
+    }
+  }
+  pool.push({ word: word, translation: translation || "", day: day || (curDay ? curDay.day : 0), errorCount: 1, addedAt: Date.now(), lastError: Date.now() });
+  Store.set("errorPool", pool);
+}
+
+function removeFromErrorPool(word) {
+  if (!word) return;
+  var pool = Store.get("errorPool", []);
+  var key = word.toLowerCase();
+  var filtered = pool.filter(function(p) { return !(p && p.word && p.word.toLowerCase() === key); });
+  Store.set("errorPool", filtered);
+}
+
+function getErrorPoolWords() {
+  var pool = Store.get("errorPool", []);
+  var result = [];
+  pool.forEach(function(p) {
+    if (!p || !p.word) return;
+    var info = findWordInData(p.word);
+    if (info) result.push(info);
+    else result.push({ word: p.word, translation: p.translation, day: p.day || 0 });
+  });
+  return result;
+}
+
+function clearErrorPool() {
+  Store.set("errorPool", []);
+  showToast("错词池已清空");
+  renderNotebook();
+}
+
+function startErrorPoolReview() {
+  var errorWords = getErrorPoolWords();
+  if (!errorWords.length) { showToast("错词池为空"); return; }
+  errorWords.sort(function(){return Math.random()-0.5;});
+  curWords = errorWords;
+  curDay = null;
+  wIdx = 0;
+  wMode = "card";
+  document.getElementById("w-title").textContent = "错词复习";
+  showPage("pg-words");
+  renderWords();
+  setupSwipe();
+}
+
 // ===== V10: Word Notebook =====
 function addToNotebook(word, translation, day) {
   if (!word) return;
@@ -2608,15 +2963,39 @@ function onBookmarkClick() {
 
 function renderNotebook() {
   var notebook = Store.get('notebook', []);
+  var errorPool = Store.get('errorPool', []);
   var container = document.getElementById('nb-content');
   var countEl = document.getElementById('nb-count');
-  if (countEl) countEl.textContent = notebook.length + ' 词';
+  if (countEl) countEl.textContent = (notebook.length + errorPool.length) + ' 词';
   if (!container) return;
-  if (!notebook.length) {
+  if (!notebook.length && !errorPool.length) {
     container.innerHTML = '<div class="empty-state"><div class="es-icon">📝</div><div class="es-title">生词本为空</div><div class="es-desc">在卡片、听写或选择题中答错的单词会自动加入</div></div>';
     return;
   }
   var html = '';
+  // Error pool section
+  if (errorPool.length) {
+    html += '<div class="nb-error-section">';
+    html += '<div class="nb-error-header"><div class="nb-error-title">⚠️ 易错词池 (' + errorPool.length + ')</div>';
+    html += '<div class="nb-error-actions">';
+    html += '<button class="btn primary sm" onclick="startErrorPoolReview()">复习错词</button>';
+    html += '<button class="btn sec sm" onclick="clearErrorPool()">清空</button>';
+    html += '</div></div>';
+    errorPool.forEach(function(p, i) {
+      if (!p) return;
+      html += '<div class="nb-error-card">';
+      html += '<div class="nbw-day">D' + (p.day || '?') + '</div>';
+      html += '<div class="nbw-info"><div class="nbw-en">' + esc(p.word || '') + '</div>';
+      html += '<div class="nbw-cn">' + esc(p.translation || '') + '</div></div>';
+      html += '<div style="font-size:11px;color:var(--org);font-weight:700">×' + (p.errorCount||1) + '</div>';
+      html += '<div class="nbw-btn" onclick="speakErrorWord(this)" data-word="' + escAttr(p.word||'') + '"><svg viewBox="0 0 24 24"><path d="M11 5L6 9H2v6h4l5 4V5z"/><path d="M15.5 8.5a5 5 0 010 7"/></svg></div>';
+      html += '</div>';
+    });
+    html += '</div>';
+  }
+  if (notebook.length) {
+    html += '<div style="font-size:13px;font-weight:800;color:var(--purp2);margin-bottom:8px;padding:0 4px">📚 生词本 (' + notebook.length + ')</div>';
+  }
   notebook.forEach(function(n, i) {
     if (!n) return;
     html += '<div class="nb-word-card">';
@@ -2629,6 +3008,11 @@ function renderNotebook() {
     html += '</div></div>';
   });
   container.innerHTML = html;
+}
+
+function speakErrorWord(el) {
+  var w = el.getAttribute("data-word");
+  if (w) speak(w);
 }
 
 function speakNotebookWord(idx) {
@@ -2893,13 +3277,14 @@ function updateRateValue(val) {
 // ===== V10: Export / Import =====
 function exportData() {
   var data = {
-    version: 'te_v12',
+    version: 'te_v13',
     exportDate: new Date().toISOString(),
     done: Store.get('done', {}),
     lastStudy: Store.get('lastStudy', 0),
     studyLog: Store.get('studyLog', {}),
     notebook: Store.get('notebook', []),
     reviews: Store.get('reviews', {}),
+    errorPool: Store.get('errorPool', []),
     ttsSettings: Store.get('ttsSettings', { rate: 0.85, voice: '' })
   };
   var json = JSON.stringify(data, null, 2);
@@ -2926,6 +3311,7 @@ function importData(file) {
       if (data.studyLog) Store.set('studyLog', data.studyLog);
       if (data.notebook) Store.set('notebook', data.notebook);
       if (data.reviews) Store.set('reviews', data.reviews);
+      if (data.errorPool) Store.set('errorPool', data.errorPool);
       if (data.ttsSettings) Store.set('ttsSettings', data.ttsSettings);
       showToast('数据导入成功');
       renderHome();

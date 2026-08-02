@@ -1,5 +1,5 @@
-// Service Worker for 旅行英语 te_v12
-const CACHE = 'te-v12';
+// Service Worker for 旅行英语 te_v13
+const CACHE = 'te-v13';
 const ASSETS = [
   './',
   './index.html',
