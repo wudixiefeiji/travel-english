@@ -15,7 +15,7 @@
 <link rel="icon" type="image/png" sizes="512x512" href="icon-512.png?v8">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png?v8">
 <link rel="manifest" href="manifest.json">
-<meta name="version" content="te_v11">
+<meta name="version" content="te_v12">
 <title>旅行英语 · 39天计划</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
 <style>
@@ -54,7 +54,8 @@ input,textarea{font-family:inherit}
 
 /* V8: Increased horizontal padding from 16px to 20px */
 .page{display:none;flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;
-  padding:calc(var(--st)+12px) 20px calc(var(--nav-h)+var(--sb)+20px);animation:fadeUp .3s ease}
+  padding:calc(var(--st)+12px) 20px calc(var(--nav-h)+var(--sb)+32px);animation:fadeUp .3s ease;
+  -webkit-transform:translateZ(0);transform:translateZ(0)}
 .page.active{display:block}
 @keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
 @keyframes fadeIn{from{opacity:0}to{opacity:1}}
@@ -617,6 +618,93 @@ input,textarea{font-family:inherit}
 /* ===== V10: Import file input ===== */
 .import-hidden{display:none}
 
+
+/* ===== V12: Daily Sentence ===== */
+.daily-sentence-card{background:linear-gradient(135deg,rgba(139,92,246,.10) 0%,rgba(6,182,212,.06) 100%);
+  border:1px solid rgba(139,92,246,.18);border-radius:var(--r);padding:18px 20px;margin-bottom:16px;
+  position:relative;overflow:hidden;animation:fadeUp .4s ease}
+.daily-sentence-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:var(--ga)}
+.ds-label{font-size:11px;font-weight:800;color:var(--purp2);text-transform:uppercase;
+  letter-spacing:1px;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.ds-label svg{width:14px;height:14px;fill:var(--purp2)}
+.ds-text{font-size:15px;font-weight:600;color:var(--t1);line-height:1.6;margin-bottom:6px;
+  font-style:italic}
+.ds-text-cn{font-size:13px;color:var(--t2);line-height:1.5}
+.ds-actions{margin-top:10px;display:flex;gap:8px}
+.ds-btn{display:inline-flex;align-items:center;gap:4px;padding:5px 12px;border-radius:var(--rp);
+  background:rgba(139,92,246,.12);border:1px solid rgba(139,92,246,.2);color:var(--purp2);
+  font-size:11px;font-weight:700;cursor:pointer;transition:all .2s}
+.ds-btn:active{transform:scale(.95)}
+.ds-btn svg{width:13px;height:13px;fill:currentColor}
+
+/* ===== V12: Review Modal ===== */
+.review-modal-list{max-height:50vh;overflow-y:auto;margin:12px -4px 16px;padding:0 4px}
+.review-modal-day-group{margin-bottom:12px}
+.review-modal-day-label{font-size:12px;font-weight:700;color:var(--cyan2);margin-bottom:6px;
+  display:flex;align-items:center;gap:6px}
+.review-modal-words{display:flex;flex-wrap:wrap;gap:6px}
+.review-modal-word{font-size:12px;font-weight:600;color:var(--t1);padding:5px 10px;
+  background:rgba(255,255,255,.04);border-radius:var(--rp);border:1px solid rgba(255,255,255,.06)}
+
+/* ===== V12: Pronunciation button spacing ===== */
+.pron-btn{display:inline-flex;align-items:center;gap:4px;padding:8px 16px;border-radius:var(--rp);
+  background:rgba(139,92,246,.12);border:1px solid rgba(139,92,246,.25);color:var(--purp2);
+  font-size:12px;font-weight:700;cursor:pointer;transition:all .2s;margin-top:4px}
+.pron-btn:active{transform:scale(.95);background:rgba(139,92,246,.25)}
+.pron-btn.recording{background:rgba(239,68,68,.15);border-color:rgba(239,68,68,.35);color:#FCA5A5;
+  animation:pronPulse 1s infinite}
+.pron-stop-btn{display:inline-flex;align-items:center;gap:4px;padding:8px 16px;border-radius:var(--rp);
+  background:rgba(239,68,68,.15);border:1px solid rgba(239,68,68,.3);color:#FCA5A5;
+  font-size:12px;font-weight:700;cursor:pointer;margin-top:4px;margin-left:8px}
+.pron-stop-btn:active{transform:scale(.95)}
+
+/* ===== V12: Dictation improvements ===== */
+.dict-mode-card{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);
+  border-radius:var(--r);padding:24px 20px;text-align:center;margin-bottom:16px}
+.dict-mode-card .dmc-icon{font-size:48px;margin-bottom:12px;animation:dictBounce 2s infinite}
+.dict-mode-card .dmc-hint{font-size:13px;color:var(--t3);margin-bottom:16px}
+.dict-mode-controls{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-bottom:4px}
+.dict-ctrl-btn{display:inline-flex;align-items:center;gap:4px;padding:10px 16px;border-radius:var(--rp);
+  font-size:13px;font-weight:700;cursor:pointer;transition:all .2s;border:1px solid}
+.dict-ctrl-btn.play{background:rgba(6,182,212,.12);border-color:rgba(6,182,212,.25);color:var(--cyan2)}
+.dict-ctrl-btn.slow{background:rgba(59,130,246,.10);border-color:rgba(59,130,246,.2);color:#60A5FA}
+.dict-ctrl-btn.hint{background:rgba(251,191,36,.10);border-color:rgba(251,191,36,.2);color:var(--ylw)}
+.dict-ctrl-btn:active{transform:scale(.95)}
+.dict-hint-display{font-size:16px;font-weight:800;color:var(--ylw);letter-spacing:4px;
+  margin:10px 0;font-family:'Courier New',monospace}
+.dict-progress-dots{display:flex;gap:4px;justify-content:center;margin:10px 0}
+.dict-dot{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.1);transition:all .3s}
+.dict-dot.correct{background:#10B981}
+.dict-dot.wrong{background:#EF4444}
+.dict-dot.current{background:var(--purp2);transform:scale(1.3)}
+@keyframes dictBounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+
+/* ===== V12: Online lookup ===== */
+.wl-tip-online{margin-top:8px;padding-top:8px;border-top:1px solid rgba(255,255,255,.06)}
+.wl-tip-online-btn{display:inline-flex;align-items:center;gap:4px;padding:6px 12px;border-radius:var(--rp);
+  background:rgba(6,182,212,.12);border:1px solid rgba(6,182,212,.2);color:var(--cyan2);
+  font-size:11px;font-weight:700;cursor:pointer}
+.wl-tip-online-btn:active{transform:scale(.95)}
+.wl-tip-loading{font-size:12px;color:var(--t3);padding:8px 0;text-align:center}
+.wl-tip-api-def{font-size:12px;color:var(--t2);line-height:1.5;margin-top:6px;padding:8px;
+  background:rgba(255,255,255,.03);border-radius:8px}
+.wl-tip-api-def b{color:var(--t1)}
+
+/* ===== V12: Extra examples ===== */
+.word-extra-examples{margin-top:10px}
+.word-extra-ex-title{font-size:11px;font-weight:800;color:var(--t3);text-transform:uppercase;
+  letter-spacing:.5px;margin-bottom:8px}
+.word-ex-item{padding:10px 12px;background:rgba(255,255,255,.03);border-radius:var(--rs);
+  margin-bottom:8px;border-left:3px solid rgba(139,92,246,.3);cursor:pointer;transition:all .2s}
+.word-ex-item:active{background:rgba(255,255,255,.06)}
+.word-ex-item .en{font-size:13px;font-weight:600;color:var(--t1);line-height:1.5}
+.word-ex-item .cn{font-size:12px;color:var(--t2);margin-top:4px}
+
+/* ===== V12: Voice gender labels ===== */
+.voice-gender-label{font-size:11px;font-weight:700;color:var(--t3);padding:4px 0 2px;
+  border-top:1px solid rgba(255,255,255,.04)}
+
 /* ===== V11: Pronunciation scoring ===== */
 .pron-btn{display:inline-flex;align-items:center;gap:4px;padding:6px 14px;border-radius:var(--rp);
   background:rgba(139,92,246,.12);border:1px solid rgba(139,92,246,.25);color:var(--purp2);
@@ -729,6 +817,7 @@ input,textarea{font-family:inherit}
     </div>
 
     <div id="review-banner-container"></div>
+    <div id="daily-sentence-container"></div>
 
     <div class="search-bar">
       <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
@@ -864,9 +953,18 @@ input,textarea{font-family:inherit}
         <div class="settings-group-title">关于</div>
         <div class="settings-row">
           <div class="settings-label">版本</div>
-          <div class="settings-value">te_v11</div>
+          <div class="settings-value">te_v12</div>
         </div>
       </div>
+    </div>
+  </div>
+
+  <!-- ===== V12: Review Modal ===== -->
+  <div class="modal-overlay" id="review-modal">
+    <div class="modal" style="max-height:80vh;overflow-y:auto;position:relative">
+      <div class="modal-close" onclick="closeReviewModal()"><svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg></div>
+      <div class="modal-title">今日复习</div>
+      <div id="review-modal-content"></div>
     </div>
   </div>
 
@@ -893,10 +991,10 @@ const DATA = [{"day":1,"dayTitle":"机场基础","daySubtitle":"Airport Basics",
 
 
 
-const SK = 'te_v11';
-const VERSION = 'te_v11';
+const SK = 'te_v12';
+const VERSION = 'te_v12';
 // Migrate data from v8
-try { ['done','lastStudy','studyLog','notebook','reviews','ttsSettings','pronScores','topicErrors'].forEach(function(k){ var ov=localStorage.getItem('te_v10_'+k); if(ov && !localStorage.getItem('te_v11_'+k)) localStorage.setItem('te_v11_'+k, ov); }); } catch(e) {}
+try { ['done','lastStudy','studyLog','notebook','reviews','ttsSettings','pronScores','topicErrors'].forEach(function(k){ var ov=localStorage.getItem('te_v10_'+k); if(ov && !localStorage.getItem('te_v12_'+k)) localStorage.setItem('te_v12_'+k, ov); }); } catch(e) {}
 // V9: Clean up old imported data
 try { localStorage.removeItem('te_v8_extra'); } catch(e) {}
 
@@ -904,7 +1002,7 @@ try { localStorage.removeItem('te_v8_extra'); } catch(e) {}
 const Store = (function() {
   var idb = null;
   var idbReady = false;
-  var DB_NAME = 'te_v11_db';
+  var DB_NAME = 'te_v12_db';
   var STORE_NAME = 'kv';
   var cache = {};
   var KNOWN_KEYS = ['done', 'lastStudy', 'studyLog', 'notebook', 'reviews', 'ttsSettings'];
@@ -1063,6 +1161,90 @@ function showPage(id) {
 function goHome() { showPage('pg-home'); renderHome(); }
 function goDay() { showPage('pg-day'); renderDay(); }
 
+
+// ===== V12: Daily Sentence =====
+var DAILY_SENTENCES = [
+  {en:"The journey of a thousand miles begins with a single step.", cn:"千里之行，始于足下。"},
+  {en:"Practice makes perfect.", cn:"熟能生巧。"},
+  {en:"Every expert was once a beginner.", cn:"每个专家都曾是初学者。"},
+  {en:"Language is the road map of a culture.", cn:"语言是一种文化的路线图。"},
+  {en:"To learn a language is to have one more window from which to look at the world.", cn:"学一门语言就是多一扇看世界的窗。"},
+  {en:"The more you read, the more you know.", cn:"读得越多，知道得越多。"},
+  {en:"Don't be afraid to make mistakes.", cn:"不要害怕犯错。"},
+  {en:"Today's efforts shape tomorrow's success.", cn:"今天的努力塑造明天的成功。"},
+  {en:"Travel is the only thing you buy that makes you richer.", cn:"旅行是唯一买得到却让你更富有的东西。"},
+  {en:"A different language is a different vision of life.", cn:"不同的语言是不同的生活视角。"},
+  {en:"Speak even if your voice shakes.", cn:"即使声音颤抖，也要开口说。"},
+  {en:"Learning never exhausts the mind.", cn:"学习永远不会使心灵枯竭。"},
+  {en:"The beautiful thing about learning is nobody can take it away from you.", cn:"学习的美好之处在于无人能将其夺走。"},
+  {en:"Words have power. Use them wisely.", cn:"言语有力量，要明智地使用。"},
+  {en:"Read more, learn more, be more.", cn:"多阅读，多学习，成为更好的自己。"},
+  {en:"One language sets you in a corridor for life. Two languages open every door.", cn:"一种语言为你打开一条走廊，两种语言打开所有门。"},
+  {en:"The limits of my language are the limits of my world.", cn:"我语言的边界就是我世界的边界。"},
+  {en:"Consistency is the key to success.", cn:"坚持是成功的关键。"},
+  {en:"Every conversation is an opportunity to learn.", cn:"每次对话都是学习的机会。"},
+  {en:"Mistakes are proof that you are trying.", cn:"错误是你正在努力的证明。"},
+  {en:"The expert in anything was once a beginner.", cn:"任何领域的专家都曾是新手。"},
+  {en:"Language is not a barrier, it's a bridge.", cn:"语言不是障碍，而是桥梁。"},
+  {en:"Today's reader is tomorrow's leader.", cn:"今天的读者是明天的领导者。"},
+  {en:"Knowledge is power. Learning is superpower.", cn:"知识就是力量，学习是超能力。"},
+  {en:"The only way to do great work is to love what you do.", cn:"做好伟大工作的唯一方法就是热爱你所做的事。"},
+  {en:"Success is the sum of small efforts repeated day in and day out.", cn:"成功是日复一日小小努力的积累。"},
+  {en:"Don't watch the clock; do what it does. Keep going.", cn:"不要看时钟，像它一样继续前行。"},
+  {en:"The future belongs to those who believe in the beauty of their dreams.", cn:"未来属于那些相信梦想之美的人。"},
+  {en:"It always seems impossible until it's done.", cn:"在完成之前，一切看起来都不可能。"},
+  {en:"The best time to plant a tree was 20 years ago. The second best time is now.", cn:"种一棵树最好的时间是二十年前，其次是现在。"},
+  {en:"You don't have to be great to start, but you have to start to be great.", cn:"你不必很厉害才能开始，但你必须开始才能很厉害。"},
+  {en:"Learning a language is learning a culture.", cn:"学一门语言就是学一种文化。"},
+  {en:"Patience is the key to mastering any skill.", cn:"耐心是掌握任何技能的关键。"},
+  {en:"Reading is to the mind what exercise is to the body.", cn:"阅读之于心灵，如同运动之于身体。"},
+  {en:"The more languages you know, the more you are human.", cn:"你懂的语言越多，你就越像真正的人。"},
+  {en:"Speak less, listen more, learn constantly.", cn:"少说，多听，不断学习。"},
+  {en:"Travel far enough, you meet yourself.", cn:"走得够远，你会遇见自己。"},
+  {en:"A word after a word after a word is power.", cn:"一字一字又一字，便是力量。"},
+  {en:"Change your language and you change your thoughts.", cn:"改变你的语言，就改变了你的思想。"},
+  {en:"The roots of education are bitter, but the fruit is sweet.", cn:"教育的根是苦的，但果实是甜的。"}
+];
+
+function getDailySentence() {
+  var now = new Date();
+  var dayOfYear = Math.floor((now - new Date(now.getFullYear(), 0, 0)) / 86400000);
+  var idx = dayOfYear % DAILY_SENTENCES.length;
+  return DAILY_SENTENCES[idx];
+}
+
+function renderDailySentence() {
+  var container = document.getElementById('daily-sentence-container');
+  if (!container) return;
+  var s = getDailySentence();
+  var html = '<div class="daily-sentence-card">';
+  html += '<div class="ds-label"><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>每日一句</div>';
+  html += '<div class="ds-text" id="ds-text">' + esc(s.en) + '</div>';
+  html += '<div class="ds-text-cn" id="ds-text-cn">' + esc(s.cn) + '</div>';
+  html += '<div class="ds-actions">';
+  html += '<div class="ds-btn" onclick="speakDailySentence()"><svg viewBox="0 0 24 24"><path d="M11 5L6 9H2v6h4l5 4V5zM15.5 8.5a5 5 0 010 7M19 5a9 9 0 010 14"/></svg>朗读</div>';
+  html += '<div class="ds-btn" onclick="nextDailySentence()"><svg viewBox="0 0 24 24" style="fill:none;stroke:currentColor;stroke-width:2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>换一句</div>';
+  html += '</div></div>';
+  container.innerHTML = html;
+}
+
+var dsOffset = 0;
+function speakDailySentence() {
+  var s = getDailySentence();
+  speak(s.en);
+}
+function nextDailySentence() {
+  dsOffset++;
+  var container = document.getElementById('daily-sentence-container');
+  if (!container) return;
+  var now = new Date();
+  var dayOfYear = Math.floor((now - new Date(now.getFullYear(), 0, 0)) / 86400000);
+  var idx = (dayOfYear + dsOffset) % DAILY_SENTENCES.length;
+  var s = DAILY_SENTENCES[idx];
+  document.getElementById('ds-text').textContent = s.en;
+  document.getElementById('ds-text-cn').textContent = s.cn;
+}
+
 // ===== HOME =====
 function renderHome() {
   const done = Store.get('done', {});
@@ -1081,6 +1263,7 @@ function renderHome() {
       rbc.innerHTML = '';
     }
   }
+  renderDailySentence();
   renderPhaseCards();
 }
 
@@ -1262,6 +1445,7 @@ function setWordMode(m) {
   wMode = m;
   wIdx = 0;
   quizState = null;
+  dictResults = null;
   renderWords();
 }
 
@@ -1336,7 +1520,21 @@ function renderCard() {
     html += '</div></div>';
   }
 
-  html += '<div style="margin-top:12px"><button class="pron-btn" onclick="startPronunciation(\'' + w.word.replace(/'/g,"\\'") + '\', document.getElementById(\'pron-result-' + wIdx + '\'))">🎤 跟读评分</button><div id="pron-result-' + wIdx + '"></div></div>';
+  // V12: Generate additional example sentences
+  var extraExamples = generateWordExamples(w.word, w.translation);
+  if (extraExamples.length) {
+    html += '<div class="word-extra-examples">';
+    html += '<div class="word-extra-ex-title">更多例句</div>';
+    extraExamples.forEach(function(ex) {
+      html += '<div class="word-ex-item" onclick="speak(\'' + ex.en.replace(/'/g, "\\'") + '\')">';
+      html += '<div class="en">' + makeClickableWords(ex.en) + '</div>';
+      html += '<div class="cn">' + esc(ex.cn) + '</div>';
+      html += '</div>';
+    });
+    html += '</div>';
+  }
+
+  html += '<div style="margin-top:16px;padding-top:12px;border-top:1px solid rgba(255,255,255,.04)"><button class="pron-btn" onclick="startPronunciation(\'' + w.word.replace(/'/g,"\\'") + '\', document.getElementById(\'pron-result-' + wIdx + '\'), this)">🎤 跟读评分</button><div id="pron-result-' + wIdx + '"></div></div>';
 
   // V10: Ebbinghaus status badge
   var ebStatus = getWordEbbinghausStatus(w.word);
@@ -1358,28 +1556,80 @@ function renderCard() {
 }
 
 function renderDict() {
-  const words = curWords;
-  const c = document.getElementById('w-content');
+  var words = curWords;
+  var c = document.getElementById('w-content');
   if (wIdx >= words.length) {
-    c.innerHTML = '<div class="empty-state"><div class="es-icon">✍️</div><div class="es-title">听写完成！</div></div>';
+    var correctCount = (dictResults ? dictResults.filter(function(r){return r;}).length : 0);
+    c.innerHTML = '<div class="empty-state"><div class="es-icon">✍️</div><div class="es-title">听写完成！</div><div class="es-desc">正确率 ' + Math.round(correctCount/words.length*100) + '% (' + correctCount + '/' + words.length + ')</div></div>';
     return;
   }
-  const w = words[wIdx];
+  var w = words[wIdx];
   if (!w) { wIdx++; renderWords(); return; }
-  let html = '<div class="word-nav"><span class="wn-progress">' + (wIdx+1) + ' / ' + words.length + '</span></div>';
-  html += '<div class="listen-card"><div class="lc-big">🔊</div><div class="lc-hint">听发音后拼写单词</div></div>';
-  html += '<button class="btn cyan" onclick="speakWord(this)" data-word="' + escAttr(w.word) + '">播放发音</button>';
+  if (!dictResults) dictResults = new Array(words.length).fill(null);
+  var hint = '';
+  for (var i = 0; i < w.word.length; i++) {
+    hint += (i === 0) ? w.word[0] : '_';
+  }
+
+  var html = '<div class="word-nav"><span class="wn-progress">' + (wIdx+1) + ' / ' + words.length + '</span></div>';
+  html += '<div class="dict-progress-dots">';
+  for (var i = 0; i < words.length; i++) {
+    var cls = 'dict-dot';
+    if (dictResults[i] === true) cls += ' correct';
+    else if (dictResults[i] === false) cls += ' wrong';
+    if (i === wIdx) cls += ' current';
+    html += '<div class="' + cls + '"></div>';
+  }
+  html += '</div>';
+
+  html += '<div class="dict-mode-card">';
+  html += '<div class="dmc-icon">🔊</div>';
+  html += '<div class="dmc-hint">听发音后拼写单词</div>';
+  html += '<div class="dict-mode-controls">';
+  html += '<button class="dict-ctrl-btn play" onclick="dictPlayWord()">🔊 播放</button>';
+  html += '<button class="dict-ctrl-btn slow" onclick="dictPlayWordSlow()">🐢 慢速</button>';
+  html += '<button class="dict-ctrl-btn hint" onclick="dictShowHint()">💡 提示</button>';
+  html += '</div>';
+  html += '<div class="dict-hint-display" id="dict-hint-display" style="display:none">' + esc(hint) + '</div>';
+  html += '</div>';
+
   html += '<input type="text" class="dict-in" id="dict-in" placeholder="输入单词..." autocomplete="off" autocapitalize="off" spellcheck="false">';
   html += '<div class="dict-hint" id="dict-hint"></div>';
   html += '<div class="btn-row"><button class="btn sec" onclick="checkDict()">检查</button><button class="btn primary" onclick="dictNext()">下一个</button></div>';
   html += '<div style="text-align:center;margin-top:12px"><button class="btn sec sm" onclick="showDictAnswer()">显示答案</button></div>';
   c.innerHTML = html;
-  const inp = document.getElementById('dict-in');
+  var inp = document.getElementById('dict-in');
   if (inp) {
-    inp.addEventListener('keydown', e => { if (e.key === 'Enter') checkDict(); });
-    inp.addEventListener('input', () => inp.classList.remove('correct','wrong'));
-    setTimeout(() => inp.focus(), 100);
+    inp.addEventListener('keydown', function(e) { if (e.key === 'Enter') checkDict(); });
+    inp.addEventListener('input', function() { inp.classList.remove('correct','wrong'); });
+    setTimeout(function() { inp.focus(); }, 100);
   }
+  // Auto-play pronunciation
+  setTimeout(function() { dictPlayWord(); }, 300);
+}
+
+var dictResults = null;
+
+function dictPlayWord() {
+  var w = curWords[wIdx];
+  if (!w) return;
+  speak(w.word);
+}
+
+function dictPlayWordSlow() {
+  var w = curWords[wIdx];
+  if (!w || !window.speechSynthesis) return;
+  window.speechSynthesis.cancel();
+  var u = new SpeechSynthesisUtterance(w.word);
+  var tts = Store.get('ttsSettings', { rate: 0.85, voice: '' });
+  u.lang = 'en-US'; u.rate = 0.5; u.pitch = 1;
+  if (tts.voice) { var voices = window.speechSynthesis.getVoices(); var v = voices.find(function(vv){return vv.name===tts.voice;}); if (v) u.voice = v; }
+  window.speechSynthesis.speak(u);
+}
+
+function dictShowHint() {
+  var el = document.getElementById('dict-hint-display');
+  if (el) el.style.display = 'block';
 }
 
 function showDictAnswer() {
@@ -1390,20 +1640,23 @@ function showDictAnswer() {
 }
 
 function checkDict() {
-  const w = curWords[wIdx];
+  var w = curWords[wIdx];
   if (!w) return;
-  const inp = document.getElementById('dict-in');
+  var inp = document.getElementById('dict-in');
   if (!inp) return;
-  const val = inp.value.trim().toLowerCase();
-  const ans = w.word.toLowerCase();
+  var val = inp.value.trim().toLowerCase();
+  var ans = w.word.toLowerCase();
   inp.classList.remove('correct','wrong');
+  if (!dictResults) dictResults = new Array(curWords.length).fill(null);
   if (val === ans) {
     inp.classList.add('correct');
     document.getElementById('dict-hint').innerHTML = '<span style="color:#34D399;font-weight:700">✓ 正确！</span>';
+    dictResults[wIdx] = true;
     markWordKnown(w.word);
   } else {
     inp.classList.add('wrong');
-    const hint = document.getElementById('dict-hint');
+    dictResults[wIdx] = false;
+    var hint = document.getElementById('dict-hint');
     if (hint.textContent === '') hint.innerHTML = '再试试，注意拼写';
     addToNotebook(w.word, w.translation, curDay ? curDay.day : 0);
     logError(curDay ? curDay.day : 0);
@@ -1494,7 +1747,7 @@ function openDlg() {
     html += '<div class="dl-line"><div class="dl-role ' + (isYou?'you':'other') + '">' + (line.role||'') + '</div>';
     html += '<div class="dl-text" onclick="speakText(this)" data-text="' + escAttr(line.textEn||'') + '">';
     html += '<div class="en">' + makeClickableWords(line.textEn||'') + '</div><div class="cn">' + esc(line.textCn||'') + '</div></div></div>';
-    html += '<div style="margin-top:6px"><button class="pron-btn" onclick="event.stopPropagation();startPronunciation(\'' + (line.textEn||'').replace(/'/g,"\\'") + '\', this.nextElementSibling)">🎤 跟读</button><div></div></div>';
+    html += '<div style="margin-top:14px;padding-top:10px;border-top:1px solid rgba(255,255,255,.04)"><button class="pron-btn" onclick="event.stopPropagation();startPronunciation(\'' + (line.textEn||'').replace(/'/g,"\\'") + '\', this.nextElementSibling, this)">🎤 跟读</button><div></div></div>';
   });
   html += '<div style="margin-top:16px"><button class="btn cyan" onclick="speakDlg()">🔊 朗读全部对话</button>';
   html += '<div class="btn-row"><button class="btn sec" onclick="speakRole()">🎤 朗读我的台词</button></div></div>';
@@ -1531,7 +1784,7 @@ function openEssay() {
     if (!s) return;
     html += '<div class="es-item" onclick="speakSentence(this)" data-text="' + escAttr(s.en||'') + '">';
     html += '<div class="en">' + makeClickableWords(s.en||'') + '</div><div class="cn">' + esc(s.cn||'') + '</div></div>';
-    html += '<div style="margin-top:6px"><button class="pron-btn" onclick="event.stopPropagation();startPronunciation(\'' + (s.en||'').replace(/'/g,"\\'") + '\', this.nextElementSibling)">🎤 跟读</button><div></div></div>';
+    html += '<div style="margin-top:14px;padding-top:10px;border-top:1px solid rgba(255,255,255,.04)"><button class="pron-btn" onclick="event.stopPropagation();startPronunciation(\'' + (s.en||'').replace(/'/g,"\\'") + '\', this.nextElementSibling, this)">🎤 跟读</button><div></div></div>';
   });
   html += '</div>';
   html += '<button class="btn cyan" onclick="speakEssay()">🔊 朗读全文</button>';
@@ -1551,6 +1804,66 @@ function speakEssay() {
   let i = 0;
   function next() { if (i >= s.length) return; if (!s[i]) { i++; next(); return; } speak(s[i].en); i++; setTimeout(next, Math.max(2000, s[i-1].en.length*60)); }
   next();
+}
+
+
+// ===== V12: Online dictionary lookup =====
+function lookupOnline(word) {
+  var tip = document.getElementById('wl-tip');
+  if (!tip) return;
+
+  // Show loading
+  var loadingEl = tip.querySelector('.wl-tip-online');
+  if (loadingEl) {
+    loadingEl.innerHTML = '<div class="wl-tip-loading">\u23F3 正在查询在线词典...</div>';
+  }
+
+  // Try free dictionary API
+  fetch('https://api.dictionaryapi.dev/api/v2/entries/en/' + encodeURIComponent(word))
+    .then(function(res) {
+      if (!res.ok) throw new Error('Not found');
+      return res.json();
+    })
+    .then(function(data) {
+      var html = '';
+      if (data && data[0]) {
+        var entry = data[0];
+        // Phonetics
+        if (entry.phonetic) {
+          html += '<div class="wl-tip-api-def"><b>音标:</b> ' + esc(entry.phonetic) + '</div>';
+        }
+        // Meanings
+        if (entry.meanings && entry.meanings.length) {
+          entry.meanings.forEach(function(m, mi) {
+            if (mi >= 2) return; // Limit to 2 parts of speech
+            html += '<div class="wl-tip-api-def"><b>' + esc(m.partOfSpeech || '') + ':</b> ';
+            if (m.definitions && m.definitions.length) {
+              var defs = m.definitions.slice(0, 2);
+              defs.forEach(function(d, di) {
+                html += (di > 0 ? '; ' : '') + esc(d.definition || '');
+              });
+            }
+            html += '</div>';
+          });
+        }
+      }
+      if (!html) {
+        // Fallback: open online dictionary in new tab
+        html = '<div class="wl-tip-loading">未找到在线释义</div>';
+        html += '<div style="text-align:center;margin-top:6px"><button class="wl-tip-online-btn" onclick="window.open(\'https://dict.youdao.com/w/' + encodeURIComponent(word) + '\', \'_blank\')">打开有道词典</button></div>';
+      } else {
+        html += '<div style="text-align:center;margin-top:6px"><button class="wl-tip-online-btn" onclick="window.open(\'https://dict.youdao.com/w/' + encodeURIComponent(word) + '\', \'_blank\')">查看完整释义</button></div>';
+      }
+      if (loadingEl) {
+        loadingEl.innerHTML = html;
+      }
+    })
+    .catch(function(err) {
+      // Fallback: open online dictionary link
+      if (loadingEl) {
+        loadingEl.innerHTML = '<div style="text-align:center"><button class="wl-tip-online-btn" onclick="window.open(\'https://dict.youdao.com/w/' + encodeURIComponent(word) + '\', \'_blank\')">\uD83D\uDD17 在线词典查询</button></div>';
+      }
+    });
 }
 
 // ===== V8: Clickable words + lookup =====
@@ -1595,15 +1908,16 @@ function lookupWord(word, el) {
       if (found.exampleCn) html += '<div class="cn">' + esc(found.exampleCn) + '</div>';
       html += '</div>';
     }
-    html += '<div class="wl-tip-actions"><button class="wl-tip-btn" onclick="speakSingleWord(\'' + word.replace(/'/g, "\\'") + '\')">🔊 朗读</button></div>';
+    html += '<div class="wl-tip-actions"><button class="wl-tip-btn" onclick="speakSingleWord(\'' + word.replace(/'/g, "\\'") + '\')">🔊 朗读</button><button class="wl-tip-online-btn" onclick="lookupOnline(\'' + word.replace(/'/g, "\\'") + '\')">🔗 在线查询</button></div>';
   } else {
     var basicTrans = lookupBasicWord(word);
     if (basicTrans) {
       html += '<div class="wl-tip-trans">' + esc(basicTrans) + '</div>';
     } else {
-      html += '<div class="wl-tip-notfound">暂无释义</div>';
+      html += '<div class="wl-tip-notfound">暂无本地释义</div>';
     }
-    html += '<div class="wl-tip-actions"><button class="wl-tip-btn" onclick="speakSingleWord(\'' + word.replace(/'/g, "\\'") + '\')">🔊 朗读</button></div>';
+    html += '<div class="wl-tip-actions"><button class="wl-tip-btn" onclick="speakSingleWord(\'' + word.replace(/'/g, "\\'") + '\')">🔊 朗读</button><button class="wl-tip-online-btn" onclick="lookupOnline(\'' + word.replace(/'/g, "\\'") + '\')">🔗 在线查询</button></div>';
+    html += '<div class="wl-tip-online" id="wl-online-area"></div>';
   }
 
   tip.innerHTML = html;
@@ -1879,22 +2193,67 @@ function esc(s) {
   return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 
+
+// ===== V12: Generate additional example sentences =====
+function generateWordExamples(word, translation) {
+  if (!word) return [];
+  var w = word.toLowerCase().trim();
+  var examples = [];
+
+  // Common sentence patterns
+  var patterns = [
+    { en: "I need to use " + w + " today.", cn: "我今天需要用到" + (translation || w) + "。" },
+    { en: "Can you tell me more about " + w + "?", cn: "你能告诉我更多关于" + (translation || w) + "的信息吗？" },
+    { en: "The " + w + " is very important in this situation.", cn: "在这种情况下，" + (translation || w) + "非常重要。" },
+    { en: "She explained the meaning of " + w + " clearly.", cn: "她清楚地解释了" + (translation || w) + "的含义。" },
+    { en: "How do you pronounce " + w + " correctly?", cn: "你怎么正确发音" + (translation || w) + "？" },
+    { en: "I learned a new word: " + w + ".", cn: "我学到了一个新词：" + (translation || w) + "。" },
+    { en: "Please repeat the word " + w + " after me.", cn: "请跟我重复" + (translation || w) + "这个词。" },
+    { en: "What does " + w + " mean in this context?", cn: "在这个语境中，" + (translation || w) + "是什么意思？" }
+  ];
+
+  // Pick 3 random patterns (deterministic based on word to be consistent)
+  var hash = 0;
+  for (var i = 0; i < w.length; i++) {
+    hash = ((hash << 5) - hash) + w.charCodeAt(i);
+    hash = hash & hash;
+  }
+  var selected = [];
+  var used = {};
+  for (var j = 0; j < 3; j++) {
+    var idx = Math.abs(hash + j * 7) % patterns.length;
+    if (!used[idx]) {
+      used[idx] = true;
+      selected.push(patterns[idx]);
+    }
+  }
+
+  return selected;
+}
+
 // ===== V11: Pronunciation scoring =====
 var recognition = null;
 var currentPronTarget = null;
 
-function startPronunciation(targetText, resultEl) {
+function startPronunciation(targetText, resultEl, btnEl) {
   var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
   if (!SR) { showToast('浏览器不支持语音识别'); return; }
-  // Stop any existing recognition
-  if (recognition) { try { recognition.stop(); } catch(e){} }
+  // If already recording, stop it
+  if (recognition) {
+    try { recognition.stop(); } catch(e){}
+    recognition = null;
+    if (window._currentPronBtn) { window._currentPronBtn.classList.remove('recording'); window._currentPronBtn.textContent = '🎤 跟读'; }
+    return;
+  }
+  if (btnEl) { btnEl.classList.add('recording'); btnEl.textContent = '⏹ 停止'; window._currentPronBtn = btnEl; }
   currentPronTarget = targetText;
   recognition = new SR();
   recognition.lang = 'en-US';
   recognition.interimResults = false;
   recognition.maxAlternatives = 3;
-  // Show recording UI
-  resultEl.innerHTML = '<div class="pron-recording">🎤 正在聆听...</div>';
+  recognition.continuous = false;
+  // Show recording UI with stop button
+  resultEl.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap"><div class="pron-recording">\uD83C\uDFA4 正在聆听...</div><button class="pron-stop-btn" onclick="stopPronunciation()">\u23F9 停止</button></div>';
   recognition.onresult = function(event) {
     var bestScore = 0;
     var bestText = '';
@@ -1905,22 +2264,33 @@ function startPronunciation(targetText, resultEl) {
       if (score > bestScore) { bestScore = score; bestText = transcript; }
     }
     showPronResult(resultEl, bestScore, bestText, targetText);
-    // Save score
     savePronScore(targetText, bestScore);
   };
+  if (window._currentPronBtn) { window._currentPronBtn.classList.remove('recording'); window._currentPronBtn.textContent = '🎤 跟读'; window._currentPronBtn = null; }
   recognition.onerror = function(event) {
     if (event.error === 'not-allowed') {
-      resultEl.innerHTML = '<div class="pron-error">请允许麦克风权限</div>';
+      resultEl.innerHTML = '<div class="pron-error">\u26A0\uFE0F 请允许麦克风权限</div>';
     } else if (event.error === 'no-speech') {
-      resultEl.innerHTML = '<div class="pron-error">未检测到语音，请重试</div>';
+      resultEl.innerHTML = '<div class="pron-error">\u672A\u68C0\u6D4B\u5230\u8BED\u97F3\uFF0C\u8BF7\u91CD\u8BD5</div>';
+    } else if (event.error === 'aborted') {
+      // User stopped, don't show error
     } else {
-      resultEl.innerHTML = '<div class="pron-error">识别失败: ' + event.error + '</div>';
+      resultEl.innerHTML = '<div class="pron-error">\u8BC6\u522B\u5931\u8D25: ' + event.error + '</div>';
     }
   };
   recognition.onend = function() {
     recognition = null;
+    if (window._currentPronBtn) { window._currentPronBtn.classList.remove('recording'); window._currentPronBtn.textContent = '🎤 跟读'; window._currentPronBtn = null; }
   };
   recognition.start();
+}
+
+function stopPronunciation() {
+  if (recognition) {
+    try { recognition.stop(); } catch(e){}
+    recognition = null;
+  }
+  if (window._currentPronBtn) { window._currentPronBtn.classList.remove('recording'); window._currentPronBtn.textContent = '🎤 跟读'; window._currentPronBtn = null; }
 }
 
 // Levenshtein distance for text comparison
@@ -2137,7 +2507,7 @@ function getWordEbbinghausStatus(word) {
 function startReview() {
   var reviewWords = getReviewWordList();
   if (!reviewWords.length) {
-    showToast('今日复习已完成');
+    showToast('今日复习已完成，继续保持！');
     return;
   }
   var byDay = {};
@@ -2146,9 +2516,39 @@ function startReview() {
     byDay[w.day].push(w);
   });
   var days = Object.keys(byDay).sort(function(a, b) { return parseInt(a) - parseInt(b); });
-  openDayDetail(parseInt(days[0]));
+
+  var html = '<div style="font-size:13px;color:var(--t2);margin-bottom:4px">基于艾宾浩斯记忆曲线，以下词汇需要复习：</div>';
+  html += '<div style="font-size:24px;font-weight:900;color:#60A5FA;margin-bottom:12px">' + reviewWords.length + ' 个词汇</div>';
+  html += '<div class="review-modal-list">';
+  days.forEach(function(d) {
+    var words = byDay[d];
+    var dayData = DATA.find(function(dd){return dd && dd.day == parseInt(d);});
+    html += '<div class="review-modal-day-group">';
+    html += '<div class="review-modal-day-label">Day ' + esc(d) + (dayData ? ' · ' + esc(dayData.dayTitle||'') : '') + ' (' + words.length + '词)</div>';
+    html += '<div class="review-modal-words">';
+    words.forEach(function(w) {
+      html += '<span class="review-modal-word">' + esc(w.word) + '</span>';
+    });
+    html += '</div></div>';
+  });
+  html += '</div>';
+  html += '<div class="btn-row"><button class="btn primary" onclick="closeReviewModal();startReviewFromDay(' + parseInt(days[0]) + ')">开始复习</button></div>';
+
+  document.getElementById('review-modal-content').innerHTML = html;
+  document.getElementById('review-modal').classList.add('show');
+}
+
+function closeReviewModal() {
+  document.getElementById('review-modal').classList.remove('show');
+}
+
+function startReviewFromDay(dayNum) {
+  openDayDetail(dayNum);
   setTimeout(function() {
-    showToast('今日需复习 ' + reviewWords.length + ' 词，分布在 ' + days.length + ' 天');
+    var reviewWords = getReviewWordList();
+    if (reviewWords.length) {
+      showToast('开始复习 ' + reviewWords.length + ' 个词汇');
+    }
   }, 500);
 }
 
@@ -2383,12 +2783,77 @@ function loadVoices() {
   var select = document.getElementById('tts-voice');
   if (!select) return;
   var current = Store.get('ttsSettings', { rate: 0.85, voice: '' });
-  var opts = '<option value="">默认语音</option>';
-  voices.forEach(function(v) {
-    if (v.lang && v.lang.indexOf('en') === 0) {
-      opts += '<option value="' + escAttr(v.name) + '"' + (v.name === current.voice ? ' selected' : '') + '>' + esc(v.name) + '</option>';
-    }
+
+  // Filter English voices and categorize by gender
+  var enVoices = voices.filter(function(v) { return v.lang && v.lang.indexOf('en') === 0; });
+
+  // Identify male/female voices by common name patterns
+  var maleVoices = enVoices.filter(function(v) {
+    var n = v.name.toLowerCase();
+    return n.indexOf('male') > -1 || n.indexOf('daniel') > -1 || n.indexOf('alex') > -1 ||
+           n.indexOf('fred') > -1 || n.indexOf('rishi') > -1 || n.indexOf('diego') > -1 ||
+           n.indexOf('jorge') > -1 || n.indexOf('oliver') > -1 || n.indexOf('arthur') > -1 ||
+           n.indexOf('thomas') > -1 || n.indexOf('james') > -1 || n.indexOf('aaron') > -1 ||
+           n.indexOf('tom') > -1 || n.indexOf('guy') > -1;
   });
+  var femaleVoices = enVoices.filter(function(v) {
+    var n = v.name.toLowerCase();
+    return n.indexOf('female') > -1 || n.indexOf('samantha') > -1 || n.indexOf('victoria') > -1 ||
+           n.indexOf('karen') > -1 || n.indexOf('moira') > -1 || n.indexOf('tessa') > -1 ||
+           n.indexOf('serena') > -1 || n.indexOf('fiona') > -1 || n.indexOf('veena') > -1 ||
+           n.indexOf('zira') > -1 || n.indexOf('susan') > -1 || n.indexOf('allison') > -1 ||
+           n.indexOf('ava') > -1 || n.indexOf('joanna') > -1 || n.indexOf('kendra') > -1 ||
+           n.indexOf('kimberly') > -1 || n.indexOf('salli') > -1 || n.indexOf('nicole') > -1;
+  });
+
+  // Remove duplicates (voices that matched both lists)
+  var maleNames = maleVoices.map(function(v){return v.name;});
+  femaleVoices = femaleVoices.filter(function(v){return maleNames.indexOf(v.name) === -1;});
+
+  // If we couldn't identify by name, just take first few from each locale
+  if (!maleVoices.length && !femaleVoices.length) {
+    // Fallback: use different voices and label them generically
+    var seen = {};
+    var unique = enVoices.filter(function(v) {
+      if (seen[v.name]) return false;
+      seen[v.name] = true;
+      return true;
+    });
+    // Pick up to 3 female and 2 male alternates
+    femaleVoices = unique.filter(function(v, i) { return i % 2 === 0; }).slice(0, 3);
+    maleVoices = unique.filter(function(v, i) { return i % 2 === 1; }).slice(0, 2);
+  }
+
+  var opts = '<option value="">默认语音</option>';
+
+  if (femaleVoices.length) {
+    opts += '<optgroup label="女声">';
+    // Deduplicate
+    var seenF = {};
+    femaleVoices.forEach(function(v) {
+      if (!seenF[v.name]) {
+        seenF[v.name] = true;
+        var label = v.name.replace(/\s*\(.*\)\s*/g, '').replace(/Microsoft |Google |Apple /g, '');
+        opts += '<option value="' + escAttr(v.name) + '"' + (v.name === current.voice ? ' selected' : '') + '>\uD83D\uDC69 ' + esc(label) + '</option>';
+      }
+    });
+    opts += '</optgroup>';
+  }
+
+  if (maleVoices.length) {
+    opts += '<optgroup label="男声">';
+    var seenM = {};
+    maleVoices.forEach(function(v) {
+      if (!seenM[v.name]) {
+        seenM[v.name] = true;
+        var label = v.name.replace(/\s*\(.*\)\s*/g, '').replace(/Microsoft |Google |Apple /g, '');
+        opts += '<option value="' + escAttr(v.name) + '"' + (v.name === current.voice ? ' selected' : '') + '>\uD83D\uDC68 ' + esc(label) + '</option>';
+      }
+    });
+    opts += '</optgroup>';
+  }
+
+  // Limit to max 6 options total (3 female + 3 male)
   select.innerHTML = opts;
 }
 
@@ -2428,7 +2893,7 @@ function updateRateValue(val) {
 // ===== V10: Export / Import =====
 function exportData() {
   var data = {
-    version: 'te_v11',
+    version: 'te_v12',
     exportDate: new Date().toISOString(),
     done: Store.get('done', {}),
     lastStudy: Store.get('lastStudy', 0),
