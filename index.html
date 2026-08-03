@@ -15,7 +15,7 @@
 <link rel="icon" type="image/png" sizes="512x512" href="icon-512.png?v8">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png?v8">
 <link rel="manifest" href="manifest.json">
-<meta name="version" content="te_v14">
+<meta name="version" content="te_v15">
 <title>旅行英语 · 39天计划</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
 <style>
@@ -54,9 +54,9 @@ input,textarea{font-family:inherit}
 
 /* V8: Increased horizontal padding from 16px to 20px */
 .page{display:none;flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;
-  padding:calc(var(--st)+12px) 20px calc(var(--nav-h)+var(--sb)+48px);animation:fadeUp .3s ease;
-  -webkit-transform:translateZ(0);transform:translateZ(0);overscroll-behavior-y:auto}
-.page.active{display:block}
+  padding:calc(var(--st)+12px) 20px calc(var(--nav-h)+var(--sb)+80px);
+  overscroll-behavior-y:contain;will-change:scroll-position}
+.page.active{display:block;animation:fadeIn .3s ease}
 @keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
 @keyframes fadeIn{from{opacity:0}to{opacity:1}}
 @keyframes scaleIn{from{opacity:0;transform:scale(.96)}to{opacity:1;transform:scale(1)}}
@@ -689,7 +689,7 @@ input,textarea{font-family:inherit}
 .ds-btn svg{width:13px;height:13px;fill:currentColor}
 
 /* ===== V12: Review Modal ===== */
-.review-modal-list{max-height:50vh;overflow-y:auto;margin:12px -4px 16px;padding:0 4px}
+.review-modal-list{max-height:50vh;overflow-y:auto;margin:12px -4px 16px;padding:0 4px;-webkit-overflow-scrolling:touch;overscroll-behavior-y:contain}
 .review-modal-day-group{margin-bottom:12px}
 .review-modal-day-label{font-size:12px;font-weight:700;color:var(--cyan2);margin-bottom:6px;
   display:flex;align-items:center;gap:6px}
@@ -967,7 +967,7 @@ input,textarea{font-family:inherit}
 
   <!-- ===== SETTINGS MODAL ===== -->
   <div class="modal-overlay" id="settings-modal">
-    <div class="modal" style="max-height:80vh;overflow-y:auto;position:relative">
+    <div class="modal" style="max-height:80vh;overflow-y:auto;position:relative;-webkit-overflow-scrolling:touch;overscroll-behavior-y:contain">
       <div class="modal-close" onclick="closeSettings()"><svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg></div>
       <div class="modal-title">设置</div>
 
@@ -1012,7 +1012,7 @@ input,textarea{font-family:inherit}
 
   <!-- ===== V12: Review Modal ===== -->
   <div class="modal-overlay" id="review-modal">
-    <div class="modal" style="max-height:80vh;overflow-y:auto;position:relative">
+    <div class="modal" style="max-height:80vh;overflow-y:auto;position:relative;-webkit-overflow-scrolling:touch;overscroll-behavior-y:contain">
       <div class="modal-close" onclick="closeReviewModal()"><svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg></div>
       <div class="modal-title">今日复习</div>
       <div id="review-modal-content"></div>
