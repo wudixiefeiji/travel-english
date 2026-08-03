@@ -15,7 +15,7 @@
 <link rel="icon" type="image/png" sizes="512x512" href="icon-512.png?v8">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png?v8">
 <link rel="manifest" href="manifest.json">
-<meta name="version" content="te_v13">
+<meta name="version" content="te_v14">
 <title>旅行英语 · 39天计划</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
 <style>
@@ -54,8 +54,8 @@ input,textarea{font-family:inherit}
 
 /* V8: Increased horizontal padding from 16px to 20px */
 .page{display:none;flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;
-  padding:calc(var(--st)+12px) 20px calc(var(--nav-h)+var(--sb)+32px);animation:fadeUp .3s ease;
-  -webkit-transform:translateZ(0);transform:translateZ(0)}
+  padding:calc(var(--st)+12px) 20px calc(var(--nav-h)+var(--sb)+48px);animation:fadeUp .3s ease;
+  -webkit-transform:translateZ(0);transform:translateZ(0);overscroll-behavior-y:auto}
 .page.active{display:block}
 @keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
 @keyframes fadeIn{from{opacity:0}to{opacity:1}}
@@ -1004,7 +1004,7 @@ input,textarea{font-family:inherit}
         <div class="settings-group-title">关于</div>
         <div class="settings-row">
           <div class="settings-label">版本</div>
-          <div class="settings-value">te_v13</div>
+          <div class="settings-value">te_v14</div>
         </div>
       </div>
     </div>
@@ -1042,10 +1042,10 @@ const DATA = [{"day":1,"dayTitle":"机场基础","daySubtitle":"Airport Basics",
 
 
 
-const SK = 'te_v13';
-const VERSION = 'te_v13';
+const SK = 'te_v14';
+const VERSION = 'te_v14';
 // Migrate data from v8
-try { ['done','lastStudy','studyLog','notebook','reviews','ttsSettings','pronScores','topicErrors'].forEach(function(k){ var ov=localStorage.getItem('te_v10_'+k); if(ov && !localStorage.getItem('te_v13_'+k)) localStorage.setItem('te_v13_'+k, ov); }); } catch(e) {}
+try { ['done','lastStudy','studyLog','notebook','reviews','ttsSettings','pronScores','topicErrors'].forEach(function(k){ var ov=localStorage.getItem('te_v10_'+k); if(ov && !localStorage.getItem('te_v14_'+k)) localStorage.setItem('te_v14_'+k, ov); }); } catch(e) {}
 // V9: Clean up old imported data
 try { localStorage.removeItem('te_v8_extra'); } catch(e) {}
 
@@ -1053,7 +1053,7 @@ try { localStorage.removeItem('te_v8_extra'); } catch(e) {}
 const Store = (function() {
   var idb = null;
   var idbReady = false;
-  var DB_NAME = 'te_v13_db';
+  var DB_NAME = 'te_v14_db';
   var STORE_NAME = 'kv';
   var cache = {};
   var KNOWN_KEYS = ['done', 'lastStudy', 'studyLog', 'notebook', 'reviews', 'ttsSettings'];
@@ -1215,46 +1215,45 @@ function goDay() { showPage('pg-day'); renderDay(); }
 
 // ===== V12: Daily Sentence =====
 var DAILY_SENTENCES = [
-  {en:"The journey of a thousand miles begins with a single step.", cn:"千里之行，始于足下。"},
-  {en:"Practice makes perfect.", cn:"熟能生巧。"},
-  {en:"Every expert was once a beginner.", cn:"每个专家都曾是初学者。"},
-  {en:"Language is the road map of a culture.", cn:"语言是一种文化的路线图。"},
-  {en:"To learn a language is to have one more window from which to look at the world.", cn:"学一门语言就是多一扇看世界的窗。"},
-  {en:"The more you read, the more you know.", cn:"读得越多，知道得越多。"},
-  {en:"Don't be afraid to make mistakes.", cn:"不要害怕犯错。"},
-  {en:"Today's efforts shape tomorrow's success.", cn:"今天的努力塑造明天的成功。"},
-  {en:"Travel is the only thing you buy that makes you richer.", cn:"旅行是唯一买得到却让你更富有的东西。"},
-  {en:"A different language is a different vision of life.", cn:"不同的语言是不同的生活视角。"},
-  {en:"Speak even if your voice shakes.", cn:"即使声音颤抖，也要开口说。"},
-  {en:"Learning never exhausts the mind.", cn:"学习永远不会使心灵枯竭。"},
-  {en:"The beautiful thing about learning is nobody can take it away from you.", cn:"学习的美好之处在于无人能将其夺走。"},
-  {en:"Words have power. Use them wisely.", cn:"言语有力量，要明智地使用。"},
-  {en:"Read more, learn more, be more.", cn:"多阅读，多学习，成为更好的自己。"},
-  {en:"One language sets you in a corridor for life. Two languages open every door.", cn:"一种语言为你打开一条走廊，两种语言打开所有门。"},
-  {en:"The limits of my language are the limits of my world.", cn:"我语言的边界就是我世界的边界。"},
-  {en:"Consistency is the key to success.", cn:"坚持是成功的关键。"},
-  {en:"Every conversation is an opportunity to learn.", cn:"每次对话都是学习的机会。"},
-  {en:"Mistakes are proof that you are trying.", cn:"错误是你正在努力的证明。"},
-  {en:"The expert in anything was once a beginner.", cn:"任何领域的专家都曾是新手。"},
-  {en:"Language is not a barrier, it's a bridge.", cn:"语言不是障碍，而是桥梁。"},
-  {en:"Today's reader is tomorrow's leader.", cn:"今天的读者是明天的领导者。"},
-  {en:"Knowledge is power. Learning is superpower.", cn:"知识就是力量，学习是超能力。"},
-  {en:"The only way to do great work is to love what you do.", cn:"做好伟大工作的唯一方法就是热爱你所做的事。"},
-  {en:"Success is the sum of small efforts repeated day in and day out.", cn:"成功是日复一日小小努力的积累。"},
-  {en:"Don't watch the clock; do what it does. Keep going.", cn:"不要看时钟，像它一样继续前行。"},
-  {en:"The future belongs to those who believe in the beauty of their dreams.", cn:"未来属于那些相信梦想之美的人。"},
-  {en:"It always seems impossible until it's done.", cn:"在完成之前，一切看起来都不可能。"},
-  {en:"The best time to plant a tree was 20 years ago. The second best time is now.", cn:"种一棵树最好的时间是二十年前，其次是现在。"},
-  {en:"You don't have to be great to start, but you have to start to be great.", cn:"你不必很厉害才能开始，但你必须开始才能很厉害。"},
-  {en:"Learning a language is learning a culture.", cn:"学一门语言就是学一种文化。"},
-  {en:"Patience is the key to mastering any skill.", cn:"耐心是掌握任何技能的关键。"},
-  {en:"Reading is to the mind what exercise is to the body.", cn:"阅读之于心灵，如同运动之于身体。"},
-  {en:"The more languages you know, the more you are human.", cn:"你懂的语言越多，你就越像真正的人。"},
-  {en:"Speak less, listen more, learn constantly.", cn:"少说，多听，不断学习。"},
-  {en:"Travel far enough, you meet yourself.", cn:"走得够远，你会遇见自己。"},
-  {en:"A word after a word after a word is power.", cn:"一字一字又一字，便是力量。"},
-  {en:"Change your language and you change your thoughts.", cn:"改变你的语言，就改变了你的思想。"},
-  {en:"The roots of education are bitter, but the fruit is sweet.", cn:"教育的根是苦的，但果实是甜的。"}
+  {en:"Could you say that again, please?", cn:"你能再说一遍吗？"},
+  {en:"I'm sorry, I don't quite understand.", cn:"抱歉，我不太明白。"},
+  {en:"How do you pronounce this word?", cn:"这个单词怎么发音？"},
+  {en:"Can you speak a little slower, please?", cn:"能说慢一点吗？"},
+  {en:"What does this word mean?", cn:"这个单词是什么意思？"},
+  {en:"I'd like to practice my English with you.", cn:"我想和你练习英语。"},
+  {en:"Could you write that down for me?", cn:"你能帮我写下来吗？"},
+  {en:"Let me try saying it.", cn:"让我试着说一说。"},
+  {en:"How do you spell that?", cn:"那个怎么拼写？"},
+  {en:"I'm still learning English.", cn:"我还在学英语。"},
+  {en:"Can you give me an example?", cn:"你能给我举个例子吗？"},
+  {en:"What's the difference between these two words?", cn:"这两个词有什么区别？"},
+  {en:"I learn something new every day.", cn:"我每天都在学新东西。"},
+  {en:"Practice a little every day, and you will improve.", cn:"每天练习一点，你就会进步。"},
+  {en:"Don't be shy, just try!", cn:"别害羞，试试看！"},
+  {en:"Excuse me, where is the nearest restroom?", cn:"打扰一下，最近的洗手间在哪里？"},
+  {en:"I'd like a cup of coffee, please.", cn:"请给我一杯咖啡。"},
+  {en:"How much does this cost?", cn:"这个多少钱？"},
+  {en:"Can I pay by credit card?", cn:"可以用信用卡支付吗？"},
+  {en:"Could you recommend a good restaurant?", cn:"你能推荐一家好餐厅吗？"},
+  {en:"I have a reservation under my name.", cn:"我用我的名字预订了。"},
+  {en:"What time does the museum open?", cn:"博物馆几点开门？"},
+  {en:"Is there a pharmacy nearby?", cn:"附近有药店吗？"},
+  {en:"I need to catch a flight at three.", cn:"我需要赶三点的航班。"},
+  {en:"Could you take a photo for me?", cn:"你能帮我拍张照吗？"},
+  {en:"I'm looking for the train station.", cn:"我在找火车站。"},
+  {en:"What's your favorite way to learn English?", cn:"你最喜欢的学英语方式是什么？"},
+  {en:"Reading aloud helps with pronunciation.", cn:"大声朗读有助于发音。"},
+  {en:"Keep a vocabulary notebook for new words.", cn:"准备一个词汇本记录新词。"},
+  {en:"Listen to English podcasts on your commute.", cn:"通勤时听英语播客。"},
+  {en:"Watch movies with English subtitles.", cn:"看带英文字幕的电影。"},
+  {en:"Find a language partner to practice with.", cn:"找一个语伴一起练习。"},
+  {en:"Set a daily goal and stick to it.", cn:"设定每日目标并坚持下去。"},
+  {en:"Review what you learned before going to bed.", cn:"睡前复习当天学的内容。"},
+  {en:"Use new words in sentences right away.", cn:"立刻用新词造句。"},
+  {en:"Don't translate everything in your head.", cn:"不要在脑中逐字翻译。"},
+  {en:"Make mistakes, that's how you learn.", cn:"犯错是学习的方式。"},
+  {en:"Speak English whenever you get the chance.", cn:"一有机会就说英语。"},
+  {en:"Consistency matters more than intensity.", cn:"坚持比强度更重要。"}
 ];
 
 function getDailySentence() {
@@ -1270,30 +1269,17 @@ function renderDailySentence() {
   var s = getDailySentence();
   var html = '<div class="daily-sentence-card">';
   html += '<div class="ds-label"><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>每日一句</div>';
-  html += '<div class="ds-text" id="ds-text">' + esc(s.en) + '</div>';
+  html += '<div class="ds-text" id="ds-text">' + makeClickableWords(s.en) + '</div>';
   html += '<div class="ds-text-cn" id="ds-text-cn">' + esc(s.cn) + '</div>';
   html += '<div class="ds-actions">';
   html += '<div class="ds-btn" onclick="speakDailySentence()"><svg viewBox="0 0 24 24"><path d="M11 5L6 9H2v6h4l5 4V5zM15.5 8.5a5 5 0 010 7M19 5a9 9 0 010 14"/></svg>朗读</div>';
-  html += '<div class="ds-btn" onclick="nextDailySentence()"><svg viewBox="0 0 24 24" style="fill:none;stroke:currentColor;stroke-width:2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>换一句</div>';
   html += '</div></div>';
   container.innerHTML = html;
 }
 
-var dsOffset = 0;
 function speakDailySentence() {
   var s = getDailySentence();
   speak(s.en);
-}
-function nextDailySentence() {
-  dsOffset++;
-  var container = document.getElementById('daily-sentence-container');
-  if (!container) return;
-  var now = new Date();
-  var dayOfYear = Math.floor((now - new Date(now.getFullYear(), 0, 0)) / 86400000);
-  var idx = (dayOfYear + dsOffset) % DAILY_SENTENCES.length;
-  var s = DAILY_SENTENCES[idx];
-  document.getElementById('ds-text').textContent = s.en;
-  document.getElementById('ds-text-cn').textContent = s.cn;
 }
 
 // ===== V13: Daily review + Mixed review =====
@@ -1713,8 +1699,12 @@ function renderDict() {
   html += '<button class="dict-ctrl-btn play" onclick="dictPlayWord()">🔊 播放</button>';
   html += '<button class="dict-ctrl-btn slow" onclick="dictPlayWordSlow()">🐢 慢速</button>';
   html += '<button class="dict-ctrl-btn hint" onclick="dictShowHint()">💡 提示</button>';
+  html += '<button class="dict-ctrl-btn hint" onclick="dictShowLength()">📊 字数</button>';
+  html += '<button class="dict-ctrl-btn hint" onclick="dictShowTranslation()">🇨🇳 释义</button>';
   html += '</div>';
   html += '<div class="dict-hint-display" id="dict-hint-display" style="display:none">' + esc(hint) + '</div>';
+  html += '<div class="dict-hint-display" id="dict-length-display" style="display:none;font-size:14px;color:var(--cyan2)">共 ' + w.word.length + ' 个字母</div>';
+  html += '<div class="dict-hint-display" id="dict-trans-display" style="display:none;font-size:14px;color:var(--cyan2)">' + esc(w.translation || '') + '</div>';
   html += '</div>';
 
   html += '<input type="text" class="dict-in" id="dict-in" placeholder="输入单词..." autocomplete="off" autocapitalize="off" spellcheck="false">';
@@ -1753,6 +1743,16 @@ function dictPlayWordSlow() {
 
 function dictShowHint() {
   var el = document.getElementById('dict-hint-display');
+  if (el) el.style.display = 'block';
+}
+
+function dictShowLength() {
+  var el = document.getElementById('dict-length-display');
+  if (el) el.style.display = 'block';
+}
+
+function dictShowTranslation() {
+  var el = document.getElementById('dict-trans-display');
   if (el) el.style.display = 'block';
 }
 
@@ -1917,6 +1917,7 @@ function renderBuild() {
   html += '</div>';
   html += '<div class="sb-actions">';
   html += '<button class="btn sec sm" onclick="sbClear()">清空</button>';
+  html += '<button class="btn cyan sm" onclick="sbHint()">提示</button>';
   html += '<button class="btn primary sm" onclick="sbCheck()">检查</button>';
   html += '<button class="btn sec sm" onclick="sbSkip()">跳过</button>';
   html += '</div>';
@@ -1997,15 +1998,79 @@ function sbCheck() {
   if (userAnswer === correct) {
     buildState.score++;
     area.classList.add("correct");
-    resultEl.innerHTML = '<div class="sb-result correct"><div class="sb-result-icon">\u2705</div><div class="sb-result-text">正确！</div></div>';
+    resultEl.innerHTML = '<div class="sb-result correct"><div class="sb-result-icon">\u2705</div><div class="sb-result-text">\u6B63\u786E\uFF01</div></div>';
+    document.querySelectorAll("#sb-word-bank .sb-word-chip").forEach(function(c){c.style.pointerEvents="none";});
+    // Correct: auto-advance after 1.5s
+    setTimeout(function() { buildState.round++; renderWords(); }, 1500);
   } else {
     area.classList.add("wrong");
-    resultEl.innerHTML = '<div class="sb-result wrong"><div class="sb-result-icon">\u274C</div><div class="sb-result-text">语序不正确</div><div class="sb-result-answer">正确答案: ' + esc(buildState.sentences[buildState.round].en) + '</div></div>';
+    // Generate detailed error feedback
+    var userWords = userAnswer.split(" ");
+    var correctWords = correct.split(" ");
+    var detailHtml = sbGenerateErrorDetail(userWords, correctWords);
+    resultEl.innerHTML = '<div class="sb-result wrong">';
+    resultEl.innerHTML += '<div class="sb-result-icon">\u274C</div>';
+    resultEl.innerHTML += '<div class="sb-result-text">\u8BED\u5E8F\u4E0D\u6B63\u786E</div>';
+    resultEl.innerHTML += detailHtml;
+    resultEl.innerHTML += '<div class="sb-result-answer">\u6B63\u786E\u7B54\u6848: ' + esc(buildState.sentences[buildState.round].en) + '</div>';
+    resultEl.innerHTML += '<button class="btn primary sm" style="margin-top:10px" onclick="sbNextAfterError()">\u4E0B\u4E00\u53E5</button>';
+    resultEl.innerHTML += '</div>';
     addToErrorPool(buildState.sentences[buildState.round].en, buildState.currentCn, curDay ? curDay.day : 0);
     if (curDay) logError(curDay.day);
+    // Disable word bank but DON'T auto-advance - user must click "下一句"
+    document.querySelectorAll("#sb-word-bank .sb-word-chip").forEach(function(c){c.style.pointerEvents="none";});
   }
-  document.querySelectorAll("#sb-word-bank .sb-word-chip").forEach(function(c){c.style.pointerEvents="none";});
-  setTimeout(function() { buildState.round++; renderWords(); }, 2500);
+}
+
+function sbGenerateErrorDetail(userWords, correctWords) {
+  var html = '<div style="text-align:left;font-size:12px;line-height:1.6;margin:8px 0;padding:10px;background:rgba(0,0,0,.2);border-radius:8px">';
+  // Word-by-word comparison
+  var maxLen = Math.max(userWords.length, correctWords.length);
+  var correctCount = 0;
+  html += '<div style="font-weight:700;color:var(--org);margin-bottom:6px">\u23F3 \u9519\u8BEF\u5206\u6790:</div>';
+  for (var i = 0; i < maxLen; i++) {
+    var uw = i < userWords.length ? userWords[i] : '___';
+    var cw = i < correctWords.length ? correctWords[i] : '';
+    if (uw === cw) {
+      correctCount++;
+      html += '<div style="color:#34D399">\u2713 \u4F4D\u7F6E' + (i+1) + ': ' + esc(cw) + ' \u2714</div>';
+    } else if (cw) {
+      html += '<div style="color:#FB923C">\u2717 \u4F4D\u7F6E' + (i+1) + ': \u4F60\u5199\u4E86 "' + esc(uw) + '"\uFF0C\u5E94\u8BE5\u662F "' + esc(cw) + '"</div>';
+    }
+  }
+  // Grammar hint
+  html += '<div style="margin-top:8px;padding-top:6px;border-top:1px solid rgba(255,255,255,.06);color:var(--cyan2)">';
+  if (correctCount === 0) {
+    html += '\uD83D\uDCD6 \u63D0\u793A: \u6CE8\u610F\u53E5\u5B50\u5F00\u5934\uFF0C\u82F1\u8BED\u901A\u5E38\u4EE5\u4E3B\u8BED\u5F00\u5934';
+  } else if (correctCount < maxLen / 2) {
+    html += '\uD83D\uDCD6 \u63D0\u793A: \u524D\u9762\u51E0\u4E2A\u8BCD\u987A\u5E8F\u6B63\u786E\uFF0C\u6CE8\u610F\u540E\u534A\u53E5\u7684\u7ED3\u6784\uFF08\u52A8\u8BCD\u4F4D\u7F6E\u3001\u4ECB\u8BCD\u77ED\u8BED\uFF09';
+  } else {
+    html += '\uD83D\uDCD6 \u63D0\u793A: \u5927\u90E8\u5206\u6B63\u786E\uFF01\u53EA\u6709\u5C11\u6570\u4F4D\u7F6E\u9700\u8C03\u6574\uFF0C\u518D\u8BD5\u4E00\u6B21';
+  }
+  html += '</div></div>';
+  return html;
+}
+
+function sbNextAfterError() {
+  buildState.round++;
+  renderWords();
+}
+
+function sbHint() {
+  var resultEl = document.getElementById("sb-result");
+  if (!resultEl) return;
+  var s = buildState.sentences[buildState.round];
+  var words = s.en.replace(/[^a-zA-Z\s']/g, "").trim().split(/\s+/);
+  var hintHtml = '<div class="sb-result" style="background:rgba(251,191,36,.06);border:1px solid rgba(251,191,36,.2)">';
+  hintHtml += '<div style="font-size:14px;font-weight:700;color:var(--ylw);margin-bottom:6px">\uD83D\uDCD6 \u8BED\u5E8F\u63D0\u793A</div>';
+  // Show first 2 words as hint
+  hintHtml += '<div style="font-size:13px;color:var(--t2);line-height:1.6">\u53E5\u5B50\u5F00\u5934: <b style="color:var(--t1)">' + esc(words.slice(0, Math.min(2, words.length)).join(" ")) + '</b>';
+  if (words.length > 2) hintHtml += ' ...';
+  hintHtml += '</div>';
+  // Show sentence structure
+  hintHtml += '<div style="font-size:12px;color:var(--t3);margin-top:6px">\u603B\u5171 ' + words.length + ' \u4E2A\u5355\u8BCD</div>';
+  hintHtml += '</div>';
+  resultEl.innerHTML = hintHtml;
 }
 
 function sbSkip() {
@@ -2177,21 +2242,13 @@ function lookupWord(word, el) {
   document.querySelectorAll('.wl-word.lookuped').forEach(w => w.classList.remove('lookuped'));
   el.classList.add('lookuped');
 
-  // Search in today's vocabulary
-  const allWords = [];
-  if (curDay) {
-    (curDay.newWords || []).forEach(w => { if (w) allWords.push(w); });
-    (curDay.reviewWords || []).forEach(w => { if (w) allWords.push(w); });
-  }
-
-  // Also search all days for comprehensive lookup
-  if (!allWords.length) {
-    DATA.forEach(d => {
-      if (!d) return;
-      (d.newWords || []).forEach(w => { if (w) allWords.push(w); });
-      (d.reviewWords || []).forEach(w => { if (w) allWords.push(w); });
-    });
-  }
+  // Search ALL days for comprehensive lookup (always)
+  var allWords = [];
+  DATA.forEach(function(d) {
+    if (!d) return;
+    (d.newWords || []).forEach(function(w) { if (w) allWords.push(w); });
+    (d.reviewWords || []).forEach(function(w) { if (w) allWords.push(w); });
+  });
 
   const found = allWords.find(w => w.word && w.word.toLowerCase() === word.toLowerCase());
 
@@ -2211,9 +2268,9 @@ function lookupWord(word, el) {
     if (basicTrans) {
       html += '<div class="wl-tip-trans">' + esc(basicTrans) + '</div>';
     } else {
-      html += '<div class="wl-tip-notfound">暂无本地释义</div>';
+      html += '<div class="wl-tip-notfound">正在联网查询...</div>';
     }
-    html += '<div class="wl-tip-actions"><button class="wl-tip-btn" onclick="speakSingleWord(\'' + word.replace(/'/g, "\\'") + '\')">🔊 朗读</button><button class="wl-tip-online-btn" onclick="lookupOnline(\'' + word.replace(/'/g, "\\'") + '\')">🔗 在线查询</button></div>';
+    html += '<div class="wl-tip-actions"><button class="wl-tip-btn" onclick="speakSingleWord(\'' + word.replace(/'/g, "\\'") + '\')">🔊 朗读</button></div>';
     html += '<div class="wl-tip-online" id="wl-online-area"></div>';
   }
 
@@ -2233,6 +2290,11 @@ function lookupWord(word, el) {
   tip.style.left = left + 'px';
   tip.style.top = top + 'px';
   tip.style.display = 'block';
+
+  // Auto-trigger online lookup if word not found locally
+  if (!found && !lookupBasicWord(word)) {
+    setTimeout(function() { lookupOnline(word); }, 300);
+  }
 }
 
 function speakSingleWord(word) {
@@ -3277,7 +3339,7 @@ function updateRateValue(val) {
 // ===== V10: Export / Import =====
 function exportData() {
   var data = {
-    version: 'te_v13',
+    version: 'te_v14',
     exportDate: new Date().toISOString(),
     done: Store.get('done', {}),
     lastStudy: Store.get('lastStudy', 0),
