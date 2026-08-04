@@ -1148,6 +1148,30 @@ var DAILY_DATA = [{"day":1,"dayTitle":"问候与寒暄的艺术","daySubtitle":"
 // Merge daily data into DATA array
 DATA.push.apply(DATA, DAILY_DATA);
 
+// V17: Normalize daily-comm data structure to match travel format
+DATA.forEach(function(d) {
+  if (!d) return;
+  // Normalize dialogue -> dialog
+  if (d.dialogue && !d.dialog) { d.dialog = d.dialogue; }
+  // Normalize essayEn/essayCn -> keep as-is (rendering code handles both)
+  // Ensure newWords have exampleEn/exampleCn fields
+  if (d.newWords) {
+    d.newWords.forEach(function(w) {
+      if (!w) return;
+      if (!w.exampleEn) w.exampleEn = '';
+      if (!w.exampleCn) w.exampleCn = '';
+    });
+  }
+  // Ensure reviewWords have exampleEn/exampleCn fields
+  if (d.reviewWords) {
+    d.reviewWords.forEach(function(w) {
+      if (!w) return;
+      if (!w.exampleEn) w.exampleEn = '';
+      if (!w.exampleCn) w.exampleCn = '';
+    });
+  }
+});
+
 // Update category descriptions with actual counts
 CATEGORIES[1].desc = 'Daily Communication · ' + DAILY_DATA.length + '天日常沟通';
 
@@ -1507,7 +1531,7 @@ function renderHome() {
   
   // V16: Update quick stats
   var totalNew = 0, totalReview = 0, totalDialog = 0;
-  DATA.forEach(function(d){ if(!d) return; totalNew += (d.newWords||[]).length; totalReview += (d.reviewWords||[]).length; totalDialog += (d.dialogue||[]).length; });
+  DATA.forEach(function(d){ if(!d) return; totalNew += (d.newWords||[]).length; totalReview += (d.reviewWords||[]).length; totalDialog += (d.dialog||[]).length; });
   var sqNew = document.getElementById('sq-new'); if (sqNew) sqNew.textContent = totalNew;
   var sqReview = document.getElementById('sq-review'); if (sqReview) sqReview.textContent = totalReview;
   var sqDialog = document.getElementById('sq-dialog'); if (sqDialog) sqDialog.textContent = totalDialog;
@@ -1685,7 +1709,15 @@ function renderDay() {
   const hasEssay = sentences.length > 0 || (d.essayEn && d.essayEn.length > 0);
 
   let html = '<div class="dd-hero">';
-  html += '<div class="dd-day">Day ' + d.day + ' · ' + (d.phase||'') + '</div>';
+  // V17: Normalize phase display for daily-comm
+  var phaseLabel = d.phase || '';
+  if (phaseLabel.indexOf('DAILY COMM') !== -1) {
+    var dayNum = d.day;
+    if (dayNum <= 10) phaseLabel = 'Phase 1';
+    else if (dayNum <= 20) phaseLabel = 'Phase 2';
+    else phaseLabel = 'Phase 3';
+  }
+  html += '<div class="dd-day">Day ' + d.day + ' · ' + phaseLabel + '</div>';
   html += '<div class="dd-title">' + esc(d.dayTitle) + '</div>';
   if (d.daySubtitle) html += '<div class="dd-sub">' + esc(d.daySubtitle) + '</div>';
   html += '<div class="dd-tags">';
