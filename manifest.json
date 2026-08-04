@@ -1,7 +1,7 @@
 {
-  "name": "旅行英语 · 39天计划",
-  "short_name": "旅行英语",
-  "description": "39天旅行英语学习计划 - 离线可用",
+  "name": "谢飞机 · 英语学习",
+  "short_name": "谢飞机",
+  "description": "谢飞机 - 英语学习助手",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
