@@ -836,12 +836,13 @@ input,textarea{font-family:inherit}
 .cat-empty-text{font-size:15px;font-weight:600}
 .cat-empty-sub{font-size:13px;color:var(--t4);margin-top:4px}
 
-/* Hide elements when in category view */
-body.cat-view .home-actions,
-body.cat-view .stats-quick,
-body.cat-view .search-bar,
-body.cat-view #search-results,
-body.cat-view .section-header{display:none !important}
+/* Hide elements when showing category list (not inside category) */
+body:not(.cat-view) .home-actions,
+body:not(.cat-view) .stats-quick,
+body:not(.cat-view) .search-bar,
+body:not(.cat-view) #search-results,
+body:not(.cat-view) #home-section-header,
+body:not(.cat-view) #home-cards{display:none !important}
 
 </style>
 </head>
@@ -1504,22 +1505,17 @@ function renderHome() {
   // V16: Category view
   var catContainer = document.getElementById('category-container');
   var catDetail = document.getElementById('category-detail-container');
-  var homeCards = document.getElementById('home-cards');
-  var sectionHeader = document.getElementById('home-section-header');
   
   if (curCategory) {
-    // Show days within category
+    // Show days within category - body has cat-view class, CSS shows action/stats/search
     if (catContainer) catContainer.style.display = 'none';
     if (catDetail) catDetail.style.display = 'block';
-    if (homeCards) homeCards.style.display = 'block';
-    if (sectionHeader) sectionHeader.style.display = 'block';
     renderCategoryDetail();
+    renderPhaseCards();
   } else {
-    // Show category cards
+    // Show category cards - body has no cat-view, CSS hides action/stats/search
     if (catContainer) catContainer.style.display = 'block';
     if (catDetail) catDetail.style.display = 'none';
-    if (homeCards) homeCards.style.display = 'none';
-    if (sectionHeader) sectionHeader.style.display = 'none';
     renderCategoryCards();
   }
 }
@@ -1659,6 +1655,8 @@ function renderDay() {
   const dlg = d.dialog || [];
   const essay = d.essay || {};
   const sentences = essay.sentences || [];
+  // V16: Support daily-comm format (essayEn/essayCn arrays)
+  const hasEssay = sentences.length > 0 || (d.essayEn && d.essayEn.length > 0);
 
   let html = '<div class="dd-hero">';
   html += '<div class="dd-day">Day ' + d.day + ' · ' + (d.phase||'') + '</div>';
@@ -1672,6 +1670,7 @@ function renderDay() {
     html += '<span class="dd-tag org">对话 ' + youLines.length + '句</span>';
   }
   if (sentences.length) html += '<span class="dd-tag ylw">阅读 ' + sentences.length + '句</span>';
+  if (!sentences.length && hasEssay) html += '<span class="dd-tag ylw">阅读 ' + (d.essayEn||[]).length + '段</span>';
   if (d.totalWords) html += '<span class="dd-tag">累计 ' + d.totalWords + '词</span>';
   html += '</div></div>';
 
@@ -1687,6 +1686,8 @@ function renderDay() {
   }
   if (sentences.length) {
     html += '<div class="mc" onclick="openEssay()"><div class="mc-icon essay">📖</div><div class="mc-body"><div class="mc-title">阅读理解</div><div class="mc-desc">' + esc(essay.title||'') + '</div></div><div class="mc-arrow">→</div></div>';
+  } else if (hasEssay) {
+    html += '<div class="mc" onclick="openEssay()"><div class="mc-icon essay">📖</div><div class="mc-body"><div class="mc-title">阅读理解</div><div class="mc-desc">' + (d.essayEn||[]).length + ' 段中英对照</div></div><div class="mc-arrow">→</div></div>';
   }
 
   html += '<div class="btn-row">';
@@ -2338,6 +2339,26 @@ function openEssay() {
   const d = curDay;
   const essay = d.essay || {};
   const sentences = essay.sentences || [];
+  
+  // V16: Support daily-comm format (essayEn/essayCn arrays)
+  if (!sentences.length && d.essayEn && d.essayEn.length) {
+    let html = '<div class="essay-card">';
+    const enArr = d.essayEn || [];
+    const cnArr = d.essayCn || [];
+    for (var i = 0; i < enArr.length; i++) {
+      if (!enArr[i]) continue;
+      html += '<div class="es-item" onclick="speakSentence(this)" data-text="' + escAttr(enArr[i]||'') + '">';
+      html += '<div class="en">' + makeClickableWords(enArr[i]||'') + '</div>';
+      if (cnArr[i]) html += '<div class="cn">' + esc(cnArr[i]||'') + '</div>';
+      html += '</div>';
+      html += '<div style="margin-top:14px;padding-top:10px;border-top:1px solid rgba(255,255,255,.04)"><button class="pron-btn" onclick="event.stopPropagation();startPronunciation(\'' + (enArr[i]||'').replace(/'/g,"\\'") + '\', this.nextElementSibling, this)">🎤 跟读</button><div></div></div>';
+    }
+    html += '</div>';
+    html += '<button class="btn cyan" onclick="speakEssayDaily()">🔊 朗读全文</button>';
+    document.getElementById('e-content').innerHTML = html;
+    return;
+  }
+  
   if (!sentences.length) { document.getElementById('e-content').innerHTML = '<div class="empty-state">暂无阅读内容</div>'; return; }
   let html = '<div class="essay-card">';
   if (essay.title) html += '<div class="es-title">' + esc(essay.title) + '</div>';
@@ -2351,6 +2372,12 @@ function openEssay() {
   html += '</div>';
   html += '<button class="btn cyan" onclick="speakEssay()">🔊 朗读全文</button>';
   document.getElementById('e-content').innerHTML = html;
+}
+
+function speakEssayDaily() {
+  if (!curDay || !curDay.essayEn) return;
+  var text = curDay.essayEn.join('. ');
+  speak(text);
 }
 
 function speakSentence(el) {
