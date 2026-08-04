@@ -1136,6 +1136,7 @@ function openCategory(catId) {
 function closeCategory() {
   curCategory = null;
   document.body.classList.remove('cat-view');
+  savedHomeScroll = 0;
   renderHome();
   var page = document.getElementById('pg-home');
   if (page) page.scrollTop = 0;
@@ -1324,7 +1325,17 @@ function showPage(id) {
   document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
 }
 
-function goHome() { showPage('pg-home'); renderHome(); }
+var savedHomeScroll = 0;
+
+function goHome() {
+  showPage('pg-home');
+  renderHome();
+  // V16: Restore scroll position when returning from day detail
+  var page = document.getElementById('pg-home');
+  if (page && savedHomeScroll > 0) {
+    setTimeout(function(){ page.scrollTop = savedHomeScroll; }, 50);
+  }
+}
 function goDay() { showPage('pg-day'); renderDay(); }
 
 
@@ -1573,11 +1584,18 @@ function renderPhaseCards() {
     return;
   }
 
-  // Group by phase
+  // Group by phase - normalize daily-comm phases
   const phases = {};
   curData.forEach(d => {
     if (!d) return;
-    const p = d.phase || 'Phase 1';
+    var p = d.phase || 'Phase 1';
+    // V16: Normalize daily-comm phase (e.g. "DAILY COMM · DAY 1" -> "Phase 1")
+    if (p.indexOf('DAILY COMM') !== -1) {
+      var dayNum = d.day;
+      if (dayNum <= 10) p = 'Phase 1';
+      else if (dayNum <= 20) p = 'Phase 2';
+      else p = 'Phase 3';
+    }
     if (!phases[p]) phases[p] = [];
     phases[p].push(d);
   });
@@ -1588,6 +1606,12 @@ function renderPhaseCards() {
     'Phase 2': '进阶沟通',
     'Phase 3': '深度表达'
   };
+  // V16: Different labels for daily category
+  if (curCategory === 'daily') {
+    phaseNames['Phase 1'] = '日常基础';
+    phaseNames['Phase 2'] = '社交进阶';
+    phaseNames['Phase 3'] = '深度表达';
+  }
 
   const phaseOrder = Object.keys(phases);
   phaseOrder.forEach(p => {
@@ -1632,6 +1656,9 @@ function openDayDetail(n) {
   var curData = getCurData();
   curDay = curData.find(d => d && d.day === n);
   if (!curDay) { showToast('该天数据加载失败'); return; }
+  // V16: Save scroll position before navigating away
+  var homePage = document.getElementById('pg-home');
+  if (homePage) savedHomeScroll = homePage.scrollTop;
   wIdx = 0;
   quizState = null;
   markStudyToday();
