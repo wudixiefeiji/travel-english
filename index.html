@@ -190,6 +190,11 @@ input,textarea{font-family:inherit}
 .dc-done-mark svg{width:12px;height:12px;stroke:#34D399;fill:none;stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
 
 /* ===== STATS ===== */
+.stats-filter{display:flex;gap:8px;margin-bottom:16px}
+.stats-filter-btn{flex:1;padding:10px 12px;border-radius:var(--rs);border:1px solid rgba(255,255,255,.06);
+  background:rgba(255,255,255,.02);color:var(--t3);font-size:13px;font-weight:600;cursor:pointer;transition:all .15s;text-align:center}
+.stats-filter-btn.active{background:linear-gradient(135deg,rgba(139,92,246,.18) 0%,rgba(6,182,212,.10) 100%);
+  border-color:rgba(139,92,246,.3);color:var(--t1)}
 .stats-hero{background:linear-gradient(135deg,rgba(139,92,246,.14) 0%,rgba(6,182,212,.06) 100%);
   border:1px solid rgba(139,92,246,.16);border-radius:var(--r);padding:24px 20px;text-align:center;
   margin-bottom:18px;position:relative;overflow:hidden}
@@ -1324,7 +1329,7 @@ function checkReminder() {
 
 function markStudyToday() {
   Store.set('lastStudy', Date.now());
-  if (curDay) logStudy(curDay.day);
+  if (curDay) logStudy(curDay.day, curDay.category || 'travel');
 }
 
 // ===== NAV =====
@@ -1363,16 +1368,13 @@ function goHome() {
 function goDay() { showPage('pg-day'); renderDay(); }
 
 
-// ===== V12: Daily Sentence =====
-var DAILY_SENTENCES = [
-  {en:"Could you say that again, please?", cn:"你能再说一遍吗？"},
-  {en:"I'm sorry, I don't quite understand.", cn:"抱歉，我不太明白。"},
+// ===== V12/V17: Daily Sentence with category support =====
+var LEARNING_SENTENCES = [
   {en:"How do you pronounce this word?", cn:"这个单词怎么发音？"},
   {en:"Can you speak a little slower, please?", cn:"能说慢一点吗？"},
   {en:"What does this word mean?", cn:"这个单词是什么意思？"},
   {en:"I'd like to practice my English with you.", cn:"我想和你练习英语。"},
   {en:"Could you write that down for me?", cn:"你能帮我写下来吗？"},
-  {en:"Let me try saying it.", cn:"让我试着说一说。"},
   {en:"How do you spell that?", cn:"那个怎么拼写？"},
   {en:"I'm still learning English.", cn:"我还在学英语。"},
   {en:"Can you give me an example?", cn:"你能给我举个例子吗？"},
@@ -1380,18 +1382,6 @@ var DAILY_SENTENCES = [
   {en:"I learn something new every day.", cn:"我每天都在学新东西。"},
   {en:"Practice a little every day, and you will improve.", cn:"每天练习一点，你就会进步。"},
   {en:"Don't be shy, just try!", cn:"别害羞，试试看！"},
-  {en:"Excuse me, where is the nearest restroom?", cn:"打扰一下，最近的洗手间在哪里？"},
-  {en:"I'd like a cup of coffee, please.", cn:"请给我一杯咖啡。"},
-  {en:"How much does this cost?", cn:"这个多少钱？"},
-  {en:"Can I pay by credit card?", cn:"可以用信用卡支付吗？"},
-  {en:"Could you recommend a good restaurant?", cn:"你能推荐一家好餐厅吗？"},
-  {en:"I have a reservation under my name.", cn:"我用我的名字预订了。"},
-  {en:"What time does the museum open?", cn:"博物馆几点开门？"},
-  {en:"Is there a pharmacy nearby?", cn:"附近有药店吗？"},
-  {en:"I need to catch a flight at three.", cn:"我需要赶三点的航班。"},
-  {en:"Could you take a photo for me?", cn:"你能帮我拍张照吗？"},
-  {en:"I'm looking for the train station.", cn:"我在找火车站。"},
-  {en:"What's your favorite way to learn English?", cn:"你最喜欢的学英语方式是什么？"},
   {en:"Reading aloud helps with pronunciation.", cn:"大声朗读有助于发音。"},
   {en:"Keep a vocabulary notebook for new words.", cn:"准备一个词汇本记录新词。"},
   {en:"Listen to English podcasts on your commute.", cn:"通勤时听英语播客。"},
@@ -1406,11 +1396,62 @@ var DAILY_SENTENCES = [
   {en:"Consistency matters more than intensity.", cn:"坚持比强度更重要。"}
 ];
 
+var TRAVEL_SENTENCES = [
+  {en:"Excuse me, where is the nearest restroom?", cn:"打扰一下，最近的洗手间在哪里？"},
+  {en:"I'd like a cup of coffee, please.", cn:"请给我一杯咖啡。"},
+  {en:"How much does this cost?", cn:"这个多少钱？"},
+  {en:"Can I pay by credit card?", cn:"可以用信用卡支付吗？"},
+  {en:"Could you recommend a good restaurant?", cn:"你能推荐一家好餐厅吗？"},
+  {en:"I have a reservation under my name.", cn:"我用我的名字预订了。"},
+  {en:"What time does the museum open?", cn:"博物馆几点开门？"},
+  {en:"Is there a pharmacy nearby?", cn:"附近有药店吗？"},
+  {en:"I need to catch a flight at three.", cn:"我需要赶三点的航班。"},
+  {en:"Could you take a photo for me?", cn:"你能帮我拍张照吗？"},
+  {en:"I'm looking for the train station.", cn:"我在找火车站。"},
+  {en:"Could you say that again, please?", cn:"你能再说一遍吗？"},
+  {en:"I'm sorry, I don't quite understand.", cn:"抱歉，我不太明白。"},
+  {en:"Let me try saying it.", cn:"让我试着说一说。"},
+  {en:"Where is the check-in counter?", cn:"值机柜台在哪里？"},
+  {en:"How do I get to Gate 12?", cn:"我怎么去12号登机口？"},
+  {en:"Is my flight on time?", cn:"我的航班准点吗？"},
+  {en:"I'd like to check in, please.", cn:"我想办理入住。"},
+  {en:"Can I get a taxi from here?", cn:"这里可以打车吗？"},
+  {en:"What's the weather like today?", cn:"今天天气怎么样？"}
+];
+
+var DAILY_COMM_SENTENCES = [
+  {en:"How have you been lately?", cn:"你最近怎么样？"},
+  {en:"It's great to see you again!", cn:"再次见到你太好了！"},
+  {en:"What do you do for a living?", cn:"你是做什么工作的？"},
+  {en:"I'm really interested in that.", cn:"我对那个真的很感兴趣。"},
+  {en:"Could you explain that in detail?", cn:"你能详细解释一下吗？"},
+  {en:"I completely agree with you.", cn:"我完全同意你的看法。"},
+  {en:"That sounds like a great idea!", cn:"听起来是个好主意！"},
+  {en:"Let me think about it for a moment.", cn:"让我想一下。"},
+  {en:"I'm sorry to hear that.", cn:"听到这个消息我很难过。"},
+  {en:"What are your plans for the weekend?", cn:"你周末有什么计划？"},
+  {en:"Would you like to grab some coffee?", cn:"你想去喝杯咖啡吗？"},
+  {en:"I appreciate your help.", cn:"感谢你的帮助。"},
+  {en:"Could you say that again, please?", cn:"你能再说一遍吗？"},
+  {en:"I'm sorry, I don't quite understand.", cn:"抱歉，我不太明白。"},
+  {en:"Let me try saying it.", cn:"让我试着说一说。"},
+  {en:"That's a good point.", cn:"说得有道理。"},
+  {en:"I see what you mean.", cn:"我明白你的意思。"},
+  {en:"How was your day?", cn:"你今天过得怎么样？"},
+  {en:"I'm looking forward to it.", cn:"我很期待。"},
+  {en:"Let's keep in touch!", cn:"保持联系！"}
+];
+
 function getDailySentence() {
   var now = new Date();
   var dayOfYear = Math.floor((now - new Date(now.getFullYear(), 0, 0)) / 86400000);
-  var idx = dayOfYear % DAILY_SENTENCES.length;
-  return DAILY_SENTENCES[idx];
+  // V17: Use category-specific sentences when in a category
+  var pool;
+  if (curCategory === 'travel') pool = TRAVEL_SENTENCES;
+  else if (curCategory === 'daily') pool = DAILY_COMM_SENTENCES;
+  else pool = LEARNING_SENTENCES;
+  var idx = dayOfYear % pool.length;
+  return pool[idx];
 }
 
 function renderDailySentence() {
@@ -2597,22 +2638,63 @@ document.addEventListener('click', function(e) {
 });
 
 // ===== STATS with SVG icons =====
+var statsFilter = 'all'; // 'all', 'travel', 'daily'
+
+function getStatsData() {
+  if (statsFilter === 'all') return DATA;
+  return DATA.filter(function(d) { return d && d.category === statsFilter; });
+}
+
+function normalizePhase(d) {
+  var p = d.phase || 'Phase 1';
+  if (p.indexOf('DAILY COMM') !== -1) {
+    if (d.day <= 10) p = 'Phase 1';
+    else if (d.day <= 20) p = 'Phase 2';
+    else p = 'Phase 3';
+  }
+  return p;
+}
+
+function getPhaseLabel(p, cat) {
+  var names = {
+    'Phase 1': cat === 'daily' ? '日常基础' : '生存基础',
+    'Phase 2': cat === 'daily' ? '社交进阶' : '进阶沟通',
+    'Phase 3': '深度表达'
+  };
+  return names[p] || p;
+}
+
 function renderStats() {
+  var statsData = getStatsData();
   const done = Store.get('done', {});
-  const doneCount = Object.keys(done).filter(k => done[k]).length;
-  const total = DATA.length;
+  const doneCount = statsData.filter(function(d) {
+    return d && done[(d.category||'travel') + '_' + d.day];
+  }).length;
+  const total = statsData.length;
   const pct = total > 0 ? Math.round(doneCount/total*100) : 0;
 
   let totalNew = 0, totalReview = 0, totalDlg = 0, totalEssay = 0;
-  DATA.forEach(d => {
+  statsData.forEach(d => {
     if (!d) return;
     totalNew += (d.newWords||[]).length;
     totalReview += (d.reviewWords||[]).length;
     totalDlg += (d.dialog||[]).filter(l => l && l.role && l.role.toUpperCase() === 'YOU').length;
+    // V17: Count both essay.sentences and essayEn arrays
     if (d.essay && d.essay.sentences) totalEssay += d.essay.sentences.length;
+    if (d.essayEn) totalEssay += d.essayEn.length;
   });
 
-  let html = '<div class="stats-hero"><div class="sh-num">' + doneCount + ' / ' + total + '</div>';
+  let html = '';
+
+  // V17: Category filter
+  html += '<div class="stats-filter">';
+  html += '<div class="stats-filter-btn ' + (statsFilter==='all'?'active':'') + '" onclick="setStatsFilter(\'all\')">全部</div>';
+  CATEGORIES.forEach(function(cat) {
+    html += '<div class="stats-filter-btn ' + (statsFilter===cat.id?'active':'') + '" onclick="setStatsFilter(\'' + cat.id + '\')">' + esc(cat.name) + '</div>';
+  });
+  html += '</div>';
+
+  html += '<div class="stats-hero"><div class="sh-num">' + doneCount + ' / ' + total + '</div>';
   html += '<div class="sh-label">已完成天数</div>';
   html += '<div class="sh-progress"><div class="sh-progress-fill" style="width:' + pct + '%"></div></div></div>';
 
@@ -2660,33 +2742,36 @@ function renderStats() {
 
   html += '</div>';
 
-  // Phase breakdown
+  // V17: Phase breakdown - normalized
+  var dominantCat = statsFilter === 'all' ? 'travel' : statsFilter;
   const phases = {};
-  DATA.forEach(d => {
+  statsData.forEach(d => {
     if (!d) return;
-    const p = d.phase || 'Phase 1';
+    var p = normalizePhase(d);
     if (!phases[p]) phases[p] = { total: 0, done: 0 };
     phases[p].total++;
-    if (done[d.category + '_' + d.day]) phases[p].done++;
+    if (done[(d.category||'travel') + '_' + d.day]) phases[p].done++;
   });
   html += '<div class="stats-section"><div class="stats-section-title">阶段进度</div>';
   Object.keys(phases).forEach(p => {
     const ph = phases[p];
     const pp = Math.round(ph.done/ph.total*100);
-    html += '<div class="phase-item"><div class="phase-name">' + esc(p) + '</div>';
+    var label = getPhaseLabel(p, dominantCat);
+    html += '<div class="phase-item"><div class="phase-name">' + esc(p) + ' · ' + esc(label) + '</div>';
     html += '<div class="phase-bar"><div class="phase-bar-fill" style="width:' + pp + '%"></div></div>';
     html += '<div class="phase-count">' + ph.done + '/' + ph.total + '</div></div>';
   });
   html += '</div>';
 
-  // Recent days
-  const recentDays = DATA.slice(-5).reverse();
+  // V17: Recent days - fixed done key
+  const recentDays = statsData.slice(-5).reverse();
   html += '<div class="stats-section"><div class="stats-section-title">最近学习</div>';
   recentDays.forEach(d => {
     if (!d) return;
-    const isDone = done[d.day];
+    const isDone = done[(d.category||'travel') + '_' + d.day];
+    var catTag = statsFilter === 'all' ? '<span style="font-size:10px;color:var(--t4);margin-right:4px">' + (d.category==='daily'?'日常':'旅行') + '</span>' : '';
     html += '<div class="recent-item"><div class="ri-day ' + (isDone?'done':'pending') + '">' + d.day + '</div>';
-    html += '<div class="ri-title">' + esc(d.dayTitle||'') + '</div>';
+    html += '<div class="ri-title">' + catTag + esc(d.dayTitle||'') + '</div>';
     html += '<div class="ri-status ' + (isDone?'done':'') + '">' + (isDone?'✓ 已完成':'未完成') + '</div></div>';
   });
   html += '</div>';
@@ -2721,6 +2806,11 @@ function renderStats() {
   html += '</div>';
 
   document.getElementById('stats-content').innerHTML = html;
+}
+
+function setStatsFilter(cat) {
+  statsFilter = cat;
+  renderStats();
 }
 
 // ===== UTILS =====
@@ -2838,25 +2928,82 @@ function esc(s) {
 }
 
 
-// ===== V12: Generate additional example sentences =====
+// ===== V17: Improved example sentence generation =====
 function generateWordExamples(word, translation) {
   if (!word) return [];
   var w = word.toLowerCase().trim();
+  var trans = (translation || '').trim();
   var examples = [];
 
-  // Common sentence patterns
-  var patterns = [
-    { en: "I need to use " + w + " today.", cn: "我今天需要用到" + (translation || w) + "。" },
-    { en: "Can you tell me more about " + w + "?", cn: "你能告诉我更多关于" + (translation || w) + "的信息吗？" },
-    { en: "The " + w + " is very important in this situation.", cn: "在这种情况下，" + (translation || w) + "非常重要。" },
-    { en: "She explained the meaning of " + w + " clearly.", cn: "她清楚地解释了" + (translation || w) + "的含义。" },
-    { en: "How do you pronounce " + w + " correctly?", cn: "你怎么正确发音" + (translation || w) + "？" },
-    { en: "I learned a new word: " + w + ".", cn: "我学到了一个新词：" + (translation || w) + "。" },
-    { en: "Please repeat the word " + w + " after me.", cn: "请跟我重复" + (translation || w) + "这个词。" },
-    { en: "What does " + w + " mean in this context?", cn: "在这个语境中，" + (translation || w) + "是什么意思？" }
-  ];
+  // V17: Skip generation for full sentences/expressions (question words, etc.)
+  if (/^(how|what|where|when|why|who|which|is|are|do|does|can|could|would|will|i|you|he|she|they|we|it)\s/.test(w)) {
+    return [];
+  }
 
-  // Pick 3 random patterns (deterministic based on word to be consistent)
+  // Detect word type from translation and word structure
+  var isPhrase = w.indexOf(' ') > -1 || w.indexOf('-') > -1;
+  var isVerb = false;
+  var isAdj = false;
+  var isNoun = false;
+
+  // Heuristic: check translation for common patterns
+  // V17: Phrases (multi-word) are almost always nouns, skip verb/adj detection
+  if (trans && !isPhrase) {
+    // Verbs often end with action characters
+    if (/[说问告诉解释记得忘记需要想要喜欢知道认为觉得希望开始停止继续帮助买卖给拿带放看听听写读学教吃喝住走跑飞来去坐站睡醒穿脱].$/.test(trans) || 
+        /^(说|问|告诉|解释|记得|忘记|需要|想要|喜欢|知道|认为|觉得|希望|开始|停止|继续|帮助|问候|打招呼|值机|登机|入住|退房|换乘|转机|申报)/.test(trans)) {
+      isVerb = true;
+    }
+    // Adjectives often end with 的
+    if (trans.indexOf('的') === trans.length - 1 || /(迟的|准点的|延误的|兴奋的|感激的|重的|美丽的|便宜的|昂贵的)/.test(trans)) {
+      isAdj = true;
+    }
+  }
+  // Default to noun
+  if (!isVerb && !isAdj) isNoun = true;
+
+  // Determine article: use "the" for specific nouns, "a/an" for countable
+  var article = 'the';
+  var firstLetter = w.charAt(0);
+  if ('aeiou'.indexOf(firstLetter) >= 0) article = 'an';
+  else article = 'a';
+
+  // For phrases, use "the" or no article
+  var nounPhrase = isPhrase ? w : (article + ' ' + w);
+  var cnRef = trans || w;
+
+  var patterns = [];
+
+  if (isVerb) {
+    patterns = [
+      { en: "I usually " + w + " every day.", cn: "我每天通常" + cnRef + "。" },
+      { en: "Can you " + w + " for me?", cn: "你能帮我" + cnRef + "吗？" },
+      { en: "She wants to " + w + " tomorrow.", cn: "她明天想" + cnRef + "。" },
+      { en: "It is important to " + w + " correctly.", cn: "正确地" + cnRef + "很重要。" },
+      { en: "They will " + w + " together.", cn: "他们将一起" + cnRef + "。" },
+      { en: "Do you know how to " + w + "?", cn: "你知道怎么" + cnRef + "吗？" }
+    ];
+  } else if (isAdj) {
+    patterns = [
+      { en: "This is very " + w + ".", cn: "这非常" + cnRef + "。" },
+      { en: "The weather is " + w + " today.", cn: "今天天气" + cnRef + "。" },
+      { en: "She looks " + w + ".", cn: "她看起来" + cnRef + "。" },
+      { en: "I think it is too " + w + ".", cn: "我觉得太" + cnRef + "了。" },
+      { en: "Everything seems " + w + " here.", cn: "这里一切看起来" + cnRef + "。" }
+    ];
+  } else {
+    // Noun patterns
+    patterns = [
+      { en: "I need " + nounPhrase + " right now.", cn: "我现在需要" + cnRef + "。" },
+      { en: "Where can I find " + nounPhrase + "?", cn: "我在哪里能找到" + cnRef + "？" },
+      { en: "This " + w + " is very useful.", cn: "这个" + cnRef + "非常有用。" },
+      { en: "Could you show me " + nounPhrase + "?", cn: "你能给我看看" + cnRef + "吗？" },
+      { en: "I lost my " + w + ".", cn: "我丢了我的" + cnRef + "。" },
+      { en: "How much does " + nounPhrase + " cost?", cn: cnRef + "多少钱？" }
+    ];
+  }
+
+  // Pick 3 patterns deterministically based on word hash
   var hash = 0;
   for (var i = 0; i < w.length; i++) {
     hash = ((hash << 5) - hash) + w.charCodeAt(i);
@@ -2864,11 +3011,12 @@ function generateWordExamples(word, translation) {
   }
   var selected = [];
   var used = {};
-  for (var j = 0; j < 3; j++) {
+  for (var j = 0; j < 4; j++) {
     var idx = Math.abs(hash + j * 7) % patterns.length;
     if (!used[idx]) {
       used[idx] = true;
       selected.push(patterns[idx]);
+      if (selected.length >= 3) break;
     }
   }
 
@@ -3443,11 +3591,13 @@ function clearSearch() {
 }
 
 // ===== V10: Study Log + Heatmap =====
-function logStudy(day) {
+function logStudy(day, cat) {
   var log = Store.get('studyLog', {});
   var today = new Date().toDateString();
   if (!log[today]) log[today] = [];
-  if (log[today].indexOf(day) === -1) log[today].push(day);
+  // V17: Use category_day key to avoid conflicts between travel and daily
+  var key = (cat || 'travel') + '_' + day;
+  if (log[today].indexOf(key) === -1) log[today].push(key);
   Store.set('studyLog', log);
 }
 
