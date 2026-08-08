@@ -1973,8 +1973,8 @@ function renderCard() {
     html += '</div></div>';
   }
 
-  // V12: Generate additional example sentences
-  var extraExamples = generateWordExamples(w.word, w.translation);
+  // V12/V19: Generate additional example sentences (skip for easy category since words have own examples)
+  var extraExamples = (curCategory === 'easy' && (w.exampleEn || w.exampleCn)) ? [] : generateWordExamples(w.word, w.translation);
   if (extraExamples.length) {
     html += '<div class="word-extra-examples">';
     html += '<div class="word-extra-ex-title">更多例句</div>';
