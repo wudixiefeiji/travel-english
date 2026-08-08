@@ -15,7 +15,7 @@
 <link rel="icon" type="image/png" sizes="512x512" href="icon-512.png?v8">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png?v8">
 <link rel="manifest" href="manifest.json">
-<meta name="version" content="te_v19">
+<meta name="version" content="te_v20">
 <title>谢飞机</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
 <style>
@@ -1793,9 +1793,9 @@ function renderDay() {
   const hasEssay = sentences.length > 0 || (d.essayEn && d.essayEn.length > 0);
 
   let html = '<div class="dd-hero">';
-  // V17: Normalize phase display for daily-comm
+  // V17: Normalize phase display for daily-comm and easy-comm
   var phaseLabel = d.phase || '';
-  if (phaseLabel.indexOf('DAILY COMM') !== -1) {
+  if (phaseLabel.indexOf('DAILY COMM') !== -1 || phaseLabel.indexOf('EASY COMM') !== -1) {
     var dayNum = d.day;
     if (dayNum <= 10) phaseLabel = 'Phase 1';
     else if (dayNum <= 20) phaseLabel = 'Phase 2';
@@ -2127,7 +2127,7 @@ function checkDict() {
     if (hint.textContent === '') hint.innerHTML = '再试试，注意拼写';
     addToNotebook(w.word, w.translation, curDay ? curDay.day : 0);
     addToErrorPool(w.word, w.translation, curDay ? curDay.day : 0);
-    logError(curDay ? curDay.day : 0);
+    logError(curDay ? curDay.day : 0, curDay ? curDay.category : '');
   }
 }
 
@@ -2364,7 +2364,7 @@ function sbCheck() {
     resultEl.innerHTML += '<button class="btn primary sm" style="margin-top:10px" onclick="sbNextAfterError()">\u4E0B\u4E00\u53E5</button>';
     resultEl.innerHTML += '</div>';
     addToErrorPool(buildState.sentences[buildState.round].en, buildState.currentCn, curDay ? curDay.day : 0);
-    if (curDay) logError(curDay.day);
+    if (curDay) logError(curDay.day, curDay.category);
     // Disable word bank but DON'T auto-advance - user must click "下一句"
     document.querySelectorAll("#sb-word-bank .sb-word-chip").forEach(function(c){c.style.pointerEvents="none";});
   }
@@ -2436,7 +2436,7 @@ function answerQuiz(el, picked, correct) {
     el.classList.add('wrong');
     document.querySelectorAll('.qo')[correct].classList.add('correct');
     if (q) { addToNotebook(q.word, q.translation, curDay ? curDay.day : 0); addToErrorPool(q.word, q.translation, curDay ? curDay.day : 0); }
-    logError(curDay ? curDay.day : 0);
+    logError(curDay ? curDay.day : 0, curDay ? curDay.category : '');
   }
   setTimeout(() => { quizState.round++; renderWords(); }, 800);
 }
@@ -2695,7 +2695,7 @@ function getStatsData() {
 
 function normalizePhase(d) {
   var p = d.phase || 'Phase 1';
-  if (p.indexOf('DAILY COMM') !== -1) {
+  if (p.indexOf('DAILY COMM') !== -1 || p.indexOf('EASY COMM') !== -1) {
     if (d.day <= 10) p = 'Phase 1';
     else if (d.day <= 20) p = 'Phase 2';
     else p = 'Phase 3';
@@ -2705,9 +2705,9 @@ function normalizePhase(d) {
 
 function getPhaseLabel(p, cat) {
   var names = {
-    'Phase 1': cat === 'daily' ? '日常基础' : '生存基础',
-    'Phase 2': cat === 'daily' ? '社交进阶' : '进阶沟通',
-    'Phase 3': '深度表达'
+    'Phase 1': cat === 'daily' ? '日常基础' : cat === 'easy' ? '基础入门' : '生存基础',
+    'Phase 2': cat === 'daily' ? '社交进阶' : cat === 'easy' ? '生活场景' : '进阶沟通',
+    'Phase 3': cat === 'daily' ? '深度表达' : cat === 'easy' ? '综合运用' : '深度表达'
   };
   return names[p] || p;
 }
@@ -3198,10 +3198,11 @@ function savePronScore(text, score) {
 }
 
 // ===== V11: Weak topic logging =====
-function logError(day) {
+function logError(day, cat) {
   var errors = Store.get('topicErrors', {});
-  if (!errors[day]) errors[day] = 0;
-  errors[day]++;
+  var key = (cat || (curDay ? curDay.category : '') || 'travel') + '_' + day;
+  if (!errors[key]) errors[key] = 0;
+  errors[key]++;
   Store.set('topicErrors', errors);
 }
 
@@ -3229,17 +3230,22 @@ function renderWordFreq() {
 
 function renderWeakTopics() {
   var errors = Store.get('topicErrors', {});
+  var statsData = getStatsData();
   var items = Object.keys(errors).map(function(k){
-    var d = DATA.find(function(dd){return dd && dd.day == parseInt(k.split('_').pop());});
-    return { day: parseInt(k), count: errors[k], title: d ? d.dayTitle : '' };
-  }).sort(function(a,b){return b.count-a.count;}).slice(0,8);
+    var parts = k.split('_');
+    var cat = parts.length > 1 ? parts[0] : 'travel';
+    var dayNum = parseInt(parts[parts.length - 1]);
+    var d = statsData.find(function(dd){return dd && dd.day == dayNum && (dd.category||'travel') === cat;});
+    if (!d) return null;
+    return { day: dayNum, category: cat, count: errors[k], title: d.dayTitle || '' };
+  }).filter(function(x){return x !== null;}).sort(function(a,b){return b.count-a.count;}).slice(0,8);
   if (!items.length) return '<div style="color:var(--t3);font-size:13px;text-align:center;padding:20px">暂无练习记录，完成听写和选择题后这里会显示薄弱话题</div>';
   var maxCount = items[0].count;
   var html = '<div class="weak-chart">';
   items.forEach(function(item) {
     var pct = Math.round(item.count/maxCount*100);
     var intensity = pct > 75 ? 'high' : pct > 50 ? 'mid' : 'low';
-    html += '<div class="weak-row" onclick="openDayDetail(' + item.day + ')">';
+    html += '<div class="weak-row" onclick="openWeakDay(\'' + item.category + '\',' + item.day + ')">';
     html += '<div class="weak-day">Day ' + item.day + '</div>';
     html += '<div class="weak-title">' + esc(item.title) + '</div>';
     html += '<div class="weak-bar-wrap"><div class="weak-bar ' + intensity + '" style="width:' + pct + '%"></div></div>';
@@ -3247,6 +3253,18 @@ function renderWeakTopics() {
   });
   html += '</div>';
   return html;
+}
+
+function openWeakDay(cat, day) {
+  curCategory = cat;
+  var curData = getCurData();
+  curDay = curData.find(function(d){return d && d.day === day;});
+  if (!curDay) { showToast('该天数据加载失败'); return; }
+  wIdx = 0;
+  quizState = null;
+  markStudyToday();
+  showPage('pg-day');
+  renderDay();
 }
 
 function renderPronStats() {
