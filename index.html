@@ -15,7 +15,7 @@
 <link rel="icon" type="image/png" sizes="512x512" href="icon-512.png?v8">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png?v8">
 <link rel="manifest" href="manifest.json">
-<meta name="version" content="te_v20">
+<meta name="version" content="te_v21">
 <title>谢飞机</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
 <style>
@@ -1374,6 +1374,7 @@ function goHome() {
   }
 }
 function goDay() { showPage('pg-day'); renderDay(); }
+function finishPractice() { if (curDay) goDay(); else goHome(); }
 
 
 // ===== V12/V17: Daily Sentence with category support =====
@@ -1924,7 +1925,8 @@ function renderCard() {
   const words = curWords;
   const c = document.getElementById('w-content');
   if (wIdx >= words.length) {
-    c.innerHTML = '<div class="empty-state"><div class="es-icon">🎉</div><div class="es-title">全部学完了！</div><div class="es-desc">已掌握 ' + words.length + ' 个词汇</div></div>';
+    c.innerHTML = '<div class="empty-state"><div class="es-icon">🎉</div><div class="es-title">全部学完了！</div><div class="es-desc">已掌握 ' + words.length + ' 个词汇</div>';
+    c.innerHTML += '<div class="btn-row" style="margin-top:16px"><button class="btn primary" onclick="finishPractice()">完成返回</button></div></div>';
     return;
   }
   const w = words[wIdx];
@@ -2013,7 +2015,8 @@ function renderDict() {
   var c = document.getElementById('w-content');
   if (wIdx >= words.length) {
     var correctCount = (dictResults ? dictResults.filter(function(r){return r;}).length : 0);
-    c.innerHTML = '<div class="empty-state"><div class="es-icon">✍️</div><div class="es-title">听写完成！</div><div class="es-desc">正确率 ' + Math.round(correctCount/words.length*100) + '% (' + correctCount + '/' + words.length + ')</div></div>';
+    c.innerHTML = '<div class="empty-state"><div class="es-icon">✍️</div><div class="es-title">听写完成！</div><div class="es-desc">正确率 ' + Math.round(correctCount/words.length*100) + '% (' + correctCount + '/' + words.length + ')</div>';
+    c.innerHTML += '<div class="btn-row" style="margin-top:16px"><button class="btn primary" onclick="finishPractice()">完成返回</button></div></div>';
     return;
   }
   var w = words[wIdx];
@@ -2165,7 +2168,7 @@ function renderQuiz() {
     if (pct >= 80) html += '<div style="color:#34D399;font-size:13px;margin-bottom:16px">优秀！继续加油</div>';
     else if (pct >= 60) html += '<div style="color:#FBBF24;font-size:13px;margin-bottom:16px">不错，还可以更好</div>';
     else html += '<div style="color:#FB923C;font-size:13px;margin-bottom:16px">需要多加练习</div>';
-    html += '<button class="btn primary" onclick="quizState=null;renderWords()">再来一轮</button></div>';
+    html += '<div class="btn-row"><button class="btn primary" onclick="finishPractice()">完成返回</button><button class="btn sec" onclick="quizState=null;renderWords()">再来一轮</button></div></div>';
     c.innerHTML = html;
     return;
   }
@@ -2240,7 +2243,7 @@ function renderBuild() {
     if (pct >= 80) html += '<div style="color:#34D399;font-size:13px;margin-bottom:16px">语法掌握很好！</div>';
     else if (pct >= 60) html += '<div style="color:#FBBF24;font-size:13px;margin-bottom:16px">不错，注意语序</div>';
     else html += '<div style="color:#FB923C;font-size:13px;margin-bottom:16px">多读句子，培养语感</div>';
-    html += '<button class="btn primary" onclick="buildState=null;renderWords()">再来一轮</button></div>';
+    html += '<div class="btn-row"><button class="btn primary" onclick="finishPractice()">完成返回</button><button class="btn sec" onclick="buildState=null;renderWords()">再来一轮</button></div></div>';
     c.innerHTML = html;
     return;
   }
@@ -3902,7 +3905,7 @@ function handleImportFile(input) {
 // ===== PWA / Service Worker =====
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', function() {
-    navigator.serviceWorker.register('service-worker.js?v=20').then(function(reg) {
+    navigator.serviceWorker.register('service-worker.js?v=21').then(function(reg) {
       console.log('SW registered:', reg.scope);
     }).catch(function(err) {
       console.log('SW registration failed:', err);
