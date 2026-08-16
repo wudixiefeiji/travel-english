@@ -15,7 +15,7 @@
 <link rel="icon" type="image/png" sizes="512x512" href="icon-512.png?v8">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png?v8">
 <link rel="manifest" href="manifest.json">
-<meta name="version" content="te_v21">
+<meta name="version" content="te_v22">
 <title>谢飞机</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
 <style>
@@ -972,7 +972,7 @@ body:not(.cat-view) #home-cards{display:none !important}
   <!-- ===== WORDS ===== -->
   <div class="page" id="pg-words">
     <div class="topbar">
-      <div class="back-btn" onclick="goDay()"><svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg></div>
+      <div class="back-btn" onclick="finishPractice()"><svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg></div>
       <div class="ptitle" id="w-title"></div>
       <div style="font-size:12px;color:var(--t3);font-weight:600" id="w-counter"></div>
     </div>
@@ -983,7 +983,7 @@ body:not(.cat-view) #home-cards{display:none !important}
   <!-- ===== DIALOG ===== -->
   <div class="page" id="pg-dlg">
     <div class="topbar">
-      <div class="back-btn" onclick="goDay()"><svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg></div>
+      <div class="back-btn" onclick="finishPractice()"><svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg></div>
       <div class="ptitle">口语练习</div>
       <div></div>
     </div>
@@ -993,7 +993,7 @@ body:not(.cat-view) #home-cards{display:none !important}
   <!-- ===== ESSAY ===== -->
   <div class="page" id="pg-essay">
     <div class="topbar">
-      <div class="back-btn" onclick="goDay()"><svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg></div>
+      <div class="back-btn" onclick="finishPractice()"><svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg></div>
       <div class="ptitle">阅读理解</div>
       <div></div>
     </div>
@@ -1102,6 +1102,7 @@ function getCurData() {
 }
 
 function getDayKey(day) {
+  if (curDay && curDay.category) return curDay.category + '_' + day;
   return (curCategory || 'travel') + '_' + day;
 }
 
@@ -1761,7 +1762,8 @@ function renderPhaseCards() {
 }
 
 // ===== DAY DETAIL =====
-function openDayDetail(n) {
+function openDayDetail(n, cat) {
+  if (cat) curCategory = cat;
   var curData = getCurData();
   curDay = curData.find(d => d && d.day === n);
   if (!curDay) { showToast('该天数据加载失败'); return; }
@@ -1907,6 +1909,7 @@ function prevWord() {
 }
 function nextWord() {
   if (wIdx < curWords.length - 1) { wIdx++; renderWords(); }
+  else if (wIdx === curWords.length - 1) { wIdx++; renderWords(); }
 }
 
 function renderWords() {
@@ -1932,11 +1935,15 @@ function renderCard() {
   const w = words[wIdx];
   if (!w) { wIdx++; renderWords(); return; }
   const prevDisabled = wIdx <= 0;
-  const nextDisabled = wIdx >= words.length - 1;
+  const isLast = wIdx >= words.length - 1;
 
   let html = '<div class="word-nav"><button class="btn sec sm" onclick="prevWord()" ' + (prevDisabled?'disabled':'') + '>上一个</button>';
   html += '<span class="wn-progress">' + (wIdx+1) + ' / ' + words.length + '</span>';
-  html += '<button class="btn primary sm" onclick="nextWord()" ' + (nextDisabled?'disabled':'') + '>下一个</button></div>';
+  if (isLast) {
+    html += '<button class="btn primary sm" onclick="nextWord()">完成</button></div>';
+  } else {
+    html += '<button class="btn primary sm" onclick="nextWord()">下一个</button></div>';
+  }
 
   html += '<div class="swipe-hint"><svg viewBox="0 0 24 24"><path d="M7 16l-4-4 4-4M17 8l4 4-4 4M3 12h18"/></svg>左右滑动切换单词</div>';
 
@@ -1975,8 +1982,12 @@ function renderCard() {
     html += '</div></div>';
   }
 
-  // V12/V19: Generate additional example sentences (skip for easy category since words have own examples)
-  var extraExamples = (curCategory === 'easy' && (w.exampleEn || w.exampleCn)) ? [] : generateWordExamples(w.word, w.translation);
+  // V22: Generate additional example sentences for all categories
+  var extraExamples = generateWordExamples(w.word, w.translation);
+  // Filter out duplicates with the word's own example
+  if (w.exampleEn) {
+    extraExamples = extraExamples.filter(function(ex) { return ex.en !== w.exampleEn; });
+  }
   if (extraExamples.length) {
     html += '<div class="word-extra-examples">';
     html += '<div class="word-extra-ex-title">更多例句</div>';
@@ -2142,7 +2153,7 @@ function dictNext() {
 function renderQuiz() {
   const words = curWords;
   const c = document.getElementById('w-content');
-  if (!quizState || quizState.round >= 10) {
+  if (!quizState) {
     const pool = [...words].sort(() => Math.random()-.5);
     const qLen = Math.min(10, pool.length);
     if (qLen === 0) {
@@ -2198,7 +2209,7 @@ var buildState = null;
 function renderBuild() {
   var words = curWords;
   var c = document.getElementById("w-content");
-  if (!buildState || buildState.round >= buildState.total) {
+  if (!buildState) {
     var sentences = [];
     if (curDay) {
       var essay = curDay.essay || {};
@@ -2464,6 +2475,7 @@ function openDlg() {
   });
   html += '<div style="margin-top:16px"><button class="btn cyan" onclick="speakDlg()">🔊 朗读全部对话</button>';
   html += '<div class="btn-row"><button class="btn sec" onclick="speakRole()">🎤 朗读我的台词</button></div></div>';
+  html += '<div class="btn-row" style="margin-top:12px"><button class="btn primary" onclick="finishPractice()">完成返回</button></div>';
   document.getElementById('d-content').innerHTML = html;
 }
 
@@ -2505,6 +2517,7 @@ function openEssay() {
     }
     html += '</div>';
     html += '<button class="btn cyan" onclick="speakEssayDaily()">🔊 朗读全文</button>';
+    html += '<div class="btn-row" style="margin-top:12px"><button class="btn primary" onclick="finishPractice()">完成返回</button></div>';
     document.getElementById('e-content').innerHTML = html;
     return;
   }
@@ -2521,6 +2534,7 @@ function openEssay() {
   });
   html += '</div>';
   html += '<button class="btn cyan" onclick="speakEssay()">🔊 朗读全文</button>';
+  html += '<div class="btn-row" style="margin-top:12px"><button class="btn primary" onclick="finishPractice()">完成返回</button></div>';
   document.getElementById('e-content').innerHTML = html;
 }
 
@@ -2640,6 +2654,7 @@ function lookupWord(word, el) {
       html += '</div>';
     }
     html += '<div class="wl-tip-actions"><button class="wl-tip-btn" onclick="speakSingleWord(\'' + word.replace(/'/g, "\\'") + '\')">🔊 朗读</button><button class="wl-tip-online-btn" onclick="lookupOnline(\'' + word.replace(/'/g, "\\'") + '\')">🔗 在线查询</button></div>';
+    html += '<div class="wl-tip-online" id="wl-online-area"></div>';
   } else {
     var basicTrans = lookupBasicWord(word);
     if (basicTrans) {
@@ -2984,17 +2999,27 @@ function generateWordExamples(word, translation) {
   if (!word) return [];
   var w = word.toLowerCase().trim();
   var trans = (translation || '').trim();
+  var cnRef = trans || w;
   var examples = [];
 
-  // V17: Skip generation for full sentences/expressions (question words, etc.)
+  // V22: For full sentences/expressions, generate contextual examples
   if (/^(how|what|where|when|why|who|which|is|are|do|does|can|could|would|will|i|you|he|she|they|we|it)\s/.test(w)) {
-    return [];
+    // These are phrases/sentences - generate usage context examples
+    return [
+      { en: 'Can you say "' + w + '" again?', cn: '你能再说一遍"' + cnRef + '"吗？' },
+      { en: 'I often use "' + w + '" in conversations.', cn: '我经常在对话中使用"' + cnRef + '"。' },
+      { en: 'Practice saying "' + w + '" out loud.', cn: '练习大声说"' + cnRef + '"。' }
+    ];
   }
 
-  // V19: Skip generation for greetings and basic expressions that don't work with templates
+  // V22: For greetings and basic expressions, generate usage examples instead of skipping
   var skipWords = ['hello','hi','hey','goodbye','bye','see you','good morning','good afternoon','good evening','good night','nice to meet you','thank you','thanks','welcome','sorry','excuse me','please','my name is','how old','no problem','really','maybe','sure','ok','okay','yes','no','let us','let\'s','someone','but','because','so','who','why','when','where','here','there','now','today','tomorrow','yesterday','tonight'];
   if (skipWords.indexOf(w) !== -1) {
-    return [];
+    return [
+      { en: 'When someone says "' + w + '", I feel welcomed.', cn: '当有人说"' + cnRef + '"时，我感到受欢迎。' },
+      { en: 'Try using "' + w + '" in your next conversation.', cn: '试着在下一次对话中使用"' + cnRef + '"。' },
+      { en: '"' + w + '" is a very common expression.', cn: '"' + cnRef + '"是一个非常常见的表达。' }
+    ];
   }
 
   // Detect word type from translation and word structure
@@ -3027,7 +3052,6 @@ function generateWordExamples(word, translation) {
 
   // For phrases, use "the" or no article
   var nounPhrase = isPhrase ? w : (article + ' ' + w);
-  var cnRef = trans || w;
 
   var patterns = [];
 
@@ -3114,8 +3138,8 @@ function startPronunciation(targetText, resultEl, btnEl) {
     }
     showPronResult(resultEl, bestScore, bestText, targetText);
     savePronScore(targetText, bestScore);
+    if (window._currentPronBtn) { window._currentPronBtn.classList.remove('recording'); window._currentPronBtn.textContent = '🎤 跟读'; window._currentPronBtn = null; }
   };
-  if (window._currentPronBtn) { window._currentPronBtn.classList.remove('recording'); window._currentPronBtn.textContent = '🎤 跟读'; window._currentPronBtn = null; }
   recognition.onerror = function(event) {
     if (event.error === 'not-allowed') {
       resultEl.innerHTML = '<div class="pron-error">\u26A0\uFE0F 请允许麦克风权限</div>';
@@ -3349,13 +3373,13 @@ function findWordInData(word) {
     var nw = d.newWords || [];
     for (var j = 0; j < nw.length; j++) {
       if (nw[j] && nw[j].word && nw[j].word.toLowerCase() === w) {
-        return { word: nw[j].word, translation: nw[j].translation, day: d.day };
+        return { word: nw[j].word, translation: nw[j].translation, day: d.day, category: d.category || 'travel' };
       }
     }
     var rw = d.reviewWords || [];
     for (var j = 0; j < rw.length; j++) {
       if (rw[j] && rw[j].word && rw[j].word.toLowerCase() === w) {
-        return { word: rw[j].word, translation: rw[j].translation, day: d.day };
+        return { word: rw[j].word, translation: rw[j].translation, day: d.day, category: d.category || 'travel' };
       }
     }
   }
@@ -3378,29 +3402,34 @@ function startReview() {
     showToast('今日复习已完成，继续保持！');
     return;
   }
-  var byDay = {};
+  var byGroup = {};
   reviewWords.forEach(function(w) {
-    if (!byDay[w.day]) byDay[w.day] = [];
-    byDay[w.day].push(w);
+    var key = (w.category || 'travel') + '_' + w.day;
+    if (!byGroup[key]) byGroup[key] = { category: w.category || 'travel', day: w.day, words: [] };
+    byGroup[key].words.push(w);
   });
-  var days = Object.keys(byDay).sort(function(a, b) { return parseInt(a) - parseInt(b); });
+  var groups = Object.keys(byGroup).map(function(k){return byGroup[k];}).sort(function(a,b){
+    if (a.category !== b.category) return a.category < b.category ? -1 : 1;
+    return a.day - b.day;
+  });
 
+  var catNames = {travel:'旅行英语', daily:'日常交流', easy:'日常基础交流'};
   var html = '<div style="font-size:13px;color:var(--t2);margin-bottom:4px">基于艾宾浩斯记忆曲线，以下词汇需要复习：</div>';
   html += '<div style="font-size:24px;font-weight:900;color:#60A5FA;margin-bottom:12px">' + reviewWords.length + ' 个词汇</div>';
   html += '<div class="review-modal-list">';
-  days.forEach(function(d) {
-    var words = byDay[d];
-    var dayData = DATA.find(function(dd){return dd && dd.day == parseInt(d);});
-    html += '<div class="review-modal-day-group">';
-    html += '<div class="review-modal-day-label">Day ' + esc(d) + (dayData ? ' · ' + esc(dayData.dayTitle||'') : '') + ' (' + words.length + '词)</div>';
+  groups.forEach(function(g) {
+    var dayData = DATA.find(function(dd){return dd && dd.day === g.day && (dd.category||'travel') === g.category;});
+    var catName = catNames[g.category] || g.category;
+    html += '<div class="review-modal-day-group" style="cursor:pointer" onclick="closeReviewModal();startReviewSession(\'' + g.category + '\',' + g.day + ')">';
+    html += '<div class="review-modal-day-label">' + catName + ' · Day ' + g.day + (dayData ? ' · ' + esc(dayData.dayTitle||'') : '') + ' (' + g.words.length + '词)</div>';
     html += '<div class="review-modal-words">';
-    words.forEach(function(w) {
+    g.words.forEach(function(w) {
       html += '<span class="review-modal-word">' + esc(w.word) + '</span>';
     });
     html += '</div></div>';
   });
   html += '</div>';
-  html += '<div class="btn-row"><button class="btn primary" onclick="closeReviewModal();startReviewFromDay(' + parseInt(days[0]) + ')">开始复习</button></div>';
+  html += '<div class="btn-row"><button class="btn primary" onclick="closeReviewModal();startMixedReviewFromWords()">开始全部复习</button></div>';
 
   document.getElementById('review-modal-content').innerHTML = html;
   document.getElementById('review-modal').classList.add('show');
@@ -3410,14 +3439,41 @@ function closeReviewModal() {
   document.getElementById('review-modal').classList.remove('show');
 }
 
-function startReviewFromDay(dayNum) {
-  openDayDetail(dayNum);
-  setTimeout(function() {
-    var reviewWords = getReviewWordList();
-    if (reviewWords.length) {
-      showToast('开始复习 ' + reviewWords.length + ' 个词汇');
-    }
-  }, 500);
+function startReviewSession(cat, dayNum) {
+  curCategory = cat;
+  var curData = getCurData();
+  curDay = curData.find(function(d){return d && d.day === dayNum;});
+  if (!curDay) { showToast('该天数据加载失败'); return; }
+  var reviewWords = getReviewWordList();
+  var dayWords = reviewWords.filter(function(w){return w.day === dayNum && (w.category||'travel') === cat;});
+  if (!dayWords.length) { showToast('没有需要复习的词汇'); return; }
+  curWords = dayWords.map(function(w){return {word:w.word, translation:w.translation, exampleEn:'', exampleCn:''};});
+  wIdx = 0;
+  quizState = null;
+  buildState = null;
+  dictResults = null;
+  wMode = 'quiz';
+  markStudyToday();
+  showPage('pg-words');
+  document.getElementById('w-title').textContent = '复习 · Day ' + dayNum;
+  renderWords();
+}
+
+function startMixedReviewFromWords() {
+  var reviewWords = getReviewWordList();
+  if (!reviewWords.length) { showToast('没有需要复习的词汇'); return; }
+  curDay = null;
+  curCategory = '';
+  curWords = reviewWords.map(function(w){return {word:w.word, translation:w.translation, exampleEn:'', exampleCn:''};});
+  wIdx = 0;
+  quizState = null;
+  buildState = null;
+  dictResults = null;
+  wMode = 'quiz';
+  markStudyToday();
+  showPage('pg-words');
+  document.getElementById('w-title').textContent = '今日复习';
+  renderWords();
 }
 
 // ===== V13: Error Pool (priority review) =====
@@ -3609,14 +3665,14 @@ function searchWords(query) {
       if (!w) return;
       if ((w.word && w.word.toLowerCase().indexOf(q) !== -1) ||
           (w.translation && w.translation.toLowerCase().indexOf(q) !== -1)) {
-        results.push({ word: w.word, translation: w.translation, day: d.day });
+        results.push({ word: w.word, translation: w.translation, day: d.day, category: d.category || 'travel' });
       }
     });
     (d.reviewWords || []).forEach(function(w) {
       if (!w) return;
       if ((w.word && w.word.toLowerCase().indexOf(q) !== -1) ||
           (w.translation && w.translation.toLowerCase().indexOf(q) !== -1)) {
-        results.push({ word: w.word, translation: w.translation, day: d.day });
+        results.push({ word: w.word, translation: w.translation, day: d.day, category: d.category || 'travel' });
       }
     });
   });
@@ -3630,10 +3686,12 @@ function renderSearchResults(results) {
     container.innerHTML = '<div class="empty-state" style="padding:30px 20px"><div class="es-desc">未找到匹配的单词</div></div>';
     return;
   }
+  var catNames = {travel:'旅行', daily:'日常', easy:'基础'};
   var html = '';
   results.forEach(function(r) {
-    html += '<div class="search-result-item" onclick="openDayDetail(' + r.day + ')">';
-    html += '<div class="sr-day">D' + r.day + '</div>';
+    var catName = catNames[r.category] || '';
+    html += '<div class="search-result-item" onclick="openDayDetail(' + r.day + ',\'' + r.category + '\')">';
+    html += '<div class="sr-day">' + catName + ' D' + r.day + '</div>';
     html += '<div class="sr-word"><div class="sr-en">' + esc(r.word) + '</div><div class="sr-cn">' + esc(r.translation || '') + '</div></div>';
     html += '</div>';
   });
@@ -3710,7 +3768,7 @@ function renderHeatmap() {
       else if (sessions >= 3) level = 'l3';
       else if (sessions >= 2) level = 'l2';
       else if (sessions >= 1) level = 'l1';
-      html += '<div class="heatmap-cell ' + level + '" title="' + (date.getMonth()+1) + '/' + date.getDate() + ': ' + sessions + '天"></div>';
+      html += '<div class="heatmap-cell ' + level + '" title="' + (date.getMonth()+1) + '/' + date.getDate() + ': ' + sessions + '次"></div>';
     }
     html += '</div>';
   }
@@ -3905,7 +3963,7 @@ function handleImportFile(input) {
 // ===== PWA / Service Worker =====
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', function() {
-    navigator.serviceWorker.register('service-worker.js?v=21').then(function(reg) {
+    navigator.serviceWorker.register('service-worker.js?v=22').then(function(reg) {
       console.log('SW registered:', reg.scope);
     }).catch(function(err) {
       console.log('SW registration failed:', err);
