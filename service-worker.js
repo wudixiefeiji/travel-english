@@ -30,8 +30,33 @@ self.addEventListener('activate', function(e) {
   );
 });
 
+self.addEventListener('message', function(e) {
+  if (e.data === 'SKIP_WAITING') self.skipWaiting();
+});
+
 self.addEventListener('fetch', function(e) {
   if (e.request.method !== 'GET') return;
+  var url = new URL(e.request.url);
+  
+  // Network-first for HTML documents (always get latest)
+  if (e.request.mode === 'navigate' || url.pathname.indexOf('.html') !== -1 || url.pathname === '/') {
+    e.respondWith(
+      fetch(e.request).then(function(response) {
+        if (response && response.status === 200) {
+          var rc = response.clone();
+          caches.open(CACHE).then(function(c) { c.put(e.request, rc); });
+        }
+        return response;
+      }).catch(function() {
+        return caches.match(e.request).then(function(r) {
+          return r || caches.match('./');
+        });
+      })
+    );
+    return;
+  }
+  
+  // Cache-first for other assets
   e.respondWith(
     caches.match(e.request).then(function(r) {
       if (r) return r;
