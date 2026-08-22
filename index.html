@@ -15,7 +15,7 @@
 <link rel="icon" type="image/png" sizes="512x512" href="icon-512.png?v8">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png?v8">
 <link rel="manifest" href="manifest.json">
-<meta name="version" content="te_v23">
+<meta name="version" content="te_v24">
 <title>谢飞机</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
 <style>
@@ -312,6 +312,17 @@ input,textarea{font-family:inherit}
 .mc-title{font-size:15px;font-weight:700;color:var(--t1)}
 .mc-desc{font-size:12px;color:var(--t3);margin-top:2px}
 .mc-arrow{color:var(--t3);font-size:14px;flex-shrink:0}
+
+/* Word preview with pinyin */
+.word-preview-section{margin-top:16px;padding:14px;background:rgba(255,255,255,.02);border-radius:var(--r);border:1px solid rgba(255,255,255,.04)}
+.wp-title{font-size:14px;font-weight:700;color:var(--t1);margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.wp-count{font-size:11px;font-weight:600;color:var(--t3);background:rgba(255,255,255,.06);padding:2px 8px;border-radius:10px}
+.wp-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.wp-item{padding:10px 12px;background:rgba(139,92,246,.06);border-radius:10px;border:1px solid rgba(139,92,246,.08);cursor:pointer;transition:all .15s}
+.wp-item:active{transform:scale(.97);background:rgba(139,92,246,.12)}
+.wp-word{font-size:14px;font-weight:700;color:var(--t1);line-height:1.3}
+.wp-pinyin{font-size:11px;color:var(--cyan2);font-weight:600;margin-top:2px}
+.wp-trans{font-size:11px;color:var(--t3);margin-top:3px;line-height:1.3}
 
 /* Action buttons */
 .action-row{display:flex;gap:10px;margin-top:4px}
@@ -1049,7 +1060,7 @@ body:not(.cat-view) #home-cards{display:none !important}
         <div class="settings-group-title">关于</div>
         <div class="settings-row">
           <div class="settings-label">版本</div>
-          <div class="settings-value">te_v23</div>
+          <div class="settings-value">te_v24</div>
         </div>
       </div>
     </div>
@@ -1835,6 +1846,36 @@ function renderDay() {
     html += '<div class="mc" onclick="openEssay()"><div class="mc-icon essay">📖</div><div class="mc-body"><div class="mc-title">阅读理解</div><div class="mc-desc">' + (d.essayEn||[]).length + ' 段中英对照</div></div><div class="mc-arrow">→</div></div>';
   }
 
+  // Word preview list with pinyin
+  if (nw.length) {
+    html += '<div class="word-preview-section">';
+    html += '<div class="wp-title">📝 今日新词 <span class="wp-count">' + nw.length + '</span></div>';
+    html += '<div class="wp-grid">';
+    nw.forEach(function(w, i) {
+      var py = getPinyin(w.word);
+      html += '<div class="wp-item" onclick="openWords(false);setTimeout(function(){wIdx=' + i + ';renderCard();},50)">';
+      html += '<div class="wp-word">' + esc(w.word) + '</div>';
+      if (py) html += '<div class="wp-pinyin">谐音: ' + esc(py) + '</div>';
+      html += '<div class="wp-trans">' + esc(w.translation || '') + '</div>';
+      html += '</div>';
+    });
+    html += '</div></div>';
+  }
+  if (rw.length) {
+    html += '<div class="word-preview-section">';
+    html += '<div class="wp-title">🔄 复习词汇 <span class="wp-count">' + rw.length + '</span></div>';
+    html += '<div class="wp-grid">';
+    rw.forEach(function(w, i) {
+      var py = getPinyin(w.word);
+      html += '<div class="wp-item" onclick="openWords(true);setTimeout(function(){wIdx=' + i + ';renderCard();},50)">';
+      html += '<div class="wp-word">' + esc(w.word) + '</div>';
+      if (py) html += '<div class="wp-pinyin">谐音: ' + esc(py) + '</div>';
+      html += '<div class="wp-trans">' + esc(w.translation || '') + '</div>';
+      html += '</div>';
+    });
+    html += '</div></div>';
+  }
+
   html += '<div class="btn-row">';
   if (isDone) {
     html += '<button class="btn green" onclick="unmarkDayDone()">✓ 已完成</button>';
@@ -2195,15 +2236,17 @@ function renderQuiz() {
   html += '<div style="text-align:center;padding:24px 20px;';
   html += 'background:linear-gradient(135deg,rgba(139,92,246,.06) 0%,rgba(6,182,212,.03) 100%);';
   html += 'border:1px solid rgba(139,92,246,.1);border-radius:var(--r);margin-bottom:14px">';
-  html += '<div style="font-size:26px;font-weight:800;color:var(--t1);display:inline-flex;align-items:center;gap:10px">';
-  html += '<span>' + esc(q.word) + '</span>';
-  var _qpy = getPinyin(q.word);
-  if (_qpy) html += '<div style="font-size:12px;color:var(--cyan2);margin-top:4px;font-weight:600">谐音: ' + esc(_qpy) + '</div>';
+  html += '<div style="display:flex;flex-direction:column;align-items:center;gap:6px">';
+  html += '<div style="display:flex;align-items:center;gap:10px">';
+  html += '<span style="font-size:26px;font-weight:800;color:var(--t1)">' + esc(q.word) + '</span>';
   html += '<span style="cursor:pointer;display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:50%;background:rgba(139,92,246,.12);transition:background .2s" onclick="event.stopPropagation();speak(\'' + q.word.replace(/'/g,"\\'") + '\')" ontouchstart="this.style.background=\'rgba(139,92,246,.25)\'" ontouchend="this.style.background=\'rgba(139,92,246,.12)\'">';
   html += '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="var(--purp2)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5L6 9H2v6h4l5 4V5z"/><path d="M15.54 8.46a5 5 0 010 7.07"/><path d="M19.07 4.93a10 10 0 010 14.14"/></svg>';
   html += '</span>';
   html += '</div>';
-  html += '<div style="font-size:13px;color:var(--t3);margin-top:4px">选择正确的中文释义</div></div>';
+  var _qpy = getPinyin(q.word);
+  if (_qpy) html += '<div style="font-size:13px;color:var(--cyan2);font-weight:600">谐音: ' + esc(_qpy) + '</div>';
+  html += '</div>';
+  html += '<div style="font-size:13px;color:var(--t3);margin-top:8px">选择正确的中文释义</div></div>';
   q.options.forEach((opt, i) => {
     html += '<div class="qo" data-idx="' + i + '" onclick="answerQuiz(this,' + i + ',' + q.correctIdx + ')">' + esc(opt||'') + '</div>';
   });
@@ -4668,7 +4711,7 @@ function handleImportFile(input) {
 // ===== PWA / Service Worker =====
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', function() {
-    navigator.serviceWorker.register('service-worker.js?v=23').then(function(reg) {
+    navigator.serviceWorker.register('service-worker.js?v=24').then(function(reg) {
       reg.addEventListener('updatefound', function() {
         var nw = reg.installing;
         if (nw) {
