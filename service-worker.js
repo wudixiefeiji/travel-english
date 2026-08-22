@@ -1,5 +1,5 @@
-// Service Worker for 谢飞机 te_v24
-const CACHE = 'te-v24';
+// Service Worker for 谢飞机 te_v25
+const CACHE = 'te-v25';
 const ASSETS = [
   './',
   './index.html',

@@ -15,7 +15,7 @@
 <link rel="icon" type="image/png" sizes="512x512" href="icon-512.png?v8">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png?v8">
 <link rel="manifest" href="manifest.json">
-<meta name="version" content="te_v24">
+<meta name="version" content="te_v25">
 <title>谢飞机</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
 <style>
@@ -1060,7 +1060,7 @@ body:not(.cat-view) #home-cards{display:none !important}
         <div class="settings-group-title">关于</div>
         <div class="settings-row">
           <div class="settings-label">版本</div>
-          <div class="settings-value">te_v24</div>
+          <div class="settings-value">te_v25</div>
         </div>
       </div>
     </div>
@@ -3739,96 +3739,321 @@ function esc(s) {
 
 
 // ===== V17: Improved example sentence generation =====
+var EXAMPLE_SENTENCES = {
+  'address':[{en:'What\'s your home address?',cn:'你家的地址是什么？'},{en:'The hotel address is on the card.',cn:'酒店地址在卡片上。'},{en:'I can\'t find the address.',cn:'我找不到地址。'}],
+  'afternoon':[{en:'Let\'s meet in the afternoon.',cn:'我们下午见面吧。'},{en:'I take a nap in the afternoon.',cn:'我下午会小睡一会儿。'},{en:'It rains every afternoon here.',cn:'这里每天下午都下雨。'}],
+  'air conditioning':[{en:'Can you turn on the air conditioning?',cn:'你能打开空调吗？'},{en:'The air conditioning is too cold.',cn:'空调太冷了。'},{en:'Adjust the air conditioning with this remote.',cn:'用这个遥控器调节空调。'}],
+  'airline':[{en:'Which airline are you flying with?',cn:'你坐的是哪家航空公司的航班？'},{en:'This airline has great service.',cn:'这家航空公司服务很好。'},{en:'I usually fly with the same airline.',cn:'我通常坐同一家航空公司的飞机。'}],
+  'airport':[{en:'The airport is 45 minutes from the city.',cn:'机场离市区有45分钟路程。'},{en:'We arrived at the airport early.',cn:'我们很早就到了机场。'},{en:'The airport has free Wi-Fi.',cn:'机场有免费无线网络。'}],
+  'aisle':[{en:'Please keep the aisle clear.',cn:'请保持过道通畅。'},{en:'I\'m sitting in the aisle seat.',cn:'我坐在过道位置。'},{en:'Walk down the aisle to find your seat.',cn:'沿着过道走去找您的座位。'}],
+  'aisle seat':[{en:'I prefer an aisle seat so I can stretch my legs.',cn:'我更喜欢过道座位，这样可以伸腿。'},{en:'The aisle seat is more convenient for restroom visits.',cn:'过道座位去洗手间更方便。'},{en:'She chose the aisle seat instead of the window seat.',cn:'她选择了过道座位而不是靠窗座位。'}],
+  'allergy':[{en:'I have a food allergy to peanuts.',cn:'我对花生过敏。'},{en:'Do you have any allergies?',cn:'你有什么过敏吗？'},{en:'Seasonal allergies are the worst in spring.',cn:'季节性过敏在春天最严重。'}],
+  'ambulance':[{en:'Call an ambulance immediately!',cn:'立即叫救护车！'},{en:'The ambulance arrived in five minutes.',cn:'救护车五分钟就到了。'},{en:'She was taken to hospital by ambulance.',cn:'她被救护车送到了医院。'}],
+  'answer':[{en:'I don\'t know the answer.',cn:'我不知道答案。'},{en:'The answer is on page 5.',cn:'答案在第5页。'},{en:'Please answer truthfully.',cn:'请如实回答。'}],
+  'appetizer':[{en:'We ordered spring rolls as an appetizer.',cn:'我们点了春卷当开胃菜。'},{en:'The appetizer was delicious.',cn:'开胃菜很好吃。'},{en:'What appetizers do you recommend?',cn:'你推荐什么开胃菜？'}],
+  'arrival':[{en:'The arrival time is 10:30 in the morning.',cn:'到达时间是上午10点30分。'},{en:'We will meet you at the arrival hall.',cn:'我们会在到达大厅接你。'},{en:'On-time arrival is rare these days.',cn:'现在准时到达很少见了。'}],
+  'bag':[{en:'This bag is made of leather.',cn:'这个包是皮制的。'},{en:'My bag is too heavy.',cn:'我的包太重了。'},{en:'Can you hold my bag for a minute?',cn:'你能帮我拿一下包吗？'}],
+  'baggage / luggage':[{en:'How many pieces of luggage do you have?',cn:'您有几件行李？'},{en:'My luggage didn\'t arrive with the flight.',cn:'我的行李没有随航班到达。'},{en:'Please label your luggage clearly.',cn:'请清楚地标记您的行李。'}],
+  'baggage claim':[{en:'Baggage claim is on the ground floor.',cn:'行李提取处在一楼。'},{en:'We waited at baggage claim for 40 minutes.',cn:'我们在行李提取处等了40分钟。'},{en:'Which carousel is for our flight?',cn:'我们航班的行李在哪个转盘？'}],
+  'bank':[{en:'I need to go to the bank to withdraw money.',cn:'我需要去银行取钱。'},{en:'The bank is closed on weekends.',cn:'银行周末不营业。'},{en:'Which bank has the best exchange rate?',cn:'哪家银行汇率最好？'}],
+  'bathroom':[{en:'The bathroom has a shower and bathtub.',cn:'浴室有淋浴和浴缸。'},{en:'Where is the bathroom?',cn:'洗手间在哪里？'},{en:'The bathroom is very clean.',cn:'浴室非常干净。'}],
+  'beach':[{en:'Let\'s go to the beach this weekend.',cn:'这周末我们去海滩吧。'},{en:'The beach was crowded with tourists.',cn:'海滩上挤满了游客。'},{en:'I love walking on the beach at sunset.',cn:'我喜欢日落时在海滩上散步。'}],
+  'beef':[{en:'How would you like your beef cooked?',cn:'您的牛肉要几分熟？'},{en:'Beef is more expensive than chicken.',cn:'牛肉比鸡肉贵。'},{en:'I ordered a beef noodle soup.',cn:'我点了一碗牛肉面。'}],
+  'beer':[{en:'Let\'s have a beer after work.',cn:'下班后去喝杯啤酒吧。'},{en:'This local beer is very good.',cn:'这种当地啤酒很好喝。'},{en:'How much is a bottle of beer?',cn:'一瓶啤酒多少钱？'}],
+  'bicycle':[{en:'You can rent a bicycle near the park.',cn:'你可以在公园附近租自行车。'},{en:'Riding a bicycle is great exercise.',cn:'骑自行车是很好的锻炼。'},{en:'Is it safe to ride a bicycle here?',cn:'在这里骑自行车安全吗？'}],
+  'bill':[{en:'Can we have the bill, please?',cn:'请给我们账单好吗？'},{en:'Let\'s split the bill equally.',cn:'我们平摊账单吧。'},{en:'The bill came to $45 total.',cn:'账单总共45美元。'}],
+  'blanket':[{en:'Can I have a blanket, please?',cn:'请给我一条毯子好吗？'},{en:'The blanket keeps me warm on the plane.',cn:'毯子让我在飞机上保持温暖。'},{en:'Please return the blanket before landing.',cn:'请在降落前归还毯子。'}],
+  'boarding pass':[{en:'Please have your boarding pass ready for inspection.',cn:'请准备好您的登机牌以便检查。'},{en:'I can\'t find my boarding pass anywhere.',cn:'我到处都找不到我的登机牌。'},{en:'The boarding pass shows your seat number.',cn:'登机牌上有您的座位号。'}],
+  'bread':[{en:'I bought some bread from the bakery.',cn:'我从面包店买了一些面包。'},{en:'Fresh bread smells amazing.',cn:'新鲜面包闻起来很香。'},{en:'Would you like some bread with butter?',cn:'你想要涂黄油的面包吗？'}],
+  'breakfast':[{en:'Breakfast is served from 7 to 10 AM.',cn:'早餐供应时间是早上7点到10点。'},{en:'Is breakfast included in the price?',cn:'价格包含早餐吗？'},{en:'The hotel breakfast is delicious.',cn:'酒店的早餐很美味。'}],
+  'buffet':[{en:'The breakfast buffet has many choices.',cn:'自助早餐有很多选择。'},{en:'I love hotel breakfast buffets.',cn:'我喜欢酒店的自助早餐。'},{en:'The buffet is on the second floor.',cn:'自助餐在二楼。'}],
+  'bus':[{en:'The bus comes every 15 minutes.',cn:'公交车每15分钟一班。'},{en:'I take the bus to work every day.',cn:'我每天坐公交车上班。'},{en:'Does this bus go to the train station?',cn:'这趟公交车去火车站吗？'}],
+  'cafe':[{en:'Let\'s meet at the cafe.',cn:'我们在咖啡馆见面吧。'},{en:'I work at a cafe part-time.',cn:'我在咖啡馆做兼职。'},{en:'This cafe has great coffee.',cn:'这家咖啡馆的咖啡很好。'}],
+  'camera':[{en:'I brought my camera on the trip.',cn:'我带了相机去旅行。'},{en:'This camera takes amazing photos.',cn:'这台相机拍出来的照片很棒。'},{en:'Don\'t forget your camera battery.',cn:'别忘了相机电池。'}],
+  'carry-on':[{en:'This bag is my carry-on luggage.',cn:'这个包是我的随身行李。'},{en:'You can bring one carry-on bag.',cn:'你可以带一个随身包。'},{en:'Make sure your carry-on fits the size limit.',cn:'确保你的随身行李符合尺寸限制。'}],
+  'cash':[{en:'Do you take cash?',cn:'你们收现金吗？'},{en:'I only have cash on me.',cn:'我身上只有现金。'},{en:'Please pay in cash at the counter.',cn:'请在柜台付现金。'}],
+  'cheap':[{en:'Street food is usually cheap and tasty.',cn:'街边小吃通常又便宜又好吃。'},{en:'I found a cheap hotel near the station.',cn:'我在车站附近找到了一家便宜的旅馆。'},{en:'Cheap things often break easily.',cn:'便宜的东西通常容易坏。'}],
+  'check out':[{en:'I\'d like to check out, please. Here\'s my key.',cn:'我想退房。这是我的房卡。'},{en:'What time is check-out?',cn:'退房时间是几点？'},{en:'We checked out early in the morning.',cn:'我们一大早就退房了。'}],
+  'check-in':[{en:'Online check-in opens 24 hours before departure.',cn:'网上值机在出发前24小时开放。'},{en:'The check-in counter is on the third floor.',cn:'值机柜台在三楼。'},{en:'We need to check in our luggage first.',cn:'我们需要先托运行李。'}],
+  'check-in (hotel)':[{en:'I\'d like to check in, please. I have a reservation.',cn:'我想办理入住。我有预订。'},{en:'Check-in time is after 2 PM.',cn:'入住时间是下午2点以后。'},{en:'The check-in process took only five minutes.',cn:'入住手续只花了五分钟。'}],
+  'chef':[{en:'The chef is famous for his seafood dishes.',cn:'这位厨师以海鲜菜闻名。'},{en:'I want to thank the chef personally.',cn:'我想亲自感谢厨师。'},{en:'The chef\'s special is the salmon.',cn:'厨师特供是三文鱼。'}],
+  'chicken':[{en:'I\'ll have the fried chicken, please.',cn:'请给我来炸鸡。'},{en:'Chicken is a popular meat.',cn:'鸡肉是很受欢迎的肉类。'},{en:'This chicken is very tender.',cn:'这鸡肉很嫩。'}],
+  'chinese':[{en:'I can speak a little Chinese.',cn:'我会说一点中文。'},{en:'Chinese is a difficult language.',cn:'中文是一门很难的语言。'},{en:'Please speak slowly in Chinese.',cn:'请用中文慢慢说。'}],
+  'clothes':[{en:'I need to buy some new clothes.',cn:'我需要买些新衣服。'},{en:'These clothes are too small now.',cn:'这些衣服现在太小了。'},{en:'She has a lot of clothes.',cn:'她有很多衣服。'}],
+  'coffee':[{en:'I need a cup of coffee to wake up.',cn:'我需要一杯咖啡来提神。'},{en:'How do you take your coffee?',cn:'你的咖啡要怎么喝？'},{en:'This coffee shop is very popular.',cn:'这家咖啡店很受欢迎。'}],
+  'cold':[{en:'I\'m cold - can you close the window?',cn:'我好冷——你能关上窗户吗？'},{en:'It gets very cold in winter here.',cn:'这里冬天非常冷。'},{en:'The water was freezing cold.',cn:'水冰冷刺骨。'}],
+  'concierge':[{en:'Ask the concierge for restaurant recommendations.',cn:'向礼宾部咨询餐厅推荐。'},{en:'The concierge can help you book tickets.',cn:'礼宾部可以帮您订票。'},{en:'Concierge service is 24 hours.',cn:'礼宾服务24小时可用。'}],
+  'connecting flight':[{en:'Is there a connecting flight to Paris?',cn:'有去巴黎的转机航班吗？'},{en:'We have a two-hour layover for the connecting flight.',cn:'我们转机有两小时的停留时间。'},{en:'I missed my connecting flight due to the delay.',cn:'由于延误，我错过了转机航班。'}],
+  'cough':[{en:'I have a bad cough and sore throat.',cn:'我咳嗽得很厉害，喉咙也痛。'},{en:'This cough syrup might help.',cn:'这个止咳糖浆可能有用。'},{en:'Cover your mouth when you cough.',cn:'咳嗽的时候捂住嘴。'}],
+  'credit card':[{en:'Can I pay by credit card?',cn:'我可以用信用卡付款吗？'},{en:'My credit card was declined.',cn:'我的信用卡被拒绝了。'},{en:'I never leave home without my credit card.',cn:'我出门从不不带信用卡。'}],
+  'crew':[{en:'The cabin crew is very professional.',cn:'机组人员非常专业。'},{en:'Please follow the crew\'s instructions.',cn:'请听从机组人员的指示。'},{en:'The crew will serve drinks shortly.',cn:'机组人员很快会提供饮料。'}],
+  'currency':[{en:'What currency do they use in Japan?',cn:'日本用什么货币？'},{en:'You can exchange currency at the airport.',cn:'你可以在机场兑换货币。'},{en:'The local currency is the Euro.',cn:'当地货币是欧元。'}],
+  'customs':[{en:'You need to go through customs after immigration.',cn:'入境检查后需要通过海关。'},{en:'Do you have anything to declare at customs?',cn:'您在海关有什么需要申报的吗？'},{en:'The customs officer checked my bags carefully.',cn:'海关官员仔细检查了我的包。'}],
+  'delay':[{en:'The flight was delayed due to bad weather.',cn:'航班因恶劣天气延误了。'},{en:'How long is the delay?',cn:'延误多长时间？'},{en:'I hate train delays.',cn:'我讨厌火车晚点。'}],
+  'delicious':[{en:'This food is absolutely delicious!',cn:'这食物太好吃了！'},{en:'The soup was delicious and hot.',cn:'汤美味又热乎。'},{en:'I\'ve never had such delicious noodles.',cn:'我从没吃过这么好吃的面条。'}],
+  'departure':[{en:'The departure time is 3:45 PM.',cn:'出发时间是下午3点45分。'},{en:'Please arrive at the airport two hours before departure.',cn:'请在出发前两小时到达机场。'},{en:'The flight is ready for departure.',cn:'航班已准备好起飞。'}],
+  'dessert':[{en:'What would you like for dessert?',cn:'您想要什么甜点？'},{en:'I\'m too full for dessert.',cn:'我太饱了，吃不下甜点了。'},{en:'The chocolate cake is a popular dessert.',cn:'巧克力蛋糕是很受欢迎的甜点。'}],
+  'destination':[{en:'What is your final destination?',cn:'你的最终目的地是哪里？'},{en:'We reached our destination at noon.',cn:'我们中午到达了目的地。'},{en:'The ticket shows your destination.',cn:'车票上有你的目的地。'}],
+  'dinner':[{en:'What\'s for dinner tonight?',cn:'今晚晚饭吃什么？'},{en:'We had dinner at a nice restaurant.',cn:'我们在一家不错的餐厅吃了晚饭。'},{en:'Dinner is ready!',cn:'晚饭好了！'}],
+  'discount':[{en:'Is there any discount for students?',cn:'学生有折扣吗？'},{en:'They\'re having a 30% discount sale.',cn:'他们在打七折。'},{en:'Can I get a discount if I buy two?',cn:'买两个的话能打折吗？'}],
+  'doctor':[{en:'I need to see a doctor immediately.',cn:'我需要立即看医生。'},{en:'The doctor prescribed some medicine.',cn:'医生开了一些药。'},{en:'You should see a doctor about that pain.',cn:'你应该去看医生检查一下那个疼痛。'}],
+  'double room':[{en:'I\'d like to book a double room for two nights.',cn:'我想预订一间双人房，住两晚。'},{en:'The double room has a king-size bed.',cn:'双人房有一张特大号床。'},{en:'Is a double room available for tonight?',cn:'今晚有空的双人房吗？'}],
+  'duty-free':[{en:'I bought perfume at the duty-free shop.',cn:'我在免税店买了香水。'},{en:'Duty-free prices are much cheaper.',cn:'免税价格便宜很多。'},{en:'There are several duty-free stores at the airport.',cn:'机场有好几家免税店。'}],
+  'egg':[{en:'How do you like your eggs?',cn:'你喜欢怎么做的鸡蛋？'},{en:'I had two eggs for breakfast.',cn:'我早餐吃了两个鸡蛋。'},{en:'Eggs are high in protein.',cn:'鸡蛋富含蛋白质。'}],
+  'elevator':[{en:'The elevator is over there on your left.',cn:'电梯在您左边那边。'},{en:'Please take the elevator to the 5th floor.',cn:'请乘电梯到5楼。'},{en:'The elevator is out of order today.',cn:'电梯今天坏了。'}],
+  'email':[{en:'What\'s your email address?',cn:'你的邮箱地址是什么？'},{en:'I\'ll send you an email.',cn:'我会给你发邮件。'},{en:'I didn\'t receive your email.',cn:'我没收到你的邮件。'}],
+  'english':[{en:'I\'m learning English.',cn:'我正在学英语。'},{en:'Do you speak English?',cn:'你会说英语吗？'},{en:'English is a global language.',cn:'英语是一门全球性语言。'}],
+  'evening':[{en:'Good evening, everyone!',cn:'大家晚上好！'},{en:'What are you doing this evening?',cn:'你今晚在做什么？'},{en:'The evening view is beautiful.',cn:'傍晚的景色很美。'}],
+  'exchange rate':[{en:'What\'s the exchange rate today?',cn:'今天的汇率是多少？'},{en:'The exchange rate is not very good right now.',cn:'现在汇率不是很好。'},{en:'Exchange rates fluctuate every day.',cn:'汇率每天都在波动。'}],
+  'excuse me':[{en:'Excuse me, where is the restroom?',cn:'请问洗手间在哪里？'},{en:'Excuse me, is this seat taken?',cn:'不好意思，这个座位有人吗？'},{en:'Excuse me for interrupting.',cn:'抱歉打断一下。'}],
+  'expensive':[{en:'This hotel is too expensive for me.',cn:'这家酒店对我来说太贵了。'},{en:'Designer brands are very expensive.',cn:'设计师品牌非常昂贵。'},{en:'Flying first class is expensive.',cn:'坐头等舱很贵。'}],
+  'family':[{en:'I miss my family very much.',cn:'我非常想念我的家人。'},{en:'My family lives in Beijing.',cn:'我的家人住在北京。'},{en:'Family comes first.',cn:'家庭是第一位的。'}],
+  'far':[{en:'How far is the station?',cn:'车站有多远？'},{en:'It\'s not very far from here.',cn:'离这里不太远。'},{en:'My home is far away.',cn:'我家很远。'}],
+  'fare':[{en:'How much is the fare?',cn:'车费是多少？'},{en:'The bus fare is two dollars.',cn:'公交车费是两美元。'},{en:'Taxi fares are more expensive at night.',cn:'晚上出租车费更贵。'}],
+  'ferry':[{en:'We took the ferry to the island.',cn:'我们乘渡船去了岛上。'},{en:'The ferry runs every hour.',cn:'渡轮每小时一班。'},{en:'How much is the ferry fare?',cn:'渡轮票价是多少？'}],
+  'fever':[{en:'You have a high fever - you should rest.',cn:'你发高烧了——应该休息。'},{en:'My fever broke last night.',cn:'我昨晚退烧了。'},{en:'Take your temperature to check for a fever.',cn:'量一下体温看看有没有发烧。'}],
+  'fish':[{en:'The fish is fresh today.',cn:'今天的鱼很新鲜。'},{en:'I don\'t eat fish very often.',cn:'我不常吃鱼。'},{en:'This fish is grilled perfectly.',cn:'这鱼烤得恰到好处。'}],
+  'flight':[{en:'Our flight has been delayed by two hours.',cn:'我们的航班延误了两个小时。'},{en:'What time does your flight depart?',cn:'你的航班几点起飞？'},{en:'I always book my flight in advance.',cn:'我总是提前预订机票。'}],
+  'flight attendant':[{en:'The flight attendant brought me water.',cn:'空乘人员给我送来了水。'},{en:'Ask the flight attendant for a blanket.',cn:'向空乘人员要一条毯子。'},{en:'Flight attendants are trained for emergencies.',cn:'空乘人员接受过应急培训。'}],
+  'friend':[{en:'I\'m meeting a friend later.',cn:'我待会儿要见一个朋友。'},{en:'She\'s my best friend.',cn:'她是我最好的朋友。'},{en:'Friends are important in life.',cn:'朋友在生活中很重要。'}],
+  'front desk':[{en:'Please ask at the front desk for more information.',cn:'请向前台咨询更多信息。'},{en:'The front desk is open 24 hours.',cn:'前台24小时开放。'},{en:'I left my key at the front desk.',cn:'我把房卡放在前台了。'}],
+  'fruit':[{en:'Eat more fruit - it\'s healthy.',cn:'多吃水果，有益健康。'},{en:'What kind of fruit do you like?',cn:'你喜欢什么水果？'},{en:'The fruit here is very fresh.',cn:'这里的水果很新鲜。'}],
+  'gate':[{en:'Our boarding gate is A12.',cn:'我们的登机口是A12。'},{en:'They changed the gate at the last minute.',cn:'他们在最后一刻更改了登机口。'},{en:'Please proceed to your assigned gate.',cn:'请前往指定的登机口。'}],
+  'gift':[{en:'I bought a gift for my mom.',cn:'我给妈妈买了一件礼物。'},{en:'What gift should I get for her?',cn:'我该给她买什么礼物？'},{en:'She loved the birthday gift.',cn:'她很喜欢那个生日礼物。'}],
+  'goodbye':[{en:'Goodbye! See you tomorrow.',cn:'再见！明天见。'},{en:'She said goodbye and left.',cn:'她说了再见然后离开了。'},{en:'Goodbye and safe travels!',cn:'再见，一路平安！'}],
+  'gym':[{en:'The hotel gym is open 24 hours.',cn:'酒店健身房24小时开放。'},{en:'I work out at the gym every morning.',cn:'我每天早上在健身房锻炼。'},{en:'Is there a gym in the hotel?',cn:'酒店里有健身房吗？'}],
+  'headache':[{en:'I have a terrible headache.',cn:'我头痛得厉害。'},{en:'Do you have anything for a headache?',cn:'你有治头痛的药吗？'},{en:'Stress often causes headaches.',cn:'压力经常导致头痛。'}],
+  'hello':[{en:'Hello! How are you doing today?',cn:'你好！你今天过得怎么样？'},{en:'She said hello as she walked past.',cn:'她走过的时候打了个招呼。'},{en:'Hello, nice to meet you!',cn:'你好，很高兴认识你！'}],
+  'here':[{en:'Here is your change.',cn:'这是找您的钱。'},{en:'Come here for a second.',cn:'过来一下。'},{en:'I\'ve lived here for 5 years.',cn:'我在这里住了5年。'}],
+  'hospital':[{en:'He was taken to the hospital by ambulance.',cn:'他被救护车送到了医院。'},{en:'The hospital is just two blocks away.',cn:'医院离这里只有两个街区。'},{en:'I hate going to the hospital.',cn:'我讨厌去医院。'}],
+  'hot':[{en:'It\'s so hot today - I\'m sweating.',cn:'今天太热了——我一直在出汗。'},{en:'Summer here can be very hot.',cn:'这里的夏天会非常热。'},{en:'The soup is still hot - be careful.',cn:'汤还很烫——小心点。'}],
+  'hotel':[{en:'Which hotel are you staying at?',cn:'你住在哪家酒店？'},{en:'The hotel is in the city center.',cn:'酒店在市中心。'},{en:'I booked the hotel online.',cn:'我在网上预订了酒店。'}],
+  'hour':[{en:'It takes about an hour.',cn:'大约需要一个小时。'},{en:'I\'ll be there in half an hour.',cn:'我半小时后到。'},{en:'Working hours are 9 to 5.',cn:'工作时间是9点到5点。'}],
+  'housekeeping':[{en:'Housekeeping comes every morning at 10.',cn:'客房清洁每天早上10点来。'},{en:'Please don\'t disturb - I put the sign out.',cn:'请勿打扰——我把牌子挂出去了。'},{en:'Housekeeping left extra towels today.',cn:'客房服务今天多留了几条毛巾。'}],
+  'immigration':[{en:'The immigration line was very long.',cn:'入境检查的队伍很长。'},{en:'Prepare your passport for immigration control.',cn:'请准备好护照以备入境检查。'},{en:'She works at the immigration office.',cn:'她在移民局工作。'}],
+  'key card':[{en:'I lost my key card.',cn:'我把房卡弄丢了。'},{en:'Use the key card to enter your room.',cn:'用房卡进入您的房间。'},{en:'Please return your key card at checkout.',cn:'退房时请交还房卡。'}],
+  'landing':[{en:'We\'ll be landing in 15 minutes.',cn:'我们将在15分钟后降落。'},{en:'The landing was a bit bumpy.',cn:'降落有点颠簸。'},{en:'Please fasten your seat belt for landing.',cn:'降落时请系好安全带。'}],
+  'language':[{en:'How many languages do you speak?',cn:'你会说几种语言？'},{en:'Learning a new language takes time.',cn:'学习一门新语言需要时间。'},{en:'Body language is also important.',cn:'肢体语言也很重要。'}],
+  'laundry':[{en:'Where can I send my laundry?',cn:'我可以把衣服送到哪里洗？'},{en:'The laundry service takes one day.',cn:'洗衣服务需要一天时间。'},{en:'I need these shirts washed and ironed.',cn:'我需要把这些衬衫洗了熨好。'}],
+  'layover':[{en:'We have a 3-hour layover in Dubai.',cn:'我们在迪拜有3小时的停留。'},{en:'A short layover can be very stressful.',cn:'短暂的转机停留可能会很紧张。'},{en:'I explored the city during our layover.',cn:'我们在停留期间游览了这座城市。'}],
+  'left':[{en:'Turn left at the next corner.',cn:'在下一个路口左转。'},{en:'The bathroom is on your left.',cn:'洗手间在您左边。'},{en:'My left foot hurts.',cn:'我的左脚疼。'}],
+  'lobby':[{en:'I\'ll meet you in the hotel lobby.',cn:'我在酒店大堂等你。'},{en:'The lobby has a beautiful chandelier.',cn:'大堂有一个漂亮的吊灯。'},{en:'Please wait for me in the lobby.',cn:'请在大堂等我。'}],
+  'local':[{en:'Ask a local person for directions.',cn:'向当地人问路。'},{en:'The local food is amazing.',cn:'当地食物很棒。'},{en:'I try to live like a local when I travel.',cn:'旅行时我尽量像当地人一样生活。'}],
+  'lunch':[{en:'Let\'s have lunch together.',cn:'我们一起吃午饭吧。'},{en:'Lunch time is at 12 noon.',cn:'午饭时间是中午12点。'},{en:'I had a quick lunch today.',cn:'我今天午饭吃得很快。'}],
+  'main course':[{en:'For the main course, I\'ll have the steak.',cn:'主菜我要牛排。'},{en:'The main course came with rice and vegetables.',cn:'主菜配有米饭和蔬菜。'},{en:'I was already full before the main course.',cn:'主菜上来之前我已经饱了。'}],
+  'mall':[{en:'Let\'s go to the mall this weekend.',cn:'这周末我们去商场吧。'},{en:'The mall is huge and has everything.',cn:'商场很大，什么都有。'},{en:'I spent all day at the mall.',cn:'我在商场逛了一整天。'}],
+  'market':[{en:'The local market is worth visiting.',cn:'当地市场值得一去。'},{en:'I buy fruit at the market.',cn:'我在市场买水果。'},{en:'The market is busy in the morning.',cn:'市场早上很热闹。'}],
+  'maybe':[{en:'Maybe we can meet tomorrow.',cn:'也许我们明天可以见面。'},{en:'I\'m not sure, maybe.',cn:'我不确定，也许吧。'},{en:'Maybe you\'re right.',cn:'也许你是对的。'}],
+  'medicine':[{en:'Take this medicine three times a day.',cn:'这药一天吃三次。'},{en:'I forgot to take my medicine this morning.',cn:'我今天早上忘记吃药了。'},{en:'This medicine may make you sleepy.',cn:'这种药可能会让你犯困。'}],
+  'menu':[{en:'Can I see the menu, please?',cn:'请给我看一下菜单好吗？'},{en:'The menu has many vegetarian options.',cn:'菜单上有很多素食选择。'},{en:'What do you recommend on the menu?',cn:'菜单上你推荐什么？'}],
+  'metro':[{en:'Take the metro to the city center.',cn:'坐地铁去市中心。'},{en:'The metro is very fast and cheap.',cn:'地铁又快又便宜。'},{en:'Which metro line goes to the museum?',cn:'哪条地铁线去博物馆？'}],
+  'minibar':[{en:'The minibar has snacks and drinks.',cn:'迷你吧里有零食和饮料。'},{en:'Minibar items are quite expensive.',cn:'迷你吧的东西相当贵。'},{en:'Don\'t drink from the minibar - it\'s not free.',cn:'别喝迷你吧里的——不是免费的。'}],
+  'minute':[{en:'Wait a minute, I\'m coming.',cn:'等一下，我马上来。'},{en:'It\'s 5 minutes away.',cn:'5分钟就到了。'},{en:'Give me five more minutes.',cn:'再给我五分钟。'}],
+  'month':[{en:'I\'ve been here for a month.',cn:'我在这里已经一个月了。'},{en:'The rent is due every month.',cn:'每个月都要交房租。'},{en:'Next month I\'m traveling.',cn:'下个月我要去旅行。'}],
+  'morning':[{en:'Good morning! How did you sleep?',cn:'早上好！睡得怎么样？'},{en:'I exercise every morning.',cn:'我每天早上锻炼。'},{en:'The morning air is fresh.',cn:'早晨的空气很清新。'}],
+  'mountain':[{en:'We climbed to the top of the mountain.',cn:'我们爬到了山顶。'},{en:'The mountain view is breathtaking.',cn:'山景令人叹为观止。'},{en:'It snowed on the mountain last night.',cn:'昨晚山上下雪了。'}],
+  'museum':[{en:'The museum is free on Sundays.',cn:'博物馆周日免费开放。'},{en:'We spent three hours at the museum.',cn:'我们在博物馆待了三个小时。'},{en:'This museum has many ancient artifacts.',cn:'这个博物馆有很多古代文物。'}],
+  'name':[{en:'What\'s your name?',cn:'你叫什么名字？'},{en:'My name is Tom.',cn:'我叫汤姆。'},{en:'I forgot your name again.',cn:'我又忘了你的名字了。'}],
+  'napkin':[{en:'Could I have another napkin, please?',cn:'能再给我一张餐巾纸吗？'},{en:'Put the napkin on your lap.',cn:'把餐巾放在腿上。'},{en:'I spilled coffee on my napkin.',cn:'我把咖啡洒在餐巾上了。'}],
+  'near':[{en:'Is there a restaurant near here?',cn:'这附近有餐厅吗？'},{en:'We live near the park.',cn:'我们住在公园附近。'},{en:'The airport is near the city.',cn:'机场离城市很近。'}],
+  'night':[{en:'Good night! Sweet dreams.',cn:'晚安！好梦。'},{en:'I work at night.',cn:'我晚上工作。'},{en:'The city is beautiful at night.',cn:'城市的夜晚很美。'}],
+  'no':[{en:'No, thank you.',cn:'不用了，谢谢。'},{en:'No problem at all.',cn:'完全没问题。'},{en:'No way! That\'s impossible.',cn:'不可能！那太离谱了。'}],
+  'noodles':[{en:'I love Chinese noodles.',cn:'我喜欢中国面条。'},{en:'The noodles are too salty.',cn:'面条太咸了。'},{en:'Let\'s get noodles for lunch.',cn:'我们中午吃面条吧。'}],
+  'okay':[{en:'Okay, let\'s do it.',cn:'好的，我们开始吧。'},{en:'Is everything okay?',cn:'一切都好吗？'},{en:'Okay, I\'ll see you later.',cn:'好的，待会儿见。'}],
+  'order':[{en:'Are you ready to order?',cn:'您准备好点餐了吗？'},{en:'I\'d like to order the pasta, please.',cn:'我想点意大利面。'},{en:'We ordered way too much food.',cn:'我们点得太多了。'}],
+  'pain':[{en:'I\'m in a lot of pain right now.',cn:'我现在非常痛。'},{en:'The pain is getting worse.',cn:'疼痛越来越厉害了。'},{en:'This medicine will help with the pain.',cn:'这种药能缓解疼痛。'}],
+  'park':[{en:'Let\'s take a walk in the park.',cn:'我们去公园散散步吧。'},{en:'The park is very peaceful in the morning.',cn:'早上的公园非常宁静。'},{en:'There\'s a beautiful park near my house.',cn:'我家附近有一个很漂亮的公园。'}],
+  'passport':[{en:'Always keep your passport in a safe place.',cn:'请始终将护照放在安全的地方。'},{en:'You need a valid passport to travel abroad.',cn:'您需要有效护照才能出国旅行。'},{en:'I almost forgot my passport at home.',cn:'我差点把护照忘在家里了。'}],
+  'pharmacy':[{en:'Where is the nearest pharmacy?',cn:'最近的药店在哪里？'},{en:'You can buy this at any pharmacy.',cn:'你可以在任何药店买到这个。'},{en:'The pharmacist gave me some advice.',cn:'药剂师给了我一些建议。'}],
+  'phone':[{en:'My phone is almost dead.',cn:'我手机快没电了。'},{en:'I use my phone for everything.',cn:'我什么事都用手机。'},{en:'Can I borrow your phone?',cn:'我能借一下你的手机吗？'}],
+  'phone number':[{en:'Can I have your phone number?',cn:'能给我你的电话号码吗？'},{en:'My phone number is 123-4567.',cn:'我的电话号码是123-4567。'},{en:'I\'ll save your phone number.',cn:'我会保存你的电话号码。'}],
+  'pillow':[{en:'I\'d like a pillow and blanket, please.',cn:'请给我一个枕头和毯子。'},{en:'This pillow is very comfortable.',cn:'这个枕头非常舒服。'},{en:'I can\'t sleep without a pillow.',cn:'没有枕头我睡不着。'}],
+  'pilot':[{en:'The pilot will make an announcement soon.',cn:'飞行员很快会进行广播。'},{en:'Our pilot has 20 years of experience.',cn:'我们的飞行员有20年的经验。'},{en:'Thank the pilots for a safe flight.',cn:'感谢飞行员带来安全的飞行。'}],
+  'platform':[{en:'The train arrives on platform 3.',cn:'火车在3号站台进站。'},{en:'Which platform does the express use?',cn:'快车在哪个站台？'},{en:'Please wait on the platform.',cn:'请在站台等候。'}],
+  'please':[{en:'Please sit down and make yourself comfortable.',cn:'请坐，别拘束。'},{en:'Could you repeat that, please?',cn:'请你再说一遍好吗？'},{en:'Please wait for me here.',cn:'请在这里等我。'}],
+  'post office':[{en:'Where is the nearest post office?',cn:'最近的邮局在哪里？'},{en:'I need to go to the post office.',cn:'我需要去邮局。'},{en:'The post office is closed today.',cn:'邮局今天关门了。'}],
+  'prescription':[{en:'I need to refill my prescription.',cn:'我需要续处方。'},{en:'This medicine requires a prescription.',cn:'这种药需要处方才能买。'},{en:'The doctor wrote me a prescription.',cn:'医生给我开了处方。'}],
+  'price':[{en:'What\'s the price of this bag?',cn:'这个包多少钱？'},{en:'The price is a bit too high for me.',cn:'这个价格对我来说有点高。'},{en:'Prices here are very reasonable.',cn:'这里的价格非常合理。'}],
+  'question':[{en:'I have a question for you.',cn:'我有一个问题要问你。'},{en:'Please answer my question.',cn:'请回答我的问题。'},{en:'Any questions? Let me know.',cn:'有问题吗？告诉我。'}],
+  'rainy':[{en:'It\'s been rainy all week.',cn:'这一周都在下雨。'},{en:'Don\'t forget your umbrella - it\'s rainy outside.',cn:'别忘了带伞——外面在下雨。'},{en:'Rainy days are perfect for reading.',cn:'雨天最适合读书了。'}],
+  'really':[{en:'Really? I didn\'t know that.',cn:'真的吗？我都不知道。'},{en:'I really appreciate your help.',cn:'我真的很感谢你的帮助。'},{en:'Are you really going?',cn:'你真的要走了吗？'}],
+  'receipt':[{en:'Can I get a receipt, please?',cn:'请给我一张收据好吗？'},{en:'I need the receipt for my company.',cn:'我需要收据给公司报销。'},{en:'Keep the receipt in case you need to return it.',cn:'保留收据，万一你需要退货呢。'}],
+  'refund':[{en:'Can I get a refund for this?',cn:'这个我可以退款吗？'},{en:'They refused to give me a refund.',cn:'他们拒绝给我退款。'},{en:'You have 30 days to request a refund.',cn:'你有30天的时间申请退款。'}],
+  'rental car':[{en:'We rented a car for the trip.',cn:'我们租了一辆车旅行。'},{en:'Where is the rental car company?',cn:'租车公司在哪里？'},{en:'I need to return the rental car.',cn:'我需要还车。'}],
+  'reservation':[{en:'I have a reservation under the name Smith.',cn:'我以史密斯的名字预订了房间。'},{en:'Do you have a reservation with us?',cn:'您在我们这里有预订吗？'},{en:'I made a reservation online last week.',cn:'我上周在网上预订了。'}],
+  'restaurant':[{en:'Let\'s go to a restaurant for dinner.',cn:'我们去餐厅吃饭吧。'},{en:'This restaurant is very popular.',cn:'这家餐厅很受欢迎。'},{en:'The restaurant is closed on Mondays.',cn:'这家餐厅周一关门。'}],
+  'restroom':[{en:'Excuse me, where is the restroom?',cn:'请问洗手间在哪里？'},{en:'The restroom is on the second floor.',cn:'洗手间在二楼。'},{en:'I need to use the restroom.',cn:'我需要用一下洗手间。'}],
+  'rice':[{en:'I\'d like a bowl of rice, please.',cn:'请给我一碗米饭。'},{en:'Rice is a staple food in Asia.',cn:'米饭是亚洲的主食。'},{en:'The rice is a bit cold.',cn:'米饭有点凉了。'}],
+  'right':[{en:'Turn right after the traffic light.',cn:'红绿灯后右转。'},{en:'You\'re right! I agree.',cn:'你说得对！我同意。'},{en:'It\'s on the right side of the street.',cn:'在街道的右边。'}],
+  'room':[{en:'Our room is on the 10th floor.',cn:'我们的房间在10楼。'},{en:'The room has a great view.',cn:'房间视野很好。'},{en:'Please clean the room today.',cn:'请今天打扫房间。'}],
+  'room key':[{en:'I can\'t find my room key anywhere.',cn:'我到处都找不到房卡。'},{en:'Please return your room key when you check out.',cn:'退房时请交还房卡。'},{en:'My room key doesn\'t work.',cn:'我的房卡打不开门。'}],
+  'room service':[{en:'I ordered dinner from room service.',cn:'我从客房服务点了晚餐。'},{en:'Room service is available 24 hours.',cn:'客房服务24小时可用。'},{en:'Can I get room service at this hour?',cn:'这个点还能叫客房服务吗？'}],
+  'rush hour':[{en:'Avoid driving during rush hour.',cn:'避免在高峰时段开车。'},{en:'Rush hour is from 5 to 7 PM.',cn:'高峰时段是下午5点到7点。'},{en:'I got stuck in rush hour traffic.',cn:'我被堵在高峰车流里了。'}],
+  'safe':[{en:'Put your valuables in the room safe.',cn:'把贵重物品放在房间保险箱里。'},{en:'I can\'t open the safe.',cn:'我打不开保险箱。'},{en:'The safe is in the closet.',cn:'保险箱在衣柜里。'}],
+  'salt':[{en:'Could you pass the salt, please?',cn:'请把盐递给我好吗？'},{en:'Too much salt is bad for you.',cn:'吃太多盐对你不好。'},{en:'This dish needs more salt.',cn:'这道菜需要多加点盐。'}],
+  'schedule':[{en:'What\'s the train schedule?',cn:'火车时刻表是什么样的？'},{en:'The bus runs on a fixed schedule.',cn:'公交车按固定时刻表运行。'},{en:'Check the schedule online.',cn:'在网上查时刻表。'}],
+  'seat belt':[{en:'Please fasten your seat belt during takeoff.',cn:'起飞时请系好安全带。'},{en:'The seat belt sign is still on.',cn:'安全带指示灯仍然亮着。'},{en:'You may unfasten your seat belt now.',cn:'现在您可以解开安全带了。'}],
+  'shoes':[{en:'I need a new pair of shoes.',cn:'我需要一双新鞋。'},{en:'These shoes are very comfortable.',cn:'这双鞋非常舒服。'},{en:'Try on the shoes before buying.',cn:'买鞋之前先试穿。'}],
+  'shower':[{en:'I\'m going to take a shower.',cn:'我去冲个澡。'},{en:'The shower has great water pressure.',cn:'淋浴的水压很大。'},{en:'Is there hot water for the shower?',cn:'淋浴有热水吗？'}],
+  'single room':[{en:'A single room is perfect for solo travelers.',cn:'单人间非常适合独自旅行的人。'},{en:'How much is a single room per night?',cn:'单人间每晚多少钱？'},{en:'I\'d like a single room with a view.',cn:'我想要一间有风景的单人间。'}],
+  'size':[{en:'What size do you wear?',cn:'你穿什么尺码？'},{en:'This is too small. Do you have a larger size?',cn:'这个太小了。有大一点的吗？'},{en:'I\'m a medium size.',cn:'我穿中号。'}],
+  'sorry':[{en:'I\'m sorry I\'m late.',cn:'对不起我迟到了。'},{en:'Sorry, I didn\'t catch your name.',cn:'抱歉，我没听清你的名字。'},{en:'I\'m so sorry for your loss.',cn:'对你的损失我深表遗憾。'}],
+  'souvenir':[{en:'I bought some souvenirs for my family.',cn:'我给家人买了一些纪念品。'},{en:'Where can I buy local souvenirs?',cn:'我在哪里可以买到当地的纪念品？'},{en:'This keychain makes a great souvenir.',cn:'这个钥匙扣是很好的纪念品。'}],
+  'spicy':[{en:'This dish is too spicy for me.',cn:'这道菜对我来说太辣了。'},{en:'I love spicy food very much.',cn:'我非常喜欢吃辣的食物。'},{en:'Is the Sichuan chicken very spicy?',cn:'四川鸡很辣吗？'}],
+  'station':[{en:'I\'ll meet you at the train station.',cn:'我在火车站接你。'},{en:'The station is very busy during rush hour.',cn:'高峰期间车站非常拥挤。'},{en:'Which station are we arriving at?',cn:'我们到达哪个站？'}],
+  'store':[{en:'Is there a convenience store near here?',cn:'这附近有便利店吗？'},{en:'The store closes at 9 PM.',cn:'商店晚上9点关门。'},{en:'I\'m going to the store later.',cn:'我待会儿去商店。'}],
+  'straight':[{en:'Go straight for two blocks.',cn:'直走两个街区。'},{en:'Keep going straight ahead.',cn:'一直往前走。'},{en:'Just go straight and you\'ll see it.',cn:'直走你就能看到。'}],
+  'subway':[{en:'The subway is the fastest way to get around.',cn:'地铁是最快的出行方式。'},{en:'Which subway line goes to the airport?',cn:'哪条地铁线去机场？'},{en:'The subway station is just around the corner.',cn:'地铁站就在拐角处。'}],
+  'sugar':[{en:'How much sugar do you take in coffee?',cn:'你咖啡里放多少糖？'},{en:'I don\'t put sugar in my tea.',cn:'我茶里不放糖。'},{en:'Sugar is not very healthy.',cn:'糖不是很健康。'}],
+  'suite':[{en:'We upgraded to a suite for our anniversary.',cn:'我们为周年纪念升级到了套房。'},{en:'The presidential suite is on the top floor.',cn:'总统套房在顶层。'},{en:'This suite has a living room and bedroom.',cn:'这套套房有客厅和卧室。'}],
+  'sunny':[{en:'It\'s a beautiful sunny day.',cn:'今天是个阳光明媚的好日子。'},{en:'I hope it stays sunny for the weekend.',cn:'我希望周末一直是晴天。'},{en:'It was sunny and warm yesterday.',cn:'昨天天气晴朗温暖。'}],
+  'supermarket':[{en:'I\'m going to the supermarket.',cn:'我要去超市。'},{en:'The supermarket is open 24 hours.',cn:'超市24小时营业。'},{en:'I buy groceries at the supermarket.',cn:'我在超市买食品杂货。'}],
+  'sure':[{en:'Sure, no problem.',cn:'当然，没问题。'},{en:'Are you sure about this?',cn:'你确定吗？'},{en:'Sure thing! I\'d be happy to help.',cn:'当然可以！我很乐意帮忙。'}],
+  'swimming pool':[{en:'Does the hotel have a swimming pool?',cn:'酒店有游泳池吗？'},{en:'The swimming pool is open until 10 PM.',cn:'游泳池开放到晚上10点。'},{en:'Let\'s go to the swimming pool.',cn:'我们去游泳池吧。'}],
+  'takeoff':[{en:'Please remain seated during takeoff.',cn:'起飞期间请保持就座。'},{en:'Takeoff was very smooth.',cn:'起飞非常平稳。'},{en:'I always feel nervous during takeoff.',cn:'起飞时我总是感到紧张。'}],
+  'taxi':[{en:'Please call me a taxi to the airport.',cn:'请帮我叫一辆去机场的出租车。'},{en:'How long is the taxi ride to downtown?',cn:'坐出租车到市中心要多久？'},{en:'The taxi driver was very friendly.',cn:'出租车司机非常友好。'}],
+  'tea':[{en:'Would you like some tea?',cn:'你想喝点茶吗？'},{en:'Green tea is very healthy.',cn:'绿茶非常健康。'},{en:'I drink tea every afternoon.',cn:'我每天下午喝茶。'}],
+  'temperature':[{en:'The temperature dropped suddenly last night.',cn:'昨晚气温突然下降了。'},{en:'What\'s the temperature outside?',cn:'外面气温多少度？'},{en:'High temperatures are expected this week.',cn:'预计本周会有高温。'}],
+  'terminal':[{en:'Your flight leaves from Terminal 2.',cn:'您的航班从2号航站楼出发。'},{en:'The terminal has many shops and restaurants.',cn:'航站楼里有很多商店和餐厅。'},{en:'We walked from one terminal to another.',cn:'我们从一个航站楼走到另一个航站楼。'}],
+  'thank you':[{en:'Thank you for your help!',cn:'谢谢你的帮助！'},{en:'Thank you very much for coming.',cn:'非常感谢你的到来。'},{en:'I just want to say thank you.',cn:'我只是想对你说声谢谢。'}],
+  'there':[{en:'The store is over there.',cn:'商店在那边。'},{en:'Let\'s go there together.',cn:'我们一起去吧。'},{en:'There you are! I was looking for you.',cn:'你在这儿！我一直在找你。'}],
+  'ticket':[{en:'Where can I buy a ticket?',cn:'我在哪里可以买票？'},{en:'I need a one-way ticket to Shanghai.',cn:'我要一张去上海的单程票。'},{en:'Don\'t forget to validate your ticket.',cn:'别忘了打卡验票。'}],
+  'tip':[{en:'It\'s customary to tip 15% in restaurants.',cn:'餐厅里通常给15%的小费。'},{en:'Should we leave a tip?',cn:'我们要给小费吗？'},{en:'The service was great, so I tipped well.',cn:'服务很好，所以我给了不少小费。'}],
+  'today':[{en:'Today is a beautiful day.',cn:'今天是个好天气。'},{en:'What are you doing today?',cn:'你今天在做什么？'},{en:'I\'m tired today.',cn:'我今天很累。'}],
+  'toilet':[{en:'Where is the toilet?',cn:'厕所在哪里？'},{en:'The toilet is down the hall.',cn:'厕所在走廊尽头。'},{en:'The toilet is very clean.',cn:'厕所很干净。'}],
+  'tomorrow':[{en:'See you tomorrow!',cn:'明天见！'},{en:'Tomorrow is my birthday.',cn:'明天是我的生日。'},{en:'What\'s the plan for tomorrow?',cn:'明天有什么计划？'}],
+  'tourist':[{en:'There are many tourists here in summer.',cn:'夏天这里有很多游客。'},{en:'I\'m a tourist from China.',cn:'我是来自中国的游客。'},{en:'Tourists often take lots of photos.',cn:'游客经常拍很多照片。'}],
+  'towel':[{en:'We need more towels in the bathroom.',cn:'浴室需要更多毛巾。'},{en:'The towels are fresh and clean.',cn:'毛巾很干净清爽。'},{en:'Hang your towel up after use.',cn:'用完后把毛巾挂起来。'}],
+  'traffic':[{en:'The traffic is terrible during rush hour.',cn:'高峰时段交通很糟糕。'},{en:'There\'s a lot of traffic on the highway.',cn:'高速公路上车很多。'},{en:'Traffic is lighter on weekends.',cn:'周末交通比较通畅。'}],
+  'train':[{en:'The train to Beijing leaves at 8 AM.',cn:'去北京的火车早上8点开。'},{en:'I prefer traveling by train to flying.',cn:'比起坐飞机，我更喜欢坐火车旅行。'},{en:'We need to catch the 5:30 train.',cn:'我们得赶5点半的火车。'}],
+  'transfer':[{en:'You need to transfer at the next station.',cn:'你需要在下一站换乘。'},{en:'Is this the transfer desk for international flights?',cn:'这是国际航班转机柜台吗？'},{en:'The transfer takes about 30 minutes.',cn:'转乘大约需要30分钟。'}],
+  'transit':[{en:'Passengers in transit please follow the signs.',cn:'中转旅客请跟随指示牌。'},{en:'Do I need a visa for transit?',cn:'我过境需要签证吗？'},{en:'The transit area has a lounge.',cn:'中转区有一个休息室。'}],
+  'tray table':[{en:'Please put your tray table up.',cn:'请收起小桌板。'},{en:'The tray table is broken.',cn:'小桌板坏了。'},{en:'Put your drink on the tray table.',cn:'把饮料放在小桌板上。'}],
+  'turbulence':[{en:'We\'re experiencing some turbulence.',cn:'我们遇到了一些气流颠簸。'},{en:'Turbulence is normal and safe.',cn:'气流颠簸是正常的，很安全。'},{en:'Please stay seated during turbulence.',cn:'气流颠簸期间请坐着别动。'}],
+  'vegetable':[{en:'You should eat more vegetables.',cn:'你应该多吃蔬菜。'},{en:'The vegetables are organic.',cn:'这些蔬菜是有机的。'},{en:'I don\'t like cooked vegetables.',cn:'我不喜欢煮熟的蔬菜。'}],
+  'vegetarian':[{en:'Do you have vegetarian options?',cn:'你们有素食选择吗？'},{en:'I\'m a vegetarian, so I don\'t eat meat.',cn:'我是素食者，所以不吃肉。'},{en:'This restaurant has great vegetarian food.',cn:'这家餐厅的素食很棒。'}],
+  'visa':[{en:'Do I need a visa to enter this country?',cn:'我需要签证才能进入这个国家吗？'},{en:'My tourist visa is valid for 30 days.',cn:'我的旅游签证有效期为30天。'},{en:'She applied for a work visa last month.',cn:'她上个月申请了工作签证。'}],
+  'waiter':[{en:'Excuse me, waiter! Can we get some water?',cn:'服务员！能给我们来点水吗？'},{en:'The waiter was very attentive.',cn:'服务员非常周到。'},{en:'Ask the waiter for more napkins.',cn:'问服务员再要一些餐巾纸。'}],
+  'wake-up call':[{en:'I\'d like a wake-up call at 6 AM, please.',cn:'请早上6点叫醒我。'},{en:'Did you receive the wake-up call?',cn:'你接到叫醒电话了吗？'},{en:'I set a wake-up call for 7 o\'clock.',cn:'我设置了7点的叫醒服务。'}],
+  'watch':[{en:'He wears an expensive watch.',cn:'他戴着一块昂贵的手表。'},{en:'My watch stopped working.',cn:'我的手表不走了。'},{en:'What time does your watch say?',cn:'你的表几点了？'}],
+  'water':[{en:'Could I have a glass of water, please?',cn:'请给我一杯水好吗？'},{en:'Drink plenty of water every day.',cn:'每天要喝足够的水。'},{en:'The water here is safe to drink.',cn:'这里的水可以安全饮用。'}],
+  'weather':[{en:'The weather is perfect today.',cn:'今天天气真好。'},{en:'What\'s the weather like tomorrow?',cn:'明天天气怎么样？'},{en:'The weather can change quickly here.',cn:'这里天气变化很快。'}],
+  'week':[{en:'I\'ll be back next week.',cn:'我下周回来。'},{en:'We have a week of vacation.',cn:'我们有一周的假期。'},{en:'A week has seven days.',cn:'一周有七天。'}],
+  'welcome':[{en:'Welcome to our hotel!',cn:'欢迎光临我们酒店！'},{en:'You\'re welcome - it was my pleasure.',cn:'不客气——这是我的荣幸。'},{en:'Welcome aboard this flight to Paris.',cn:'欢迎乘坐本次飞往巴黎的航班。'}],
+  'wifi':[{en:'What\'s the WiFi password?',cn:'WiFi密码是什么？'},{en:'The hotel has free WiFi.',cn:'酒店有免费WiFi。'},{en:'The WiFi is slow in my room.',cn:'我房间的WiFi很慢。'}],
+  'window seat':[{en:'I love the window seat for the view.',cn:'我喜欢靠窗座位看风景。'},{en:'Can I switch to a window seat?',cn:'我可以换到靠窗的座位吗？'},{en:'The window seat offers amazing views.',cn:'靠窗座位能看到令人惊叹的景色。'}],
+  'wine':[{en:'I\'d like a glass of red wine, please.',cn:'请给我一杯红酒。'},{en:'This wine goes well with steak.',cn:'这款酒配牛排很好。'},{en:'White wine is served cold.',cn:'白葡萄酒冰镇后饮用。'}],
+  'year':[{en:'Happy New Year!',cn:'新年快乐！'},{en:'I\'ve studied English for three years.',cn:'我学英语已经三年了。'},{en:'Last year I visited Japan.',cn:'去年我去了日本。'}],
+  'yes':[{en:'Yes, I understand.',cn:'是的，我明白了。'},{en:'Yes, that\'s correct.',cn:'是的，没错。'},{en:'Yes, I\'d love to come.',cn:'是的，我很愿意来。'}],
+  'yesterday':[{en:'I went to the park yesterday.',cn:'我昨天去了公园。'},{en:'Yesterday was a long day.',cn:'昨天是漫长的一天。'},{en:'What did you do yesterday?',cn:'你昨天做了什么？'}]
+};
+
 function generateWordExamples(word, translation) {
   if (!word) return [];
   var w = word.toLowerCase().trim();
   var trans = (translation || '').trim();
   var cnRef = trans || w;
-  var examples = [];
 
-  // V22: For full sentences/expressions, generate contextual examples
-  if (/^(how|what|where|when|why|who|which|is|are|do|does|can|could|would|will|i|you|he|she|they|we|it)\s/.test(w)) {
-    // These are phrases/sentences - generate usage context examples
+  // ===== CURATED EXAMPLES (highest quality) =====
+  var CURATED = EXAMPLE_SENTENCES[w];
+  if (CURATED && CURATED.length) {
+    return CURATED.slice(0, 3);
+  }
+
+  // For full sentences/expressions
+  if (/^(how|what|where|when|why|who|which|is|are|do|does|can|could|would|will|i |you |he |she |they |we |it )/.test(w)) {
     return [
-      { en: 'Can you say "' + w + '" again?', cn: '你能再说一遍"' + cnRef + '"吗？' },
-      { en: 'I often use "' + w + '" in conversations.', cn: '我经常在对话中使用"' + cnRef + '"。' },
-      { en: 'Practice saying "' + w + '" out loud.', cn: '练习大声说"' + cnRef + '"。' }
+      { en: 'A: "' + capitalize(w) + '"', cn: '甲："' + cnRef + '"' },
+      { en: "That's a useful expression.", cn: "这是一个很有用的表达。" },
+      { en: "Practice saying it slowly.", cn: "慢慢练习说。" }
     ];
   }
 
-  // V22: For greetings and basic expressions, generate usage examples instead of skipping
-  var skipWords = ['hello','hi','hey','goodbye','bye','see you','good morning','good afternoon','good evening','good night','nice to meet you','thank you','thanks','welcome','sorry','excuse me','please','my name is','how old','no problem','really','maybe','sure','ok','okay','yes','no','let us','let\'s','someone','but','because','so','who','why','when','where','here','there','now','today','tomorrow','yesterday','tonight'];
-  if (skipWords.indexOf(w) !== -1) {
-    return [
-      { en: 'When someone says "' + w + '", I feel welcomed.', cn: '当有人说"' + cnRef + '"时，我感到受欢迎。' },
-      { en: 'Try using "' + w + '" in your next conversation.', cn: '试着在下一次对话中使用"' + cnRef + '"。' },
-      { en: '"' + w + '" is a very common expression.', cn: '"' + cnRef + '"是一个非常常见的表达。' }
-    ];
-  }
-
-  // Detect word type from translation and word structure
+  // Detect word type
   var isPhrase = w.indexOf(' ') > -1 || w.indexOf('-') > -1;
   var isVerb = false;
   var isAdj = false;
-  var isNoun = false;
+  var isNoun = true;
 
-  // Heuristic: check translation for common patterns
-  // V17: Phrases (multi-word) are almost always nouns, skip verb/adj detection
-  if (trans && !isPhrase) {
-    // Verbs often end with action characters
-    if (/[说问告诉解释记得忘记需要想要喜欢知道认为觉得希望开始停止继续帮助买卖给拿带放看听听写读学教吃喝住走跑飞来去坐站睡醒穿脱].$/.test(trans) || 
-        /^(说|问|告诉|解释|记得|忘记|需要|想要|喜欢|知道|认为|觉得|希望|开始|停止|继续|帮助|问候|打招呼|值机|登机|入住|退房|换乘|转机|申报)/.test(trans)) {
-      isVerb = true;
+  // Verb detection
+  if (trans) {
+    var verbEndChars = '说问告诉解释记得忘记需要想要喜欢知道认为觉得希望开始停止继续帮助买卖给拿带放看听听写读学教吃喝住走跑飞来去坐站睡醒穿脱游骑驾驶乘坐到达出发返回预订取消确认安排推荐建议申请排队等待换乘转机值机登机入住退房申报问候打招呼比较休息睡觉醒来刷牙洗脸洗澡梳头化妆刮胡子穿衣脱衣拍照录音打字阅读写作学习工作唱歌跳舞游泳爬山跑步走路运动旅行旅游观光购物吃饭喝酒点菜付钱买单结账点单叫车租车停车';
+    var verbStarts = ['说','问','告诉','解释','记得','忘记','需要','想要','喜欢','知道','认为','觉得','希望','开始','停止','继续','帮助','问候','打招呼','值机','登机','入住','退房','换乘','转机','申报','预订','取消','确认','安排','推荐','建议','比较','申请','排队','等待','到达','出发','返回','乘坐','驾驶','飞行','游泳','跑步','走路','爬山','跳舞','唱歌','阅读','写作','学习','工作','休息','睡觉','醒来','穿衣','脱衣','洗澡','刮胡子','化妆','刷牙','洗脸','梳头','拍照','录音','打字','吃饭','喝酒','点菜','付钱','买单','结账','点单','叫车','租车','停车','旅游','观光','购物','出差','请假','加班','面试','辞职','退休','搬家','装修','打扫','整理','收拾','打包','打开','关上','发送','收到','回复','保存','删除','复制','粘贴','登录','退出','注册','安装','卸载','更新','升级','修复','检查','测量','计算','添加','减少','增加','降低','提高','改变','转换','选择','同意','拒绝','接受','放弃','坚持','完成','成功','失败','尝试'];
+    for (var vi = 0; vi < verbStarts.length; vi++) {
+      if (trans.indexOf(verbStarts[vi]) === 0) { isVerb = true; isNoun = false; break; }
     }
-    // Adjectives often end with 的
-    if (trans.indexOf('的') === trans.length - 1 || /(迟的|准点的|延误的|兴奋的|感激的|重的|美丽的|便宜的|昂贵的)/.test(trans)) {
-      isAdj = true;
+    if (!isVerb) {
+      for (var vc = 0; vc < verbEndChars.length; vc++) {
+        if (trans.charAt(trans.length - 1) === verbEndChars.charAt(vc)) {
+          isVerb = true; isNoun = false; break;
+        }
+      }
     }
   }
-  // Default to noun
-  if (!isVerb && !isAdj) isNoun = true;
 
-  // Determine article: use "the" for specific nouns, "a/an" for countable
-  var article = 'the';
+  // Adjective detection
+  if (trans && !isVerb) {
+    if (trans.charAt(trans.length - 1) === '的' ||
+        /(迟|准点|延误|兴奋|感激|美丽|便宜|昂贵|舒服|危险|安全|忙碌|空闲|重要|必要|困难|容易|可能|特别|普通|完美|糟糕|精彩|有趣|无聊|友好|有礼貌|粗鲁|大方|合理|方便|可用|直接|当地|正宗|新|旧|年轻|年老|快|慢|高|低|长|短|大|小|多|少|胖|瘦|热|冷|暖|凉|甜|咸|酸|苦|辣|新鲜|著名|受欢迎|安静|吵闹|拥挤|干净|脏|富裕|贫穷|幸运|不幸|开心|难过|生气|害怕|紧张|放松|担心|惊讶|疲惫|失望|满意|抱歉|骄傲|谦虚|勇敢|胆小|诚实|勤劳|懒惰|聪明|愚蠢|善良|可爱|讨厌|简单|复杂|清楚|模糊|正确|错误|真|假|相同|不同|相似|奇怪|正常|异常|早|晚|轻|软|硬|干|湿)/.test(trans)) {
+      isAdj = true; isNoun = false;
+    }
+  }
+
+  // Uncountable nouns
+  var uncountableWords = 'water milk juice coffee tea beer wine sugar salt rice bread cheese butter soup food fruit money time work music art love happiness sadness anger fear courage knowledge information advice news weather furniture luggage baggage equipment traffic transportation homework research evidence pollution energy electricity gas oil wood paper glass metal plastic cloth medicine health education experience progress success failure luck freedom independence responsibility authority power strength weakness beauty truth fact opinion idea thought dream memory history future space distance speed quality price cost value weight height length width depth size shape color taste smell sound noise voice light darkness warmth cold heat ice snow rain wind cloud sun moon star sky ocean sea river lake forest desert island beach coast shore'.split(' ');
+  var isUncountable = uncountableWords.indexOf(w) !== -1;
+
   var firstLetter = w.charAt(0);
-  if ('aeiou'.indexOf(firstLetter) >= 0) article = 'an';
-  else article = 'a';
-
-  // For phrases, use "the" or no article
-  var nounPhrase = isPhrase ? w : (article + ' ' + w);
+  var isVowelStart = 'aeiou'.indexOf(firstLetter) >= 0;
+  var article = isVowelStart ? 'an' : 'a';
+  var nounPhrase = isPhrase ? w : (isUncountable ? w : (article + ' ' + w));
 
   var patterns = [];
 
   if (isVerb) {
     patterns = [
-      { en: "I usually " + w + " every day.", cn: "我每天通常" + cnRef + "。" },
+      { en: "I need to " + w + " soon.", cn: "我需要尽快" + cnRef + "。" },
       { en: "Can you " + w + " for me?", cn: "你能帮我" + cnRef + "吗？" },
-      { en: "She wants to " + w + " tomorrow.", cn: "她明天想" + cnRef + "。" },
-      { en: "It is important to " + w + " correctly.", cn: "正确地" + cnRef + "很重要。" },
-      { en: "They will " + w + " together.", cn: "他们将一起" + cnRef + "。" },
-      { en: "Do you know how to " + w + "?", cn: "你知道怎么" + cnRef + "吗？" }
+      { en: "Don't forget to " + w + ".", cn: "别忘了" + cnRef + "。" },
+      { en: "Let's " + w + " together.", cn: "我们一起" + cnRef + "吧。" },
+      { en: "I usually " + w + " every day.", cn: "我通常每天都" + cnRef + "。" },
+      { en: "I decided to " + w + " today.", cn: "我决定今天" + cnRef + "。" },
+      { en: "Would you like to " + w + "?", cn: "你想" + cnRef + "吗？" },
+      { en: "I learned how to " + w + ".", cn: "我学会了怎么" + cnRef + "。" }
     ];
   } else if (isAdj) {
     patterns = [
       { en: "This is very " + w + ".", cn: "这非常" + cnRef + "。" },
-      { en: "The weather is " + w + " today.", cn: "今天天气" + cnRef + "。" },
-      { en: "She looks " + w + ".", cn: "她看起来" + cnRef + "。" },
-      { en: "I think it is too " + w + ".", cn: "我觉得太" + cnRef + "了。" },
-      { en: "Everything seems " + w + " here.", cn: "这里一切看起来" + cnRef + "。" }
+      { en: "I think it's too " + w + ".", cn: "我觉得太" + cnRef + "了。" },
+      { en: "Is it always this " + w + "?", cn: "总是这么" + cnRef + "吗？" },
+      { en: "It gets more " + w + " in summer.", cn: "夏天会更" + cnRef + "。" },
+      { en: "She looks really " + w + ".", cn: "她看起来很" + cnRef + "。" },
+      { en: "I feel much more " + w + " now.", cn: "我现在感觉" + cnRef + "多了。" }
     ];
   } else {
-    // Noun patterns
-    patterns = [
-      { en: "I need " + nounPhrase + " right now.", cn: "我现在需要" + cnRef + "。" },
-      { en: "Where can I find " + nounPhrase + "?", cn: "我在哪里能找到" + cnRef + "？" },
-      { en: "This " + w + " is very useful.", cn: "这个" + cnRef + "非常有用。" },
-      { en: "Could you show me " + nounPhrase + "?", cn: "你能给我看看" + cnRef + "吗？" },
-      { en: "I lost my " + w + ".", cn: "我丢了我的" + cnRef + "。" },
-      { en: "How much does " + nounPhrase + " cost?", cn: cnRef + "多少钱？" }
-    ];
+    if (isUncountable) {
+      patterns = [
+        { en: "Could I have some " + w + "?", cn: "能给我一些" + cnRef + "吗？" },
+        { en: "I don't have enough " + w + ".", cn: "我没有足够的" + cnRef + "。" },
+        { en: "How much " + w + " do we need?", cn: "我们需要多少" + cnRef + "？" },
+        { en: "The " + w + " here is very good.", cn: "这里的" + cnRef + "非常好。" },
+        { en: "There's not much " + w + " left.", cn: "剩下的" + cnRef + "不多了。" },
+        { en: "Would you like more " + w + "?", cn: "你再来点" + cnRef + "吗？" }
+      ];
+    } else {
+      patterns = [
+        { en: "Where can I find " + nounPhrase + "?", cn: "我在哪里能找到" + cnRef + "？" },
+        { en: "I'm looking for " + nounPhrase + ".", cn: "我在找" + cnRef + "。" },
+        { en: "I need " + nounPhrase + ".", cn: "我需要" + cnRef + "。" },
+        { en: "Is there " + nounPhrase + " near here?", cn: "这附近有" + cnRef + "吗？" },
+        { en: "Do you have " + nounPhrase + "?", cn: "你有" + cnRef + "吗？" },
+        { en: "How do you say " + nounPhrase + " in Chinese?", cn: cnRef + "用中文怎么说？" },
+        { en: "Tell me about " + nounPhrase + ".", cn: "给我讲讲" + cnRef + "吧。" }
+      ];
+    }
   }
 
-  // Pick 3 patterns deterministically based on word hash
+  // Pick 3 deterministically
   var hash = 0;
   for (var i = 0; i < w.length; i++) {
     hash = ((hash << 5) - hash) + w.charCodeAt(i);
@@ -3836,16 +4061,35 @@ function generateWordExamples(word, translation) {
   }
   var selected = [];
   var used = {};
-  for (var j = 0; j < 4; j++) {
-    var idx = Math.abs(hash + j * 7) % patterns.length;
+  for (var j = 0; j < 15; j++) {
+    var idx = Math.abs(hash + j * 17) % patterns.length;
     if (!used[idx]) {
       used[idx] = true;
       selected.push(patterns[idx]);
       if (selected.length >= 3) break;
     }
   }
-
   return selected;
+}
+
+function capitalize(str) {
+  if (!str) return '';
+  return str.charAt(0).toUpperCase() + str.slice(1);
+}
+
+function capitalize(str) {
+  if (!str) return '';
+  return str.charAt(0).toUpperCase() + str.slice(1);
+}
+
+function capitalize(str) {
+  if (!str) return '';
+  return str.charAt(0).toUpperCase() + str.slice(1);
+}
+
+function capitalize(str) {
+  if (!str) return '';
+  return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
 // ===== V11: Pronunciation scoring =====
@@ -4711,7 +4955,7 @@ function handleImportFile(input) {
 // ===== PWA / Service Worker =====
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', function() {
-    navigator.serviceWorker.register('service-worker.js?v=24').then(function(reg) {
+    navigator.serviceWorker.register('service-worker.js?v=25').then(function(reg) {
       reg.addEventListener('updatefound', function() {
         var nw = reg.installing;
         if (nw) {
