@@ -15,7 +15,7 @@
 <link rel="icon" type="image/png" sizes="512x512" href="icon-512.png?v8">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png?v8">
 <link rel="manifest" href="manifest.json">
-<meta name="version" content="te_v29">
+<meta name="version" content="te_v30">
 <title>谢飞机</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
 <style>
@@ -892,6 +892,19 @@ body:not(.cat-view) #home-cards{display:none !important}
   .wc-mode button:hover{color:var(--t2)}
   .word-ex-item:hover{background:rgba(255,255,255,.04)}
 }
+
+/* ===== V30: voice diagnostics panel ===== */
+.tts-debug{display:none;position:fixed;left:50%;transform:translateX(-50%);bottom:12px;width:min(560px,94vw);
+  max-height:62vh;overflow:auto;z-index:600;background:#0B0F16;border:1px solid rgba(139,92,246,.35);
+  border-radius:14px;padding:12px 14px;font:11px/1.6 ui-monospace,SFMono-Regular,Menlo,monospace;color:#CBD5E1;
+  box-shadow:0 12px 40px rgba(0,0,0,.6)}
+.tts-debug.show{display:block}
+.tts-debug .td-head{display:flex;justify-content:space-between;align-items:center;font-weight:700;color:#E2E8F0;margin-bottom:8px}
+.tts-debug button{background:rgba(139,92,246,.2);border:1px solid rgba(139,92,246,.4);color:#E2E8F0;
+  border-radius:7px;padding:3px 10px;font-size:11px;font-weight:600;cursor:pointer}
+.tts-debug .td-list{max-height:120px;overflow:auto;background:rgba(255,255,255,.03);border-radius:8px;padding:6px 8px}
+.tts-debug .td-actions{display:flex;gap:8px;margin-top:10px}
+.ff-bd-speak.playing{background:rgba(239,68,68,.18);border-color:rgba(239,68,68,.4);color:#FCA5A5}
 </style>
 </head>
 <body>
@@ -1069,14 +1082,15 @@ body:not(.cat-view) #home-cards{display:none !important}
         <div class="settings-row col">
           <div style="display:flex;justify-content:space-between;align-items:center">
             <div class="settings-label">语速</div>
-            <div class="settings-value" id="tts-rate-value">0.85</div>
+            <div class="settings-value" id="tts-rate-value">0.95</div>
           </div>
-          <input type="range" class="settings-slider" id="tts-rate" min="0.5" max="1.5" step="0.05" value="0.85" oninput="updateRateValue(this.value)">
-          <div class="settings-desc">0.5 慢速 - 1.5 快速</div>
+          <input type="range" class="settings-slider" id="tts-rate" min="0.6" max="1.4" step="0.05" value="0.95" oninput="updateRateValue(this.value)">
+          <div class="settings-desc">0.6 慢速 - 1.4 快速（推荐 0.95）</div>
         </div>
         <div class="settings-row col">
           <div class="settings-label">语音</div>
-          <select class="settings-select" id="tts-voice"><option value="">默认语音</option></select>
+          <select class="settings-select" id="tts-voice"><option value="">自动选择</option></select>
+          <div class="settings-desc" id="tts-current" style="margin-top:6px">正在检测可用语音…</div>
         </div>
         <div class="btn-row">
           <button class="btn sec" onclick="speak('Hello, welcome to travel English learning app.')">试听</button>
@@ -1097,7 +1111,7 @@ body:not(.cat-view) #home-cards{display:none !important}
         <div class="settings-group-title">关于</div>
         <div class="settings-row">
           <div class="settings-label">版本</div>
-          <div class="settings-value">te_v29</div>
+          <div class="settings-value" onclick="voiceDebugTap()" style="-webkit-user-select:none;user-select:none">te_v30</div>
         </div>
       </div>
     </div>
@@ -1391,6 +1405,7 @@ function markStudyToday() {
 
 // ===== NAV =====
 function switchNav(tab) {
+  if (window.TTS) TTS.stop('nav');
   var idMap = { home: 'pg-home', stats: 'pg-stats', notebook: 'pg-notebook' };
   var id = idMap[tab] || 'pg-home';
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
@@ -1405,6 +1420,7 @@ function switchNav(tab) {
 }
 
 function showPage(id) {
+  if (window.TTS) TTS.stop('page');
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   const page = document.getElementById(id);
   if (page) { page.classList.add('active'); page.scrollTop = 0; }
@@ -1974,6 +1990,7 @@ function setupSwipe() {
 }
 
 function setWordMode(m) {
+  if (window.TTS) TTS.stop('mode');
   wMode = m;
   wIdx = 0;
   quizState = null;
@@ -1983,9 +2000,11 @@ function setWordMode(m) {
 }
 
 function prevWord() {
+  if (window.TTS) TTS.stop('prev');
   if (wIdx > 0) { wIdx--; renderWords(); }
 }
 function nextWord() {
+  if (window.TTS) TTS.stop('next');
   if (wIdx < curWords.length - 1) { wIdx++; renderWords(); }
   else if (wIdx === curWords.length - 1) { wIdx++; renderWords(); }
 }
@@ -2045,7 +2064,7 @@ function renderCard() {
       if (i < parts.length - 1) html += '<span class="ff-bd-sep">+</span>';
     });
     html += '</div>';
-    html += '<button class="ff-bd-speak" onclick="event.stopPropagation();speakParts(\'' + parts.join('|').replace(/'/g,"\\'") + '\')">拆解朗读</button>';
+    html += '<button class="ff-bd-speak" data-parts="' + escAttr(parts.join('|')) + '" onclick="event.stopPropagation();speakParts(this.getAttribute(\'data-parts\'),this)">拆解朗读</button>';
     html += '</div>';
   }
   html += '</div>';
@@ -2058,7 +2077,7 @@ function renderCard() {
   html += '</div></div>';
 
   if (w.exampleEn || w.exampleCn) {
-    html += '<div class="wi"><div class="wi-ex" onclick="speakText(this)" data-text="' + escAttr(w.exampleEn||'') + '">';
+    html += '<div class="wi"><div class="wi-ex" onclick="speakText(this,event)" data-text="' + escAttr(w.exampleEn||'') + '">';
     html += '<div class="en">' + makeClickableWords(w.exampleEn||'') + '</div><div class="cn">' + esc(w.exampleCn||'') + '</div>';
     html += '<div class="wi-ex-hint">点击句子朗读</div>';
     html += '</div></div>';
@@ -2074,7 +2093,7 @@ function renderCard() {
     html += '<div class="word-extra-examples">';
     html += '<div class="word-extra-ex-title">更多例句</div>';
     extraExamples.forEach(function(ex) {
-      html += '<div class="word-ex-item" onclick="speak(\'' + ex.en.replace(/'/g, "\\'") + '\')">';
+      html += '<div class="word-ex-item" data-text="' + escAttr(ex.en) + '" onclick="event.stopPropagation();speakText(this,event)">';
       html += '<div class="en">' + makeClickableWords(ex.en) + '</div>';
       html += '<div class="cn">' + esc(ex.cn) + '</div>';
       html += '</div>';
@@ -2157,8 +2176,14 @@ function renderDict() {
     inp.addEventListener('input', function() { inp.classList.remove('correct','wrong'); });
     setTimeout(function() { inp.focus(); }, 100);
   }
-  // Auto-play pronunciation
-  setTimeout(function() { dictPlayWord(); }, 300);
+  // Auto-play pronunciation (guarded against stale renders / page switches)
+  setTimeout(function() {
+    if (wMode !== 'dict') return;
+    var pg = document.getElementById('pg-words');
+    if (!pg || !pg.classList.contains('active')) return;
+    if (curWords[wIdx] !== w) return;
+    dictPlayWord();
+  }, 300);
 }
 
 var dictResults = null;
@@ -2171,13 +2196,8 @@ function dictPlayWord() {
 
 function dictPlayWordSlow() {
   var w = curWords[wIdx];
-  if (!w || !window.speechSynthesis) return;
-  window.speechSynthesis.cancel();
-  var u = new SpeechSynthesisUtterance(w.word);
-  var tts = Store.get('ttsSettings', { rate: 0.85, voice: '' });
-  u.lang = 'en-US'; u.rate = 0.5; u.pitch = 1;
-  if (tts.voice) { var voices = window.speechSynthesis.getVoices(); var v = voices.find(function(vv){return vv.name===tts.voice;}); if (v) u.voice = v; }
-  window.speechSynthesis.speak(u);
+  if (!w) return;
+  TTS.play(w.word, { mode: 'slow' });
 }
 
 function dictShowHint() {
@@ -2276,7 +2296,7 @@ function renderQuiz() {
   html += '<div style="display:flex;flex-direction:column;align-items:center;gap:6px">';
   html += '<div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:center;max-width:100%">';
   html += '<span style="font-size:24px;font-weight:800;color:var(--t1);word-break:break-word;overflow-wrap:break-word;line-height:1.35;text-align:center;max-width:100%;display:block;padding:0 4px">' + esc(q.word) + '</span>';
-  html += '<span style="cursor:pointer;display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:50%;background:rgba(139,92,246,.12);transition:background .2s" onclick="event.stopPropagation();speak(\'' + q.word.replace(/'/g,"\\'") + '\')" ontouchstart="this.style.background=\'rgba(139,92,246,.25)\'" ontouchend="this.style.background=\'rgba(139,92,246,.12)\'">';
+  html += '<span style="cursor:pointer;display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:50%;background:rgba(139,92,246,.12);transition:background .2s" data-word="' + escAttr(q.word) + '" onclick="event.stopPropagation();speakWord(this)" ontouchstart="this.style.background=\'rgba(139,92,246,.25)\'" ontouchend="this.style.background=\'rgba(139,92,246,.12)\'">';
   html += '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="var(--purp2)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5L6 9H2v6h4l5 4V5z"/><path d="M15.54 8.46a5 5 0 010 7.07"/><path d="M19.07 4.93a10 10 0 010 14.14"/></svg>';
   html += '</span>';
   html += '</div>';
@@ -2556,7 +2576,7 @@ function openDlg() {
     if (!line) return;
     const isYou = line.role && line.role.toUpperCase() === 'YOU';
     html += '<div class="dl-line"><div class="dl-role ' + (isYou?'you':'other') + '">' + (line.role||'') + '</div>';
-    html += '<div class="dl-text" onclick="speakText(this)" data-text="' + escAttr(line.textEn||'') + '">';
+    html += '<div class="dl-text" onclick="speakText(this,event)" data-text="' + escAttr(line.textEn||'') + '">';
     html += '<div class="en">' + makeClickableWords(line.textEn||'') + '</div><div class="cn">' + esc(line.textCn||'') + '</div></div></div>';
     html += '<div style="margin-top:14px;padding-top:10px;border-top:1px solid rgba(255,255,255,.04)"><button class="pron-btn" onclick="event.stopPropagation();startPronunciation(\'' + (line.textEn||'').replace(/'/g,"\\'") + '\', this.nextElementSibling, this)">🎤 跟读</button><div></div></div>';
   });
@@ -2567,19 +2587,15 @@ function openDlg() {
 }
 
 function speakDlg() {
-  const lines = (curDay.dialog||[]).filter(l => l && l.textEn);
+  const lines = (curDay.dialog||[]).filter(l => l && l.textEn).map(l => l.textEn);
   if (!lines.length) return;
-  let i = 0;
-  function next() { if (i >= lines.length) return; speak(lines[i].textEn); i++; setTimeout(next, Math.max(2000, lines[i-1].textEn.length*70)); }
-  next();
+  TTS.playSequence(lines, { gap: 380 });
 }
 
 function speakRole() {
-  const lines = (curDay.dialog||[]).filter(l => l && l.role && l.role.toUpperCase() === 'YOU' && l.textEn);
+  const lines = (curDay.dialog||[]).filter(l => l && l.role && l.role.toUpperCase() === 'YOU' && l.textEn).map(l => l.textEn);
   if (!lines.length) { showToast('没有你的台词'); return; }
-  let i = 0;
-  function next() { if (i >= lines.length) return; speak(lines[i].textEn); i++; setTimeout(next, Math.max(2000, lines[i-1].textEn.length*70)); }
-  next();
+  TTS.playSequence(lines, { gap: 380 });
 }
 
 // ===== ESSAY with clickable words =====
@@ -2596,7 +2612,7 @@ function openEssay() {
     const cnArr = d.essayCn || [];
     for (var i = 0; i < enArr.length; i++) {
       if (!enArr[i]) continue;
-      html += '<div class="es-item" onclick="speakSentence(this)" data-text="' + escAttr(enArr[i]||'') + '">';
+      html += '<div class="es-item" onclick="speakSentence(this,event)" data-text="' + escAttr(enArr[i]||'') + '">';
       html += '<div class="en">' + makeClickableWords(enArr[i]||'') + '</div>';
       if (cnArr[i]) html += '<div class="cn">' + esc(cnArr[i]||'') + '</div>';
       html += '</div>';
@@ -2615,7 +2631,7 @@ function openEssay() {
   if (essay.titleCn) html += '<div class="es-title-cn">' + esc(essay.titleCn) + '</div>';
   sentences.forEach((s, idx) => {
     if (!s) return;
-    html += '<div class="es-item" onclick="speakSentence(this)" data-text="' + escAttr(s.en||'') + '">';
+    html += '<div class="es-item" onclick="speakSentence(this,event)" data-text="' + escAttr(s.en||'') + '">';
     html += '<div class="en">' + makeClickableWords(s.en||'') + '</div><div class="cn">' + esc(s.cn||'') + '</div></div>';
     html += '<div style="margin-top:14px;padding-top:10px;border-top:1px solid rgba(255,255,255,.04)"><button class="pron-btn" onclick="event.stopPropagation();startPronunciation(\'' + (s.en||'').replace(/'/g,"\\'") + '\', this.nextElementSibling, this)">🎤 跟读</button><div></div></div>';
   });
@@ -2627,23 +2643,20 @@ function openEssay() {
 
 function speakEssayDaily() {
   if (!curDay || !curDay.essayEn) return;
-  var text = curDay.essayEn.join('. ');
-  speak(text);
+  TTS.playSequence(curDay.essayEn, { gap: 360 });
 }
 
-function speakSentence(el) {
-  if (!window.speechSynthesis) return;
-  var e = window.event || {};
-  if (e.target && e.target.classList && e.target.classList.contains('wl-word')) return;
-  speak(el.dataset.text);
+function speakSentence(el, ev) {
+  if (ev && ev.target && ev.target.closest && ev.target.closest('.wl-word')) return;
+  if (!el) return;
+  var t = el.getAttribute ? el.getAttribute('data-text') : (el.dataset && el.dataset.text);
+  if (t) speak(t);
 }
 
 function speakEssay() {
   const s = (curDay.essay ? curDay.essay.sentences : []) || [];
   if (!s.length) return;
-  let i = 0;
-  function next() { if (i >= s.length) return; if (!s[i]) { i++; next(); return; } speak(s[i].en); i++; setTimeout(next, Math.max(2000, s[i-1].en.length*60)); }
-  next();
+  TTS.playSequence(s.filter(Boolean).map(x => x.en), { gap: 360 });
 }
 
 
@@ -3667,36 +3680,55 @@ function escAttr(s) { if (!s) return ''; return String(s).replace(/&/g,'&amp;').
 
 function getWordParts(word) {
   if (!word) return [];
-  var w = word.trim();
-  if (w.indexOf(' ') > -1) return w.split(/\s+/).filter(function(p){return p.length>0;});
-  if (w.indexOf('-') > -1) return w.split('-').filter(function(p){return p.length>0;});
-  if (w.indexOf('/') > -1) return w.split('/').filter(function(p){return p.length>0;});
-  return [w];
+  var w = String(word).replace(/\s+/g, ' ').trim();
+  if (!w) return [];
+  if (w.indexOf('/') > -1) return [];              // alternatives, not a breakdown
+  if (/^[a-z](\.[a-z])+\.?$/i.test(w)) return [];  // a.m. / p.m. style abbreviations
+  w = w.replace(/\([^)]*\)/g, ' ').replace(/\[[^\]]*\]/g, ' ').trim();
+  if (!w) return [];
+  var tokens = w.replace(/[?!.,;:"“”]/g, ' ').split(/\s+/).filter(Boolean);
+  var parts = [];
+  tokens.forEach(function(tok) {
+    if (tok.indexOf('-') > -1) {
+      tok.split('-').forEach(function(p) { if (p) parts.push(p); });
+    } else {
+      parts.push(tok);
+    }
+  });
+  parts = parts.filter(function(p) { return /[A-Za-z]/.test(p); });
+  if (parts.length < 2 || parts.length > 7) return [];
+  return parts;
 }
 
-function speakParts(partsStr) {
-  var parts = partsStr.split('|').filter(function(p){return p.length>0;});
-  if (!parts.length || !window.speechSynthesis) return;
-  window.speechSynthesis.cancel();
-  var i = 0;
-  function next() {
-    if (i >= parts.length) return;
-    var u = new SpeechSynthesisUtterance(parts[i]);
-    var _tts = Store.get('ttsSettings', { rate: 0.85, voice: '' });
-    u.lang = 'en-US'; u.rate = _tts.rate || 0.85; u.pitch = 1;
-    if (_tts.voice) { var _vs = window.speechSynthesis.getVoices(); var _v = _vs.find(function(vv){return vv.name===_tts.voice;}); if (_v) u.voice = _v; }
-    u.onend = function() { i++; setTimeout(next, 300); };
-    window.speechSynthesis.speak(u);
+function speakParts(partsStr, btn) {
+  var parts = String(partsStr || '').split('|').map(function(p) { return cleanSpeechText(p); })
+    .filter(function(p) { return !!p; });
+  if (!parts.length) return;
+  var original = partsStr;
+  function restore() {
+    if (!btn) return;
+    btn.classList.remove('playing');
+    btn.textContent = '拆解朗读';
+    btn.onclick = function(e) { e.stopPropagation(); speakParts(original, btn); };
   }
-  next();
+  if (btn) {
+    btn.classList.add('playing');
+    btn.textContent = '停止';
+    btn.onclick = function(e) { e.stopPropagation(); TTS.stop('parts'); };
+  }
+  TTS.playSequence(parts, {
+    gap: 280,
+    onState: function(st) { if (st !== 'playing') restore(); },
+    onDone: restore
+  });
 }
 
 function speakTextStr(text) { speak(text); }
-function speakText(el) {
-  if (!window.speechSynthesis) return;
-  var e = window.event || {};
-  if (e.target && e.target.classList && e.target.classList.contains('wl-word')) return;
-  speak(el.dataset.text);
+function speakText(el, ev) {
+  if (ev && ev.target && ev.target.closest && ev.target.closest('.wl-word')) return;
+  if (!el) return;
+  var t = el.getAttribute ? el.getAttribute('data-text') : (el.dataset && el.dataset.text);
+  if (t) speak(t);
 }
 
 // Basic English dictionary for common words
@@ -3755,18 +3787,308 @@ function lookupBasicWord(word) {
   return null;
 }
 
-function speak(text) {
-  if (!text || !window.speechSynthesis) return;
-  window.speechSynthesis.cancel();
-  const u = new SpeechSynthesisUtterance(text);
-  const tts = Store.get('ttsSettings', { rate: 0.85, voice: '' });
-  u.lang = 'en-US'; u.rate = tts.rate || 0.85; u.pitch = 1;
-  if (tts.voice) {
-    const voices = window.speechSynthesis.getVoices();
-    const v = voices.find(vv => vv.name === tts.voice);
-    if (v) u.voice = v;
+// ===== V30: Unified speech engine =====
+function cleanSpeechText(raw) {
+  if (raw === null || raw === undefined) return '';
+  var t = String(raw);
+  t = t.replace(/&nbsp;/gi, ' ').replace(/&amp;/gi, '&').replace(/&lt;/gi, '<')
+       .replace(/&gt;/gi, '>').replace(/&quot;/gi, '"').replace(/&#39;/g, "'");
+  t = t.replace(/<[^>]*>/g, ' ');
+  t = t.replace(/\([^)]*\)/g, ' ');           // (hotel), (formal)
+  t = t.replace(/\[[^\]]*\]/g, ' ');          // [phonetic]
+  t = t.replace(/[\u3000-\u303f\uff00-\uffef\u4e00-\u9fff]+/g, ' '); // CJK / fullwidth
+  if (t.indexOf('/') > -1) t = t.split(/\s*\/\s*/)[0];
+  t = t.replace(/\b[A-B]\s*:\s*/g, ' ');
+  t = t.replace(/\s*\.{2,}\s*/g, ' ');
+  t = t.replace(/[\u2018\u2019]/g, "'").replace(/[\u201c\u201d]/g, '"');
+  t = t.replace(/\s+/g, ' ').trim();
+  t = t.replace(/^[,\-:;]+/, '').replace(/[,\-:;]+$/, '');
+  return t;
+}
+
+var TTS = (function() {
+  var taskSeq = 0;
+  var queue = [];
+  var timer = null;
+  var watchdog = null;
+  var active = null;
+  var utter = null;
+  var log = [];
+  var lastError = '';
+  var noEnglishWarned = false;
+  var voiceCache = [];
+  var voiceCacheAt = 0;
+  var US_PRIORITY = ['google us english','samantha','ava','allison','susan','zoe','alex','joanna',
+    'kendra','kimberly','matthew','tom','aaron','nicky','aria','jenny','guy','zira','david','mark'];
+
+  function stamp() {
+    var d = new Date();
+    return ('0'+d.getHours()).slice(-2)+':'+('0'+d.getMinutes()).slice(-2)+':'+('0'+d.getSeconds()).slice(-2);
   }
-  window.speechSynthesis.speak(u);
+  function logAdd(type, msg) {
+    log.push({ t: stamp(), type: type, msg: String(msg || '').slice(0, 80) });
+    if (log.length > 30) log.shift();
+  }
+  function synth() { return window.speechSynthesis || null; }
+
+  function refreshVoices(force) {
+    var s = synth();
+    if (!s) return [];
+    var now = Date.now();
+    if (!force && voiceCache.length && now - voiceCacheAt < 4000) return voiceCache;
+    voiceCache = s.getVoices() || [];
+    voiceCacheAt = now;
+    return voiceCache;
+  }
+  function isEnglish(v) { return !!v && !!v.lang && /^en([-_]|$)/i.test(v.lang); }
+  function isUS(v) { return isEnglish(v) && /^en[-_]US$/i.test(String(v.lang)); }
+  function voiceScore(v) {
+    var name = (v.name || '').toLowerCase();
+    var score = 0;
+    if (isUS(v)) score += 100;
+    if (v.localService) score += 20;
+    if (v.default) score += 5;
+    for (var i = 0; i < US_PRIORITY.length; i++) {
+      if (name.indexOf(US_PRIORITY[i]) > -1) { score += 60 - i * 2; break; }
+    }
+    if (/\b(compact|novelty|whisper|bells|boing|bad news|good news|organ|cellos|jester|superstar|wobble|bahh|bubbles|trinoids|zarvox|albert|fred)\b/.test(name)) score -= 80;
+    if (/\(enhanced\)|premium|neural|natural/.test(name)) score += 25;
+    return score;
+  }
+  function bestEnglish() {
+    var list = refreshVoices().filter(isEnglish).slice();
+    if (!list.length) return null;
+    list.sort(function(a, b) { return voiceScore(b) - voiceScore(a); });
+    return list[0];
+  }
+  function savedPref() {
+    var s = Store.get('ttsSettings', { rate: 0.95, voice: '', voiceURI: '' });
+    if (!s) s = { rate: 0.95, voice: '', voiceURI: '' };
+    return s;
+  }
+  function resolveVoice() {
+    var list = refreshVoices();
+    var pref = savedPref();
+    if (pref.voiceURI) {
+      for (var i = 0; i < list.length; i++) {
+        if ((list[i].voiceURI || list[i].name) === pref.voiceURI) return { voice: list[i], fallback: false };
+      }
+    }
+    if (pref.voice) {
+      for (var j = 0; j < list.length; j++) {
+        if (list[j].name === pref.voice) return { voice: list[j], fallback: false };
+      }
+    }
+    var pick = bestEnglish();
+    if (pick) return { voice: pick, fallback: !!(pref.voiceURI || pref.voice) };
+    return { voice: null, fallback: false };
+  }
+  function effectiveRate(mode) {
+    var base = Number(savedPref().rate);
+    if (!isFinite(base) || base <= 0) base = 0.95;
+    if (mode === 'slow') return Math.max(0.6, Math.min(1.0, Math.round((base - 0.15) * 20) / 20));
+    return Math.max(0.6, Math.min(1.4, base));
+  }
+  function splitText(text) {
+    var t = String(text || '').trim();
+    if (!t) return [];
+    if (t.length <= 180) return [t];
+    var parts = t.match(/[^.!?;]+[.!?;]*/g) || [t];
+    var out = [], buf = '';
+    parts.forEach(function(p) {
+      p = p.trim();
+      if (!p) return;
+      if ((buf + ' ' + p).trim().length > 180 && buf) { out.push(buf.trim()); buf = p; }
+      else buf = (buf ? buf + ' ' : '') + p;
+    });
+    if (buf.trim()) out.push(buf.trim());
+    return out.length ? out : [t];
+  }
+  function clearTimers() {
+    if (timer) { clearTimeout(timer); timer = null; }
+    if (watchdog) { clearTimeout(watchdog); watchdog = null; }
+  }
+  function stop(reason) {
+    var a = active;
+    taskSeq++;
+    active = null;
+    queue = [];
+    clearTimers();
+    utter = null;
+    var s = synth();
+    if (s) { try { s.cancel(); } catch (e) {} }
+    if (a) {
+      logAdd('cancel', reason || '');
+      try { if (a.onState) a.onState('canceled'); } catch (e) {}
+    }
+  }
+  function finish(id) {
+    if (id !== taskSeq) return;
+    var a = active;
+    active = null;
+    clearTimers();
+    utter = null;
+    if (a) {
+      logAdd('done', a.mode);
+      try { if (a.onState) a.onState('done'); } catch (e) {}
+      try { if (a.onDone) a.onDone(true); } catch (e) {}
+    }
+  }
+  function abort(id, err) {
+    if (id !== taskSeq) return;
+    lastError = err || 'error';
+    logAdd('abort', lastError);
+    var a = active;
+    active = null;
+    queue = [];
+    clearTimers();
+    utter = null;
+    var s = synth();
+    if (s) { try { s.cancel(); } catch (e) {} }
+    if (a) {
+      try { if (a.onState) a.onState('error', lastError); } catch (e) {}
+      try { if (a.onDone) a.onDone(false); } catch (e) {}
+    }
+  }
+  function speakOne(text, id, attempt) {
+    if (id !== taskSeq || !active) return;
+    var s = synth();
+    if (!s) { abort(id, 'unsupported'); return; }
+    var rv = resolveVoice();
+    if (!rv.voice) {
+      if (!noEnglishWarned) {
+        noEnglishWarned = true;
+        if (typeof showToast === 'function') showToast('未检测到英语语音，请在系统设置中添加英语语音');
+      }
+      abort(id, 'no-english-voice');
+      return;
+    }
+    var u = new SpeechSynthesisUtterance(text);
+    u.voice = rv.voice;
+    u.lang = rv.voice.lang || 'en-US';
+    u.rate = active.rate;
+    u.pitch = 1;
+    u.volume = 1;
+    var ended = false;
+    u.onstart = function() {
+      if (id !== taskSeq) return;
+      logAdd('start', text);
+      if (active) active.startedAt = Date.now();
+    };
+    u.onend = function() {
+      if (ended) return;
+      ended = true;
+      if (id !== taskSeq) { logAdd('stale-end', text); return; }
+      if (watchdog) { clearTimeout(watchdog); watchdog = null; }
+      if (!queue.length) { finish(id); return; }
+      timer = setTimeout(function() {
+        timer = null;
+        if (id === taskSeq) nextSegment(id);
+      }, active ? active.gap : 240);
+    };
+    u.onerror = function(ev) {
+      if (ended) return;
+      ended = true;
+      if (id !== taskSeq) return;
+      abort(id, (ev && (ev.error || ev.type)) || 'error');
+    };
+    utter = u;
+    try {
+      s.speak(u);
+    } catch (e) {
+      abort(id, 'speak-exception');
+      return;
+    }
+    if (watchdog) clearTimeout(watchdog);
+    watchdog = setTimeout(function() {
+      watchdog = null;
+      if (id !== taskSeq || !active || ended) return;
+      var st = synth();
+      if (!st) return;
+      if (!st.speaking && !st.pending) {
+        if (attempt < 1) {
+          logAdd('retry', text);
+          try { st.cancel(); } catch (e) {}
+          setTimeout(function() { if (id === taskSeq) speakOne(text, id, attempt + 1); }, 80);
+        } else {
+          abort(id, 'not-started');
+        }
+      }
+    }, 500);
+  }
+  function nextSegment(id) {
+    if (id !== taskSeq || !active) return;
+    if (!queue.length) { finish(id); return; }
+    speakOne(queue.shift(), id, 0);
+  }
+  function play(text, opts) {
+    opts = opts || {};
+    var clean = cleanSpeechText(text);
+    if (!clean) return false;
+    stop('replace');
+    var id = ++taskSeq;
+    queue = splitText(clean);
+    if (!queue.length) return false;
+    active = {
+      id: id,
+      mode: opts.mode || 'normal',
+      rate: effectiveRate(opts.mode),
+      gap: opts.gap === undefined ? 240 : opts.gap,
+      onDone: opts.onDone,
+      onState: opts.onState,
+      startedAt: Date.now()
+    };
+    logAdd('play', clean);
+    nextSegment(id);
+    return true;
+  }
+  function playSequence(texts, opts) {
+    opts = opts || {};
+    var list = (texts || []).map(cleanSpeechText).filter(function(x) { return !!x; });
+    if (!list.length) return false;
+    stop('replace');
+    var id = ++taskSeq;
+    queue = list;
+    active = {
+      id: id,
+      mode: opts.mode || 'sequence',
+      rate: effectiveRate(opts.mode),
+      gap: opts.gap === undefined ? 320 : opts.gap,
+      onDone: opts.onDone,
+      onState: opts.onState,
+      startedAt: Date.now()
+    };
+    logAdd('seq', list.length + ' segments');
+    nextSegment(id);
+    return true;
+  }
+  function getState() {
+    var rv = resolveVoice();
+    var s = synth();
+    return {
+      supported: !!s,
+      speaking: !!(s && s.speaking),
+      pending: !!(s && s.pending),
+      taskId: taskSeq,
+      active: active ? { mode: active.mode, rate: active.rate, remaining: queue.length, startedAt: active.startedAt } : null,
+      currentVoice: rv.voice ? { name: rv.voice.name, lang: rv.voice.lang, local: !!rv.voice.localService, uri: rv.voice.voiceURI } : null,
+      fallback: rv.fallback,
+      lastError: lastError,
+      voices: refreshVoices().filter(isEnglish).map(function(v) {
+        return { name: v.name, lang: v.lang, local: !!v.localService, default: !!v.default };
+      }),
+      log: log.slice(-14)
+    };
+  }
+  return {
+    play: play, playSequence: playSequence, stop: stop, getState: getState,
+    effectiveRate: effectiveRate, resolveVoice: resolveVoice, refreshVoices: refreshVoices,
+    isEnglish: isEnglish, isUS: isUS, bestEnglish: bestEnglish, logAdd: logAdd
+  };
+})();
+
+function speak(text, opts) {
+  return TTS.play(text, opts || {});
 }
 
 function esc(s) {
@@ -5866,99 +6188,102 @@ function renderHeatmap() {
   return html;
 }
 
-// ===== V10: TTS Settings =====
-function loadVoices() {
-  if (!window.speechSynthesis) return;
-  var voices = window.speechSynthesis.getVoices();
-  var select = document.getElementById('tts-voice');
-  if (!select) return;
-  var current = Store.get('ttsSettings', { rate: 0.85, voice: '' });
+// ===== V30: TTS Settings & voice loading =====
+var _voicesBound = false, _voicesRetry = 0, _voicesTimer = null, _voiceWarned = false;
 
-  // Filter English voices and categorize by gender
-  var enVoices = voices.filter(function(v) { return v.lang && v.lang.indexOf('en') === 0; });
-
-  // Identify male/female voices by common name patterns
-  var maleVoices = enVoices.filter(function(v) {
-    var n = v.name.toLowerCase();
-    return n.indexOf('male') > -1 || n.indexOf('daniel') > -1 || n.indexOf('alex') > -1 ||
-           n.indexOf('fred') > -1 || n.indexOf('rishi') > -1 || n.indexOf('diego') > -1 ||
-           n.indexOf('jorge') > -1 || n.indexOf('oliver') > -1 || n.indexOf('arthur') > -1 ||
-           n.indexOf('thomas') > -1 || n.indexOf('james') > -1 || n.indexOf('aaron') > -1 ||
-           n.indexOf('tom') > -1 || n.indexOf('guy') > -1;
-  });
-  var femaleVoices = enVoices.filter(function(v) {
-    var n = v.name.toLowerCase();
-    return n.indexOf('female') > -1 || n.indexOf('samantha') > -1 || n.indexOf('victoria') > -1 ||
-           n.indexOf('karen') > -1 || n.indexOf('moira') > -1 || n.indexOf('tessa') > -1 ||
-           n.indexOf('serena') > -1 || n.indexOf('fiona') > -1 || n.indexOf('veena') > -1 ||
-           n.indexOf('zira') > -1 || n.indexOf('susan') > -1 || n.indexOf('allison') > -1 ||
-           n.indexOf('ava') > -1 || n.indexOf('joanna') > -1 || n.indexOf('kendra') > -1 ||
-           n.indexOf('kimberly') > -1 || n.indexOf('salli') > -1 || n.indexOf('nicole') > -1;
-  });
-
-  // Remove duplicates (voices that matched both lists)
-  var maleNames = maleVoices.map(function(v){return v.name;});
-  femaleVoices = femaleVoices.filter(function(v){return maleNames.indexOf(v.name) === -1;});
-
-  // If we couldn't identify by name, just take first few from each locale
-  if (!maleVoices.length && !femaleVoices.length) {
-    // Fallback: use different voices and label them generically
-    var seen = {};
-    var unique = enVoices.filter(function(v) {
-      if (seen[v.name]) return false;
-      seen[v.name] = true;
-      return true;
-    });
-    // Pick up to 3 female and 2 male alternates
-    femaleVoices = unique.filter(function(v, i) { return i % 2 === 0; }).slice(0, 3);
-    maleVoices = unique.filter(function(v, i) { return i % 2 === 1; }).slice(0, 2);
-  }
-
-  var opts = '<option value="">默认语音</option>';
-
-  if (femaleVoices.length) {
-    opts += '<optgroup label="女声">';
-    // Deduplicate
-    var seenF = {};
-    femaleVoices.forEach(function(v) {
-      if (!seenF[v.name]) {
-        seenF[v.name] = true;
-        var label = v.name.replace(/\s*\(.*\)\s*/g, '').replace(/Microsoft |Google |Apple /g, '');
-        opts += '<option value="' + escAttr(v.name) + '"' + (v.name === current.voice ? ' selected' : '') + '>\uD83D\uDC69 ' + esc(label) + '</option>';
-      }
-    });
-    opts += '</optgroup>';
-  }
-
-  if (maleVoices.length) {
-    opts += '<optgroup label="男声">';
-    var seenM = {};
-    maleVoices.forEach(function(v) {
-      if (!seenM[v.name]) {
-        seenM[v.name] = true;
-        var label = v.name.replace(/\s*\(.*\)\s*/g, '').replace(/Microsoft |Google |Apple /g, '');
-        opts += '<option value="' + escAttr(v.name) + '"' + (v.name === current.voice ? ' selected' : '') + '>\uD83D\uDC68 ' + esc(label) + '</option>';
-      }
-    });
-    opts += '</optgroup>';
-  }
-
-  // Limit to max 6 options total (3 female + 3 male)
-  select.innerHTML = opts;
+function voiceLabel(v) {
+  var name = (v.name || '').replace(/\s*\(.*?\)\s*/g, '').replace(/^(Microsoft|Google|Apple)\s+/i, '');
+  return name + ' · ' + (v.lang || '') + ' · ' + (v.localService ? '本地' : '在线');
 }
 
-if (window.speechSynthesis) {
-  window.speechSynthesis.onvoiceschanged = loadVoices;
+function loadVoices() {
+  if (!window.speechSynthesis) return;
+  var voices = window.speechSynthesis.getVoices() || [];
+  var select = document.getElementById('tts-voice');
+  if (!voices.length) {
+    if (_voicesRetry < 6) {
+      var waits = [60, 120, 240, 480, 900, 1400];
+      var delay = waits[_voicesRetry] || 1400;
+      _voicesRetry++;
+      if (_voicesTimer) clearTimeout(_voicesTimer);
+      _voicesTimer = setTimeout(function() { _voicesTimer = null; loadVoices(); }, delay);
+    }
+    if (select && select.options.length <= 1) {
+      select.innerHTML = '<option value="">正在加载语音…</option>';
+    }
+    return;
+  }
+  _voicesRetry = 0;
+  TTS.refreshVoices(true);
+  if (!select) return;
+
+  var en = voices.filter(TTS.isEnglish);
+  var us = en.filter(TTS.isUS);
+  var others = en.filter(function(v) { return !TTS.isUS(v); });
+  var pref = Store.get('ttsSettings', { rate: 0.95, voice: '', voiceURI: '' });
+  var auto = TTS.bestEnglish();
+  var autoLabel = auto ? '自动（' + voiceLabel(auto) + '）' : '无可用英语语音';
+  var opts = '<option value="">' + esc(autoLabel) + '</option>';
+
+  function buildGroup(title, list) {
+    if (!list.length) return '';
+    var seen = {}, html = '<optgroup label="' + title + '">';
+    list.sort(function(a, b) { return (a.name || '').localeCompare(b.name || ''); });
+    list.forEach(function(v) {
+      var key = v.voiceURI || v.name;
+      if (seen[key]) return;
+      seen[key] = true;
+      var selected = (pref.voiceURI === key) || (!pref.voiceURI && pref.voice && pref.voice === v.name);
+      html += '<option value="' + escAttr(key) + '"' + (selected ? ' selected' : '') + '>' + esc(voiceLabel(v)) + '</option>';
+    });
+    return html + '</optgroup>';
+  }
+  opts += buildGroup('美式英语 en-US', us);
+  opts += buildGroup('其他英语', others);
+  select.innerHTML = opts;
+
+  if (!en.length && !_voiceWarned) {
+    _voiceWarned = true;
+    showToast('未检测到英语语音，请在系统设置中添加英语语音');
+  }
+
+  var info = document.getElementById('tts-current');
+  if (info) {
+    var rv = TTS.resolveVoice();
+    if (rv.voice) {
+      info.textContent = '当前使用：' + rv.voice.name + ' (' + rv.voice.lang + ')' +
+        (rv.voice.localService ? ' · 系统本地语音' : ' · 在线语音') +
+        (rv.fallback ? ' · 原语音不可用，已自动切换' : '');
+      info.style.color = rv.fallback ? 'var(--ylw)' : 'var(--t3)';
+    } else {
+      info.textContent = '未找到英语语音，请先在系统设置中添加英语语音';
+      info.style.color = 'var(--red)';
+    }
+  }
+}
+
+function initVoices() {
+  if (!window.speechSynthesis) return;
+  if (!_voicesBound) {
+    _voicesBound = true;
+    window.speechSynthesis.onvoiceschanged = function() {
+      TTS.refreshVoices(true);
+      loadVoices();
+    };
+  }
+  loadVoices();
 }
 
 function openSettings() {
   var modal = document.getElementById('settings-modal');
-  var tts = Store.get('ttsSettings', { rate: 0.85, voice: '' });
+  var tts = Store.get('ttsSettings', { rate: 0.95, voice: '', voiceURI: '' });
+  var rate = parseFloat(tts.rate);
+  if (!isFinite(rate) || rate <= 0) rate = 0.95;
   var rateSlider = document.getElementById('tts-rate');
   var rateValue = document.getElementById('tts-rate-value');
-  if (rateSlider) rateSlider.value = tts.rate;
-  if (rateValue) rateValue.textContent = tts.rate.toFixed(2);
-  loadVoices();
+  if (rateSlider) rateSlider.value = rate;
+  if (rateValue) rateValue.textContent = rate.toFixed(2);
+  initVoices();
   if (modal) modal.classList.add('show');
 }
 
@@ -5968,16 +6293,80 @@ function closeSettings() {
 }
 
 function saveTtsSettings() {
-  var rate = parseFloat(document.getElementById('tts-rate').value);
-  var voice = document.getElementById('tts-voice').value;
-  Store.set('ttsSettings', { rate: rate, voice: voice });
-  showToast('设置已保存');
+  var rateEl = document.getElementById('tts-rate');
+  var rate = rateEl ? parseFloat(rateEl.value) : 0.95;
+  if (!isFinite(rate) || rate <= 0) rate = 0.95;
+  var select = document.getElementById('tts-voice');
+  var key = select ? select.value : '';
+  var voiceName = '';
+  var voices = window.speechSynthesis ? (window.speechSynthesis.getVoices() || []) : [];
+  for (var i = 0; i < voices.length; i++) {
+    if ((voices[i].voiceURI || voices[i].name) === key) { voiceName = voices[i].name; break; }
+  }
+  Store.set('ttsSettings', { rate: rate, voice: voiceName, voiceURI: key });
+  var rv = TTS.resolveVoice();
+  showToast(rv.voice ? ('设置已保存：' + rv.voice.name) : '设置已保存');
   closeSettings();
 }
 
 function updateRateValue(val) {
   var el = document.getElementById('tts-rate-value');
   if (el) el.textContent = parseFloat(val).toFixed(2);
+}
+
+if (window.speechSynthesis) {
+  initVoices();
+}
+
+// ===== V30: Hidden voice diagnostics (triple-tap version) =====
+var _dbgTap = 0, _dbgTimer = null;
+function voiceDebugTap() {
+  _dbgTap++;
+  if (_dbgTimer) clearTimeout(_dbgTimer);
+  _dbgTimer = setTimeout(function() { _dbgTap = 0; }, 1500);
+  if (_dbgTap >= 3) { _dbgTap = 0; openVoiceDebug(); }
+}
+function closeVoiceDebug() {
+  var p = document.getElementById('tts-debug-panel');
+  if (p) p.classList.remove('show');
+}
+function openVoiceDebug() {
+  var st = TTS.getState();
+  var panel = document.getElementById('tts-debug-panel');
+  if (!panel) {
+    panel = document.createElement('div');
+    panel.id = 'tts-debug-panel';
+    panel.className = 'tts-debug';
+    document.body.appendChild(panel);
+  }
+  var voiceRows = st.voices.length ? st.voices.map(function(v) {
+    return '<div>' + esc(v.name) + ' · ' + esc(v.lang) + (v.local ? ' · 本地' : ' · 在线') + (v.default ? ' · 默认' : '') + '</div>';
+  }).join('') : '<div style="color:#f87171">无可用英语语音</div>';
+  var logRows = st.log.length ? st.log.map(function(l) {
+    return '<div><span style="color:#64748b">' + esc(l.t) + '</span> [' + esc(l.type) + '] ' + esc(l.msg) + '</div>';
+  }).join('') : '<div>—</div>';
+  panel.innerHTML =
+    '<div class="td-head"><span>语音诊断 V30</span><button onclick="closeVoiceDebug()">关闭</button></div>' +
+    '<div class="td-body">' +
+      '<div><b>支持 SpeechSynthesis：</b>' + (st.supported ? '是' : '否') + '</div>' +
+      '<div><b>当前任务：</b>' + (st.active ? ('播放中 · ' + st.active.mode + ' · 语速 ' + st.active.rate.toFixed(2) + ' · 剩余 ' + st.active.remaining) : '空闲') + '</div>' +
+      '<div><b>任务 ID：</b>' + st.taskId + '</div>' +
+      '<div><b>实际语音：</b>' + (st.currentVoice ? esc(st.currentVoice.name + ' (' + st.currentVoice.lang + ')' + (st.currentVoice.local ? ' 本地' : ' 在线')) : '未选择') + (st.fallback ? ' <span style="color:#fbbf24">已回退</span>' : '') + '</div>' +
+      '<div><b>最近错误：</b>' + (st.lastError ? esc(st.lastError) : '无') + '</div>' +
+      '<div style="margin-top:8px"><b>可用英语语音 (' + st.voices.length + ')</b></div>' +
+      '<div class="td-list">' + voiceRows + '</div>' +
+      '<div style="margin-top:8px"><b>播放日志</b></div>' +
+      '<div class="td-list">' + logRows + '</div>' +
+      '<div class="td-actions"><button onclick="openVoiceDebug()">刷新</button><button onclick="speak(\'Hello, this is a voice test.\')">试听</button></div>' +
+    '</div>';
+  panel.classList.add('show');
+}
+window.openVoiceDebug = openVoiceDebug;
+window.closeVoiceDebug = closeVoiceDebug;
+window.voiceDebugTap = voiceDebugTap;
+window.TTS = TTS;
+if (/(?:\?|&)debug=1(?:&|$)/.test(location.search) || location.hash === '#voice-debug') {
+  setTimeout(openVoiceDebug, 900);
 }
 
 // ===== V10: Export / Import =====
@@ -6107,7 +6496,7 @@ document.addEventListener('keydown', function(e) {
 // ===== PWA / Service Worker =====
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', function() {
-    navigator.serviceWorker.register('service-worker.js?v=29').then(function(reg) {
+    navigator.serviceWorker.register('service-worker.js?v=30').then(function(reg) {
       reg.addEventListener('updatefound', function() {
         var nw = reg.installing;
         if (nw) {
