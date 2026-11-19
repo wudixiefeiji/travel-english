@@ -6207,9 +6207,18 @@ function loadVoices() {
       _voicesRetry++;
       if (_voicesTimer) clearTimeout(_voicesTimer);
       _voicesTimer = setTimeout(function() { _voicesTimer = null; loadVoices(); }, delay);
+      if (select && select.options.length <= 1) {
+        select.innerHTML = '<option value="">正在加载语音…</option>';
+      }
+      return;
     }
     if (select && select.options.length <= 1) {
-      select.innerHTML = '<option value="">正在加载语音…</option>';
+      select.innerHTML = '<option value="">无可用语音（请在系统中安装英语语音）</option>';
+    }
+    var none = document.getElementById('tts-current');
+    if (none) {
+      none.textContent = '未找到任何语音，请在系统设置中添加英语语音';
+      none.style.color = 'var(--red)';
     }
     return;
   }
