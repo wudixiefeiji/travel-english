@@ -6360,6 +6360,7 @@ function openVoiceDebug() {
       '<div><b>支持 SpeechSynthesis：</b>' + (st.supported ? '是' : '否') + '</div>' +
       '<div><b>当前任务：</b>' + (st.active ? ('播放中 · ' + st.active.mode + ' · 语速 ' + st.active.rate.toFixed(2) + ' · 剩余 ' + st.active.remaining) : '空闲') + '</div>' +
       '<div><b>任务 ID：</b>' + st.taskId + '</div>' +
+      '<div><b>语音监听器：</b>' + (_voicesBound ? '已绑定（单例）' : '未绑定') + '</div>' +
       '<div><b>实际语音：</b>' + (st.currentVoice ? esc(st.currentVoice.name + ' (' + st.currentVoice.lang + ')' + (st.currentVoice.local ? ' 本地' : ' 在线')) : '未选择') + (st.fallback ? ' <span style="color:#fbbf24">已回退</span>' : '') + '</div>' +
       '<div><b>最近错误：</b>' + (st.lastError ? esc(st.lastError) : '无') + '</div>' +
       '<div style="margin-top:8px"><b>可用英语语音 (' + st.voices.length + ')</b></div>' +
