@@ -15,7 +15,7 @@
 <link rel="icon" type="image/png" sizes="512x512" href="icon-512.png?v8">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png?v8">
 <link rel="manifest" href="manifest.json">
-<meta name="version" content="te_v26">
+<meta name="version" content="te_v28">
 <title>谢飞机</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
 <style>
@@ -856,6 +856,42 @@ input,textarea{font-family:inherit}
 body:not(.cat-view) #home-section-header,
 body:not(.cat-view) #home-cards{display:none !important}
 
+/* ===== V28: Desktop / MacBook ===== */
+.kb-hint{display:none}
+@media (min-width:1024px){
+  #app{max-width:1000px}
+  .nav{max-width:1000px}
+  #pg-day,#pg-words,#pg-dlg,#pg-essay,#pg-notebook{max-width:780px;margin:0 auto;width:100%}
+  .phase-card-grid{grid-template-columns:repeat(3,1fr);gap:12px}
+  .cat-grid{grid-template-columns:1fr 1fr}
+  .wp-grid{grid-template-columns:repeat(3,1fr)}
+  .wc-mode{max-width:680px;margin-left:auto;margin-right:auto}
+  #w-content{max-width:680px;margin:0 auto}
+  .flip-c{max-width:680px;margin-left:auto;margin-right:auto}
+  .kb-hint{display:block;max-width:680px;margin:-6px auto 12px;font-size:11px;color:var(--t4);
+    text-align:center;font-weight:600;letter-spacing:.3px}
+}
+@media (min-width:1440px){
+  #app{max-width:1120px}
+  .nav{max-width:1120px}
+  #pg-day,#pg-words,#pg-dlg,#pg-essay,#pg-notebook{max-width:860px}
+  .phase-card-grid{grid-template-columns:repeat(4,1fr)}
+  .wp-grid{grid-template-columns:repeat(4,1fr)}
+}
+@media (hover:hover) and (pointer:fine){
+  .day-card:hover{background:rgba(255,255,255,.05);border-color:rgba(139,92,246,.3);
+    transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,.35)}
+  .day-card:hover::before{opacity:1}
+  .cat-card:hover{border-color:rgba(139,92,246,.3);background:rgba(255,255,255,.04);transform:translateY(-2px)}
+  .btn:hover{filter:brightness(1.1)}
+  .qo:hover{background:rgba(255,255,255,.05);border-color:rgba(139,92,246,.35)}
+  .nav-btn:hover svg{stroke:#60A5FA}
+  .nav-btn:hover span{color:#60A5FA}
+  .flip-c:hover .flip-f{border-color:rgba(139,92,246,.3)}
+  .flip-c:hover .flip-b{border-color:rgba(6,182,212,.3)}
+  .wc-mode button:hover{color:var(--t2)}
+  .word-ex-item:hover{background:rgba(255,255,255,.04)}
+}
 </style>
 </head>
 <body>
@@ -988,6 +1024,7 @@ body:not(.cat-view) #home-cards{display:none !important}
       <div style="font-size:12px;color:var(--t3);font-weight:600" id="w-counter"></div>
     </div>
     <div class="wc-mode" id="w-mode-bar"></div>
+    <div class="kb-hint" id="kb-hint">空格 翻卡 · ← / → 切换单词 · 1-4 选择答案 · Enter 继续</div>
     <div id="w-content"></div>
   </div>
 
@@ -1060,7 +1097,7 @@ body:not(.cat-view) #home-cards{display:none !important}
         <div class="settings-group-title">关于</div>
         <div class="settings-row">
           <div class="settings-label">版本</div>
-          <div class="settings-value">te_v26</div>
+          <div class="settings-value">te_v28</div>
         </div>
       </div>
     </div>
@@ -3929,7 +3966,7 @@ var EXAMPLE_SENTENCES = {
   'check-out':[{en:'Do you know what "check-out" means?',cn:'你知道"退房"是什么意思吗？'},{en:'I learned the phrase "check-out" today.',cn:'我今天学会了"退房"这个表达。'},{en:'Can you use "check-out" in a sentence?',cn:'你能用"退房"造个句子吗？'}],
   'check-up':[{en:'Do you know what "check-up" means?',cn:'你知道"体检"是什么意思吗？'},{en:'I learned the phrase "check-up" today.',cn:'我今天学会了"体检"这个表达。'},{en:'Can you use "check-up" in a sentence?',cn:'你能用"体检"造个句子吗？'}],
   'chef':[{en:'Where can I find a chef?',cn:'我在哪里能找到主厨？'},{en:'I\'m looking for a chef.',cn:'我在找主厨。'},{en:'Do you have a chef?',cn:'你有主厨吗？'}],
-  'chef's special':[{en:'Do you know what "chef\'s special" means?',cn:'你知道"主厨特餐"是什么意思吗？'},{en:'I learned the phrase "chef\'s special" today.',cn:'我今天学会了"主厨特餐"这个表达。'},{en:'Can you use "chef\'s special" in a sentence?',cn:'你能用"主厨特餐"造个句子吗？'}],
+  'chef\'s special':[{en:'Do you know what "chef\'s special" means?',cn:'你知道"主厨特餐"是什么意思吗？'},{en:'I learned the phrase "chef\'s special" today.',cn:'我今天学会了"主厨特餐"这个表达。'},{en:'Can you use "chef\'s special" in a sentence?',cn:'你能用"主厨特餐"造个句子吗？'}],
   'child':[{en:'Where can I find a child?',cn:'我在哪里能找到孩子？'},{en:'I\'m looking for a child.',cn:'我在找孩子。'},{en:'Do you have a child?',cn:'你有孩子吗？'}],
   'chilly':[{en:'This is very chilly.',cn:'这非常寒冷的。'},{en:'I think it\'s too chilly for me.',cn:'我觉得对我来说太寒冷的了。'},{en:'Is it always this chilly here?',cn:'这里总是这么寒冷的吗？'}],
   'chitchat':[{en:'Where can I find a chitchat?',cn:'我在哪里能找到闲谈？'},{en:'I\'m looking for a chitchat.',cn:'我在找闲谈。'},{en:'Do you have a chitchat?',cn:'你有闲谈吗？'}],
@@ -5973,10 +6010,78 @@ function handleImportFile(input) {
   }
 }
 
+// ===== V28: Desktop keyboard shortcuts =====
+function _isTypingTarget(el) {
+  if (!el) return false;
+  var tag = (el.tagName || '').toLowerCase();
+  return tag === 'input' || tag === 'textarea' || tag === 'select' || el.isContentEditable;
+}
+
+document.addEventListener('keydown', function(e) {
+  if (e.ctrlKey || e.metaKey || e.altKey) return;
+  if (_isTypingTarget(e.target)) return;
+
+  if (e.key === 'Escape') {
+    var opened = document.querySelector('.modal-overlay.show');
+    if (!opened) return;
+    if (opened.id === 'settings-modal') closeSettings();
+    else if (opened.id === 'review-modal') closeReviewModal();
+    else opened.classList.remove('show');
+    e.preventDefault();
+    return;
+  }
+
+  var active = document.querySelector('.page.active');
+  if (!active || active.id !== 'pg-words') return;
+
+  var tag = (e.target.tagName || '').toLowerCase();
+  var nativeBtn = (tag === 'button' || tag === 'a');
+
+  // Card mode: Space flips, arrows switch words, S reads aloud
+  if (wMode === 'card' && !quizState) {
+    if (e.code === 'Space' || e.key === ' ') {
+      if (nativeBtn) return;
+      var flipEl = document.querySelector('#w-content .flip-c');
+      if (flipEl) { toggleFlip(flipEl); e.preventDefault(); }
+      else if (wIdx >= curWords.length) { finishPractice(); e.preventDefault(); }
+      return;
+    }
+    if (e.key === 'ArrowRight') { nextWord(); e.preventDefault(); return; }
+    if (e.key === 'ArrowLeft') { prevWord(); e.preventDefault(); return; }
+    if (e.key === 'Enter') {
+      if (nativeBtn) return;
+      if (document.querySelector('#w-content .flip-c')) nextWord();
+      else finishPractice();
+      e.preventDefault();
+      return;
+    }
+    if (e.key === 's' || e.key === 'S') {
+      var cw = curWords[wIdx];
+      if (cw) speak(cw.word);
+      e.preventDefault();
+    }
+    return;
+  }
+
+  // Quiz mode: 1-4 picks an option
+  if (wMode === 'quiz' && quizState && quizState.round < quizState.questions.length) {
+    if (document.querySelector('.qo.correct, .qo.wrong')) return;
+    var n = parseInt(e.key, 10);
+    if (n >= 1 && n <= 4) {
+      var opts = document.querySelectorAll('#w-content .qo');
+      var optEl = opts[n - 1];
+      if (optEl) {
+        answerQuiz(optEl, n - 1, quizState.questions[quizState.round].correctIdx);
+        e.preventDefault();
+      }
+    }
+  }
+});
+
 // ===== PWA / Service Worker =====
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', function() {
-    navigator.serviceWorker.register('service-worker.js?v=27').then(function(reg) {
+    navigator.serviceWorker.register('service-worker.js?v=28').then(function(reg) {
       reg.addEventListener('updatefound', function() {
         var nw = reg.installing;
         if (nw) {
