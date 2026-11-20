@@ -15,7 +15,7 @@
 <link rel="icon" type="image/png" sizes="512x512" href="icon-512.png?v8">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png?v8">
 <link rel="manifest" href="manifest.json">
-<meta name="version" content="te_v31">
+<meta name="version" content="te_v32">
 <title>谢飞机</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
 <style>
@@ -1111,7 +1111,7 @@ body:not(.cat-view) #home-cards{display:none !important}
         <div class="settings-group-title">关于</div>
         <div class="settings-row">
           <div class="settings-label">版本</div>
-          <div class="settings-value" onclick="voiceDebugTap()" style="-webkit-user-select:none;user-select:none">te_v31</div>
+          <div class="settings-value" onclick="voiceDebugTap()" style="-webkit-user-select:none;user-select:none">te_v32</div>
         </div>
       </div>
     </div>
@@ -1973,7 +1973,8 @@ function openWords(isReview) {
 
 function setupSwipe() {
   const c = document.getElementById('w-content');
-  if (!c) return;
+  if (!c || c._swipeBound) return;
+  c._swipeBound = true;
   c.addEventListener('touchstart', e => {
     swipeStartX = e.touches[0].clientX;
     swipeStartY = e.touches[0].clientY;
@@ -2177,7 +2178,9 @@ function renderDict() {
     setTimeout(function() { inp.focus(); }, 100);
   }
   // Auto-play pronunciation (guarded against stale renders / page switches)
-  setTimeout(function() {
+  if (dictAutoTimer) { clearTimeout(dictAutoTimer); dictAutoTimer = null; }
+  dictAutoTimer = setTimeout(function() {
+    dictAutoTimer = null;
     if (wMode !== 'dict') return;
     var pg = document.getElementById('pg-words');
     if (!pg || !pg.classList.contains('active')) return;
@@ -2187,14 +2190,17 @@ function renderDict() {
 }
 
 var dictResults = null;
+var dictAutoTimer = null;
 
 function dictPlayWord() {
+  if (dictAutoTimer) { clearTimeout(dictAutoTimer); dictAutoTimer = null; }
   var w = curWords[wIdx];
   if (!w) return;
   speak(w.word);
 }
 
 function dictPlayWordSlow() {
+  if (dictAutoTimer) { clearTimeout(dictAutoTimer); dictAutoTimer = null; }
   var w = curWords[wIdx];
   if (!w) return;
   TTS.play(w.word, { mode: 'slow' });
@@ -3828,6 +3834,7 @@ var TTS = (function() {
   var queue = [];
   var timer = null;
   var watchdog = null;
+  var playGuard = null;
   var active = null;
   var utter = null;
   var log = [];
@@ -3840,7 +3847,8 @@ var TTS = (function() {
 
   function stamp() {
     var d = new Date();
-    return ('0'+d.getHours()).slice(-2)+':'+('0'+d.getMinutes()).slice(-2)+':'+('0'+d.getSeconds()).slice(-2);
+    return ('0'+d.getHours()).slice(-2)+':'+('0'+d.getMinutes()).slice(-2)+':'+('0'+d.getSeconds()).slice(-2)+
+      '.'+('00'+d.getMilliseconds()).slice(-3);
   }
   function logAdd(type, msg) {
     log.push({ t: stamp(), type: type, msg: String(msg || '').slice(0, 80) });
@@ -3920,6 +3928,7 @@ var TTS = (function() {
   function clearTimers() {
     if (timer) { clearTimeout(timer); timer = null; }
     if (watchdog) { clearTimeout(watchdog); watchdog = null; }
+    if (playGuard) { clearTimeout(playGuard); playGuard = null; }
   }
   function stop(reason) {
     var a = active;
@@ -3982,17 +3991,61 @@ var TTS = (function() {
     u.rate = active.rate;
     u.pitch = 1;
     u.volume = 1;
-    var ended = false;
+
+    var settled = false;      // end/error/superseded: ignore every later event
+    var started = false;      // onstart is the only proof that playback began
+    var startupAt = Date.now();
+
+    logAdd('uttr', '#' + id + ' a' + attempt + ' ' + rv.voice.name + '/' + rv.voice.lang + ' r=' + active.rate);
+
+    function detach() {
+      try { u.onstart = null; u.onend = null; u.onerror = null; } catch (e) {}
+    }
+    function clearGuard() {
+      if (playGuard) { clearTimeout(playGuard); playGuard = null; }
+    }
+    function schedulePlaybackGuard() {
+      clearGuard();
+      // Generous upper bound; only used if the engine never fires onend.
+      var words = text.split(/\s+/).length;
+      var est = Math.max(6000, Math.round(words * 400 / Math.max(0.6, active.rate)) + 6000);
+      playGuard = setTimeout(function guardTick() {
+        playGuard = null;
+        if (id !== taskSeq || settled) return;
+        var st = synth();
+        if (!st) return;
+        if (st.speaking || st.pending) {
+          playGuard = setTimeout(guardTick, 2000);
+          return;
+        }
+        // Started but no onend and engine is idle: close this segment without interrupting audio.
+        settled = true;
+        logAdd('guard-end', text);
+        detach();
+        if (!queue.length) { finish(id); return; }
+        timer = setTimeout(function() {
+          timer = null;
+          if (id === taskSeq) nextSegment(id);
+        }, active ? active.gap : 240);
+      }, est);
+    }
+
     u.onstart = function() {
-      if (id !== taskSeq) return;
+      if (id !== taskSeq || settled) return;
+      started = true;
+      if (watchdog) { clearTimeout(watchdog); watchdog = null; }
+      if (active) { active.startedAt = Date.now(); active.started = true; }
       logAdd('start', text);
-      if (active) active.startedAt = Date.now();
+      schedulePlaybackGuard();
     };
     u.onend = function() {
-      if (ended) return;
-      ended = true;
+      if (settled) return;
+      settled = true;
       if (id !== taskSeq) { logAdd('stale-end', text); return; }
       if (watchdog) { clearTimeout(watchdog); watchdog = null; }
+      clearGuard();
+      if (active) active.started = false;
+      logAdd('end', text);
       if (!queue.length) { finish(id); return; }
       timer = setTimeout(function() {
         timer = null;
@@ -4000,34 +4053,56 @@ var TTS = (function() {
       }, active ? active.gap : 240);
     };
     u.onerror = function(ev) {
-      if (ended) return;
-      ended = true;
+      if (settled) return;
+      settled = true;
       if (id !== taskSeq) return;
+      if (watchdog) { clearTimeout(watchdog); watchdog = null; }
+      clearGuard();
       abort(id, (ev && (ev.error || ev.type)) || 'error');
     };
+
     utter = u;
     try {
       s.speak(u);
     } catch (e) {
+      settled = true;
+      clearTimers();
       abort(id, 'speak-exception');
       return;
     }
-    if (watchdog) clearTimeout(watchdog);
-    watchdog = setTimeout(function() {
+
+    // Startup watchdog: wait up to 4s for onstart. Safari can briefly report
+    // speaking===false && pending===false right after speak(), so an early idle
+    // reading is NEVER treated as failure, and normal playback is never touched.
+    if (watchdog) { clearTimeout(watchdog); watchdog = null; }
+    watchdog = setTimeout(function checkStart() {
       watchdog = null;
-      if (id !== taskSeq || !active || ended) return;
+      if (id !== taskSeq || !active || settled || started) return;
       var st = synth();
-      if (!st) return;
-      if (!st.speaking && !st.pending) {
-        if (attempt < 1) {
-          logAdd('retry', text);
-          try { st.cancel(); } catch (e) {}
-          setTimeout(function() { if (id === taskSeq) speakOne(text, id, attempt + 1); }, 80);
-        } else {
-          abort(id, 'not-started');
-        }
+      if (!st) { abort(id, 'unsupported'); return; }
+      if (st.speaking || st.pending) {
+        watchdog = setTimeout(checkStart, 700);
+        return;
       }
-    }, 500);
+      if (Date.now() - startupAt < 4000) {
+        watchdog = setTimeout(checkStart, 700);
+        return;
+      }
+      // Genuine startup failure. Invalidate the old utterance before any retry so
+      // the same text can never produce two overlapping voices.
+      if (attempt < 1) {
+        settled = true;
+        detach();
+        clearGuard();
+        logAdd('retry', text);
+        try { s.cancel(); } catch (e2) {}
+        setTimeout(function() {
+          if (id === taskSeq) speakOne(text, id, attempt + 1);
+        }, 150);
+      } else {
+        abort(id, 'not-started');
+      }
+    }, 900);
   }
   function nextSegment(id) {
     if (id !== taskSeq || !active) return;
@@ -4053,9 +4128,10 @@ var TTS = (function() {
       gap: opts.gap === undefined ? (dialogues.length > 1 ? 320 : 240) : opts.gap,
       onDone: opts.onDone,
       onState: opts.onState,
+      started: false,
       startedAt: Date.now()
     };
-    logAdd('play', segs.join(' | '));
+    logAdd('play', '#' + id + ' ' + segs.join(' | '));
     nextSegment(id);
     return true;
   }
@@ -4079,9 +4155,10 @@ var TTS = (function() {
       gap: opts.gap === undefined ? 320 : opts.gap,
       onDone: opts.onDone,
       onState: opts.onState,
+      started: false,
       startedAt: Date.now()
     };
-    logAdd('seq', list.length + ' segments');
+    logAdd('seq', '#' + id + ' ' + list.length + ' segments');
     nextSegment(id);
     return true;
   }
@@ -4093,14 +4170,14 @@ var TTS = (function() {
       speaking: !!(s && s.speaking),
       pending: !!(s && s.pending),
       taskId: taskSeq,
-      active: active ? { mode: active.mode, rate: active.rate, remaining: queue.length, startedAt: active.startedAt } : null,
+      active: active ? { mode: active.mode, rate: active.rate, started: !!active.started, remaining: queue.length, startedAt: active.startedAt } : null,
       currentVoice: rv.voice ? { name: rv.voice.name, lang: rv.voice.lang, local: !!rv.voice.localService, uri: rv.voice.voiceURI } : null,
       fallback: rv.fallback,
       lastError: lastError,
       voices: refreshVoices().filter(isEnglish).map(function(v) {
         return { name: v.name, lang: v.lang, local: !!v.localService, default: !!v.default };
       }),
-      log: log.slice(-14)
+      log: log.slice(-24)
     };
   }
   return {
@@ -6378,10 +6455,11 @@ function openVoiceDebug() {
     return '<div><span style="color:#64748b">' + esc(l.t) + '</span> [' + esc(l.type) + '] ' + esc(l.msg) + '</div>';
   }).join('') : '<div>—</div>';
   panel.innerHTML =
-    '<div class="td-head"><span>语音诊断 V30</span><button onclick="closeVoiceDebug()">关闭</button></div>' +
+    '<div class="td-head"><span>语音诊断 V32</span><button onclick="closeVoiceDebug()">关闭</button></div>' +
     '<div class="td-body">' +
       '<div><b>支持 SpeechSynthesis：</b>' + (st.supported ? '是' : '否') + '</div>' +
-      '<div><b>当前任务：</b>' + (st.active ? ('播放中 · ' + st.active.mode + ' · 语速 ' + st.active.rate.toFixed(2) + ' · 剩余 ' + st.active.remaining) : '空闲') + '</div>' +
+      '<div><b>引擎状态：</b>speaking=' + (st.speaking ? 'true' : 'false') + ' · pending=' + (st.pending ? 'true' : 'false') + '</div>' +
+      '<div><b>当前任务：</b>' + (st.active ? ('已启动 ' + (st.active.started ? '是' : '否') + ' · ' + st.active.mode + ' · 语速 ' + st.active.rate.toFixed(2) + ' · 剩余 ' + st.active.remaining) : '空闲') + '</div>' +
       '<div><b>任务 ID：</b>' + st.taskId + '</div>' +
       '<div><b>语音监听器：</b>' + (_voicesBound ? '已绑定（单例）' : '未绑定') + '</div>' +
       '<div><b>实际语音：</b>' + (st.currentVoice ? esc(st.currentVoice.name + ' (' + st.currentVoice.lang + ')' + (st.currentVoice.local ? ' 本地' : ' 在线')) : '未选择') + (st.fallback ? ' <span style="color:#fbbf24">已回退</span>' : '') + '</div>' +
@@ -6529,7 +6607,7 @@ document.addEventListener('keydown', function(e) {
 // ===== PWA / Service Worker =====
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', function() {
-    navigator.serviceWorker.register('service-worker.js?v=31').then(function(reg) {
+    navigator.serviceWorker.register('service-worker.js?v=32').then(function(reg) {
       reg.addEventListener('updatefound', function() {
         var nw = reg.installing;
         if (nw) {
