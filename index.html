@@ -15,7 +15,7 @@
 <link rel="icon" type="image/png" sizes="512x512" href="icon-512.png?v8">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png?v8">
 <link rel="manifest" href="manifest.json">
-<meta name="version" content="te_v30">
+<meta name="version" content="te_v31">
 <title>谢飞机</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
 <style>
@@ -1111,7 +1111,7 @@ body:not(.cat-view) #home-cards{display:none !important}
         <div class="settings-group-title">关于</div>
         <div class="settings-row">
           <div class="settings-label">版本</div>
-          <div class="settings-value" onclick="voiceDebugTap()" style="-webkit-user-select:none;user-select:none">te_v30</div>
+          <div class="settings-value" onclick="voiceDebugTap()" style="-webkit-user-select:none;user-select:none">te_v31</div>
         </div>
       </div>
     </div>
@@ -3798,12 +3798,29 @@ function cleanSpeechText(raw) {
   t = t.replace(/\[[^\]]*\]/g, ' ');          // [phonetic]
   t = t.replace(/[\u3000-\u303f\uff00-\uffef\u4e00-\u9fff]+/g, ' '); // CJK / fullwidth
   if (t.indexOf('/') > -1) t = t.split(/\s*\/\s*/)[0];
-  t = t.replace(/\b[A-B]\s*:\s*/g, ' ');
-  t = t.replace(/\s*\.{2,}\s*/g, ' ');
-  t = t.replace(/[\u2018\u2019]/g, "'").replace(/[\u201c\u201d]/g, '"');
+  t = t.replace(/\b[A-B]\s*:\s*/g, ' ');        // leftover speaker labels
+  t = t.replace(/[\u2018\u2019]/g, "'");        // curly apostrophes
+  t = t.replace(/[\u201c\u201d"]/g, ' ');       // drop double quotes
+  t = t.replace(/_+/g, ' ');                    // GrandHotel_Guest -> GrandHotel Guest
+  t = t.replace(/\s*[\u2014\u2013]\s*/g, ', '); // em/en dash -> short pause
+  t = t.replace(/\s*\.{2,}\s*/g, ' ');          // ellipsis
+  t = t.replace(/\s*;\s*/g, '. ');              // semicolon -> sentence break
   t = t.replace(/\s+/g, ' ').trim();
-  t = t.replace(/^[,\-:;]+/, '').replace(/[,\-:;]+$/, '');
+  t = t.replace(/\s*,\s*(?:,\s*)+/g, ', ');
+  t = t.replace(/\s*,\s*([.!?])/g, '$1');
+  t = t.replace(/^[,\-:;.]+/, '').replace(/[,\-:;]+$/, '');
+  // Multi-word utterances with no terminal mark get a falling tone instead of a flat cut.
+  if (t && /[A-Za-z0-9]$/.test(t) && t.split(/\s+/).length >= 3) t += '.';
   return t;
+}
+
+// Split "A: ... B: ..." dialogue into separate utterances so each turn keeps its natural intonation.
+function splitDialogue(raw) {
+  var t = String(raw === null || raw === undefined ? '' : raw).trim();
+  if (!/^[AB]\s*:/.test(t)) return [t];
+  var labels = t.match(/(?:^|\s)[AB]\s*:/g);
+  if (!labels || labels.length < 2) return [t];
+  return t.split(/(?:^|\s)[AB]\s*:\s*/).filter(function(x) { return !!x && !!x.trim(); });
 }
 
 var TTS = (function() {
@@ -3892,16 +3909,12 @@ var TTS = (function() {
   function splitText(text) {
     var t = String(text || '').trim();
     if (!t) return [];
-    if (t.length <= 180) return [t];
-    var parts = t.match(/[^.!?;]+[.!?;]*/g) || [t];
-    var out = [], buf = '';
-    parts.forEach(function(p) {
-      p = p.trim();
-      if (!p) return;
-      if ((buf + ' ' + p).trim().length > 180 && buf) { out.push(buf.trim()); buf = p; }
-      else buf = (buf ? buf + ' ' : '') + p;
-    });
-    if (buf.trim()) out.push(buf.trim());
+    if (t.length <= 120) return [t];
+    // Split on real sentence endings only (followed by a capital letter or end of text),
+    // so abbreviations like "a.m." and decimals stay intact.
+    var parts = t.match(/[^.!?]+[.!?]+(?=\s+[A-Z]|$)/g);
+    if (!parts || parts.length < 2) return [t];
+    var out = parts.map(function(p) { return p.trim(); }).filter(function(p) { return !!p; });
     return out.length ? out : [t];
   }
   function clearTimers() {
@@ -4023,28 +4036,38 @@ var TTS = (function() {
   }
   function play(text, opts) {
     opts = opts || {};
-    var clean = cleanSpeechText(text);
-    if (!clean) return false;
+    var dialogues = splitDialogue(text);
+    var segs = [];
+    dialogues.forEach(function(seg) {
+      var clean = cleanSpeechText(seg);
+      if (clean) splitText(clean).forEach(function(x) { segs.push(x); });
+    });
+    if (!segs.length) return false;
     stop('replace');
     var id = ++taskSeq;
-    queue = splitText(clean);
-    if (!queue.length) return false;
+    queue = segs;
     active = {
       id: id,
       mode: opts.mode || 'normal',
       rate: effectiveRate(opts.mode),
-      gap: opts.gap === undefined ? 240 : opts.gap,
+      gap: opts.gap === undefined ? (dialogues.length > 1 ? 320 : 240) : opts.gap,
       onDone: opts.onDone,
       onState: opts.onState,
       startedAt: Date.now()
     };
-    logAdd('play', clean);
+    logAdd('play', segs.join(' | '));
     nextSegment(id);
     return true;
   }
   function playSequence(texts, opts) {
     opts = opts || {};
-    var list = (texts || []).map(cleanSpeechText).filter(function(x) { return !!x; });
+    var list = [];
+    (texts || []).forEach(function(item) {
+      splitDialogue(item).forEach(function(seg) {
+        var clean = cleanSpeechText(seg);
+        if (clean) splitText(clean).forEach(function(x) { list.push(x); });
+      });
+    });
     if (!list.length) return false;
     stop('replace');
     var id = ++taskSeq;
@@ -6506,7 +6529,7 @@ document.addEventListener('keydown', function(e) {
 // ===== PWA / Service Worker =====
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', function() {
-    navigator.serviceWorker.register('service-worker.js?v=30').then(function(reg) {
+    navigator.serviceWorker.register('service-worker.js?v=31').then(function(reg) {
       reg.addEventListener('updatefound', function() {
         var nw = reg.installing;
         if (nw) {
