@@ -15,7 +15,7 @@
 <link rel="icon" type="image/png" sizes="512x512" href="icon-512.png?v8">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png?v8">
 <link rel="manifest" href="manifest.json">
-<meta name="version" content="te_v32">
+<meta name="version" content="te_v33">
 <title>谢飞机</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
 <style>
@@ -1111,7 +1111,7 @@ body:not(.cat-view) #home-cards{display:none !important}
         <div class="settings-group-title">关于</div>
         <div class="settings-row">
           <div class="settings-label">版本</div>
-          <div class="settings-value" onclick="voiceDebugTap()" style="-webkit-user-select:none;user-select:none">te_v32</div>
+          <div class="settings-value" onclick="voiceDebugTap()" style="-webkit-user-select:none;user-select:none">te_v33</div>
         </div>
       </div>
     </div>
@@ -3835,6 +3835,7 @@ var TTS = (function() {
   var timer = null;
   var watchdog = null;
   var playGuard = null;
+  var launchTimer = null;
   var active = null;
   var utter = null;
   var log = [];
@@ -3929,27 +3930,37 @@ var TTS = (function() {
     if (timer) { clearTimeout(timer); timer = null; }
     if (watchdog) { clearTimeout(watchdog); watchdog = null; }
     if (playGuard) { clearTimeout(playGuard); playGuard = null; }
+    if (launchTimer) { clearTimeout(launchTimer); launchTimer = null; }
+  }
+  function releaseUtterance() {
+    var u = utter;
+    utter = null;
+    if (!u) return;
+    try { u.onstart = u.onend = u.onerror = u.onboundary = null; } catch (e) {}
   }
   function stop(reason) {
     var a = active;
+    var s = synth();
+    var shouldCancel = !!(utter || (s && (s.speaking || s.pending || s.paused)));
     taskSeq++;
     active = null;
     queue = [];
     clearTimers();
-    utter = null;
-    var s = synth();
-    if (s) { try { s.cancel(); } catch (e) {} }
+    releaseUtterance();
+    // Safari is sensitive to cancel(); never call it on an already idle engine.
+    if (shouldCancel && s) { try { s.cancel(); } catch (e) {} }
     if (a) {
       logAdd('cancel', reason || '');
       try { if (a.onState) a.onState('canceled'); } catch (e) {}
     }
+    return shouldCancel;
   }
   function finish(id) {
     if (id !== taskSeq) return;
     var a = active;
     active = null;
     clearTimers();
-    utter = null;
+    releaseUtterance();
     if (a) {
       logAdd('done', a.mode);
       try { if (a.onState) a.onState('done'); } catch (e) {}
@@ -3964,19 +3975,20 @@ var TTS = (function() {
     active = null;
     queue = [];
     clearTimers();
-    utter = null;
+    releaseUtterance();
     var s = synth();
-    if (s) { try { s.cancel(); } catch (e) {} }
+    if (s && (s.speaking || s.pending || s.paused)) { try { s.cancel(); } catch (e) {} }
     if (a) {
       try { if (a.onState) a.onState('error', lastError); } catch (e) {}
       try { if (a.onDone) a.onDone(false); } catch (e) {}
     }
   }
-  function speakOne(text, id, attempt) {
+  function speakOne(text, id) {
     if (id !== taskSeq || !active) return;
     var s = synth();
     if (!s) { abort(id, 'unsupported'); return; }
-    var rv = resolveVoice();
+    // Keep one voice for the whole task; changing voices mid-sequence sounds broken.
+    var rv = active.voice ? { voice: active.voice, fallback: false } : resolveVoice();
     if (!rv.voice) {
       if (!noEnglishWarned) {
         noEnglishWarned = true;
@@ -3985,6 +3997,7 @@ var TTS = (function() {
       abort(id, 'no-english-voice');
       return;
     }
+    active.voice = rv.voice;
     var u = new SpeechSynthesisUtterance(text);
     u.voice = rv.voice;
     u.lang = rv.voice.lang || 'en-US';
@@ -3992,21 +4005,18 @@ var TTS = (function() {
     u.pitch = 1;
     u.volume = 1;
 
-    var settled = false;      // end/error/superseded: ignore every later event
-    var started = false;      // onstart is the only proof that playback began
+    var settled = false;
+    var started = false;
     var startupAt = Date.now();
 
-    logAdd('uttr', '#' + id + ' a' + attempt + ' ' + rv.voice.name + '/' + rv.voice.lang + ' r=' + active.rate);
+    logAdd('uttr', '#' + id + ' ' + rv.voice.name + '/' + rv.voice.lang + ' r=' + active.rate);
 
-    function detach() {
-      try { u.onstart = null; u.onend = null; u.onerror = null; } catch (e) {}
-    }
     function clearGuard() {
       if (playGuard) { clearTimeout(playGuard); playGuard = null; }
     }
     function schedulePlaybackGuard() {
       clearGuard();
-      // Generous upper bound; only used if the engine never fires onend.
+      // Fallback only: normal completion always comes from onend.
       var words = text.split(/\s+/).length;
       var est = Math.max(6000, Math.round(words * 400 / Math.max(0.6, active.rate)) + 6000);
       playGuard = setTimeout(function guardTick() {
@@ -4018,10 +4028,9 @@ var TTS = (function() {
           playGuard = setTimeout(guardTick, 2000);
           return;
         }
-        // Started but no onend and engine is idle: close this segment without interrupting audio.
         settled = true;
         logAdd('guard-end', text);
-        detach();
+        if (utter === u) releaseUtterance();
         if (!queue.length) { finish(id); return; }
         timer = setTimeout(function() {
           timer = null;
@@ -4029,15 +4038,19 @@ var TTS = (function() {
         }, active ? active.gap : 240);
       }, est);
     }
-
-    u.onstart = function() {
-      if (id !== taskSeq || settled) return;
+    function markStarted(source) {
+      if (id !== taskSeq || !active || settled || started) return;
       started = true;
       if (watchdog) { clearTimeout(watchdog); watchdog = null; }
-      if (active) { active.startedAt = Date.now(); active.started = true; }
-      logAdd('start', text);
+      active.startedAt = Date.now();
+      active.started = true;
+      logAdd(source === 'event' ? 'start' : 'start-' + source, text);
       schedulePlaybackGuard();
-    };
+    }
+
+    u.onstart = function() { markStarted('event'); };
+    // Some Safari builds omit onstart; a boundary is also proof of real audio.
+    u.onboundary = function() { markStarted('boundary'); };
     u.onend = function() {
       if (settled) return;
       settled = true;
@@ -4046,6 +4059,7 @@ var TTS = (function() {
       clearGuard();
       if (active) active.started = false;
       logAdd('end', text);
+      if (utter === u) releaseUtterance();
       if (!queue.length) { finish(id); return; }
       timer = setTimeout(function() {
         timer = null;
@@ -4063,6 +4077,7 @@ var TTS = (function() {
 
     utter = u;
     try {
+      if (s.paused) s.resume();
       s.speak(u);
     } catch (e) {
       settled = true;
@@ -4071,43 +4086,38 @@ var TTS = (function() {
       return;
     }
 
-    // Startup watchdog: wait up to 4s for onstart. Safari can briefly report
-    // speaking===false && pending===false right after speak(), so an early idle
-    // reading is NEVER treated as failure, and normal playback is never touched.
-    if (watchdog) { clearTimeout(watchdog); watchdog = null; }
-    watchdog = setTimeout(function checkStart() {
-      watchdog = null;
-      if (id !== taskSeq || !active || settled || started) return;
-      var st = synth();
-      if (!st) { abort(id, 'unsupported'); return; }
-      if (st.speaking || st.pending) {
-        watchdog = setTimeout(checkStart, 700);
-        return;
-      }
-      if (Date.now() - startupAt < 4000) {
-        watchdog = setTimeout(checkStart, 700);
-        return;
-      }
-      // Genuine startup failure. Invalidate the old utterance before any retry so
-      // the same text can never produce two overlapping voices.
-      if (attempt < 1) {
-        settled = true;
-        detach();
-        clearGuard();
-        logAdd('retry', text);
-        try { s.cancel(); } catch (e2) {}
-        setTimeout(function() {
-          if (id === taskSeq) speakOne(text, id, attempt + 1);
-        }, 150);
-      } else {
-        abort(id, 'not-started');
-      }
-    }, 900);
+    // Never resubmit the same text automatically. If Safari omits onstart but the
+    // engine is speaking, adopt that state instead of cancelling real audio.
+    if (!started && !settled) {
+      if (watchdog) { clearTimeout(watchdog); watchdog = null; }
+      watchdog = setTimeout(function checkStart() {
+        watchdog = null;
+        if (id !== taskSeq || !active || settled || started) return;
+        var st = synth();
+        if (!st) { abort(id, 'unsupported'); return; }
+        if (st.speaking) { markStarted('engine'); return; }
+        if (Date.now() - startupAt < 5000) {
+          watchdog = setTimeout(checkStart, 700);
+          return;
+        }
+        logAdd('start-timeout', text);
+        abort(id, st.pending ? 'start-timeout-pending' : 'not-started');
+      }, 1000);
+    }
   }
   function nextSegment(id) {
     if (id !== taskSeq || !active) return;
     if (!queue.length) { finish(id); return; }
-    speakOne(queue.shift(), id, 0);
+    speakOne(queue.shift(), id);
+  }
+  function launch(id, canceled) {
+    if (!canceled) { nextSegment(id); return; }
+    // Let Safari finish the old cancel before queuing new audio.
+    logAdd('defer', '#' + id + ' 90ms');
+    launchTimer = setTimeout(function() {
+      launchTimer = null;
+      if (id === taskSeq && active) nextSegment(id);
+    }, 90);
   }
   function play(text, opts) {
     opts = opts || {};
@@ -4118,7 +4128,7 @@ var TTS = (function() {
       if (clean) splitText(clean).forEach(function(x) { segs.push(x); });
     });
     if (!segs.length) return false;
-    stop('replace');
+    var canceled = stop('replace');
     var id = ++taskSeq;
     queue = segs;
     active = {
@@ -4132,7 +4142,7 @@ var TTS = (function() {
       startedAt: Date.now()
     };
     logAdd('play', '#' + id + ' ' + segs.join(' | '));
-    nextSegment(id);
+    launch(id, canceled);
     return true;
   }
   function playSequence(texts, opts) {
@@ -4145,7 +4155,7 @@ var TTS = (function() {
       });
     });
     if (!list.length) return false;
-    stop('replace');
+    var canceled = stop('replace');
     var id = ++taskSeq;
     queue = list;
     active = {
@@ -4159,7 +4169,7 @@ var TTS = (function() {
       startedAt: Date.now()
     };
     logAdd('seq', '#' + id + ' ' + list.length + ' segments');
-    nextSegment(id);
+    launch(id, canceled);
     return true;
   }
   function getState() {
@@ -6455,7 +6465,7 @@ function openVoiceDebug() {
     return '<div><span style="color:#64748b">' + esc(l.t) + '</span> [' + esc(l.type) + '] ' + esc(l.msg) + '</div>';
   }).join('') : '<div>—</div>';
   panel.innerHTML =
-    '<div class="td-head"><span>语音诊断 V32</span><button onclick="closeVoiceDebug()">关闭</button></div>' +
+    '<div class="td-head"><span>语音诊断 V33</span><button onclick="closeVoiceDebug()">关闭</button></div>' +
     '<div class="td-body">' +
       '<div><b>支持 SpeechSynthesis：</b>' + (st.supported ? '是' : '否') + '</div>' +
       '<div><b>引擎状态：</b>speaking=' + (st.speaking ? 'true' : 'false') + ' · pending=' + (st.pending ? 'true' : 'false') + '</div>' +
@@ -6607,7 +6617,7 @@ document.addEventListener('keydown', function(e) {
 // ===== PWA / Service Worker =====
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', function() {
-    navigator.serviceWorker.register('service-worker.js?v=32').then(function(reg) {
+    navigator.serviceWorker.register('service-worker.js?v=33').then(function(reg) {
       reg.addEventListener('updatefound', function() {
         var nw = reg.installing;
         if (nw) {
