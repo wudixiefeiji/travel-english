@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
-<meta name="theme-color" content="#07090F">
+<meta name="theme-color" content="#F7F5F0">
 <meta name="apple-mobile-web-app-title" content="谢飞机">
 <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v8">
 <link rel="apple-touch-icon" sizes="120x120" href="apple-touch-icon.png?v8">
@@ -15,7 +15,7 @@
 <link rel="icon" type="image/png" sizes="512x512" href="icon-512.png?v8">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png?v8">
 <link rel="manifest" href="manifest.json">
-<meta name="version" content="te_v33">
+<meta name="version" content="te_v34">
 <title>谢飞机</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
 <style>
@@ -772,7 +772,7 @@ input,textarea{font-family:inherit}
 
 /* ===== V12: Voice gender labels ===== */
 .voice-gender-label{font-size:11px;font-weight:700;color:var(--t3);padding:4px 0 2px;
-  border-top:1px solid rgba(255,255,255,.04)}
+  border-top:1px solid var(--line)}
 
 /* ===== V11: Pronunciation scoring ===== */
 .pron-btn{display:inline-flex;align-items:center;gap:4px;padding:6px 14px;border-radius:var(--rp);
@@ -905,6 +905,505 @@ body:not(.cat-view) #home-cards{display:none !important}
 .tts-debug .td-list{max-height:120px;overflow:auto;background:rgba(255,255,255,.03);border-radius:8px;padding:6px 8px}
 .tts-debug .td-actions{display:flex;gap:8px;margin-top:10px}
 .ff-bd-speak.playing{background:rgba(239,68,68,.18);border-color:rgba(239,68,68,.4);color:#FCA5A5}
+
+/* ============================================================
+   V34: Warm editorial design system
+   ============================================================ */
+:root{
+  --nav-h:64px;
+  --r:18px;--rs:13px;
+  --accent:#3E7A6B;--accent-strong:#2F5F54;--accent-soft:#E8F1ED;--accent-line:#CBDED7;
+  --surface:#FFFFFF;--surface-2:#FAF8F3;--line:#E7E1D6;--line-strong:#D8D0C2;
+  --bg:#F7F5F0;--bg2:#EFEBE3;
+  --t1:#26231E;--t2:#57514A;--t3:#857D72;--t4:#AAA297;
+  --grn:#3E7A6B;--red:#B2544A;--org:#A4703C;--ylw:#A5812F;--blue:#4E6F8E;
+  --purp:#3E7A6B;--purp2:#2F5F54;--cyan:#3E7A6B;--cyan2:#4B8A79;
+  --ga:linear-gradient(135deg,#4B8A79 0%,#3E7A6B 100%);
+  --gb:linear-gradient(135deg,#4B8A79 0%,#3E7A6B 100%);
+  --gc:linear-gradient(135deg,#4B8A79 0%,#3E7A6B 100%);
+  --gd:linear-gradient(135deg,#4B8A79 0%,#3E7A6B 100%);
+  --go:linear-gradient(135deg,#B07B46 0%,#9A683A 100%);
+  --gy:linear-gradient(135deg,#B08A3E 0%,#96742C 100%);
+  --glow-p:none;--glow-c:none;
+  --st:max(env(safe-area-inset-top,0px),16px);
+  --shadow-sm:0 1px 2px rgba(38,35,30,.05);
+  --shadow-md:0 12px 32px rgba(38,35,30,.10);
+}
+html,body{background:var(--bg)}
+body{color:var(--t1);font-family:'Inter',-apple-system,BlinkMacSystemFont,"PingFang SC","Noto Sans SC",sans-serif;
+  font-size:15px;line-height:1.6;letter-spacing:0;-webkit-font-smoothing:antialiased}
+#app{max-width:none;width:100%;left:0;transform:none;background:var(--bg)}
+#app::before{display:none}
+.page{padding:calc(var(--st)+8px) 18px calc(var(--sb)+24px)}
+.page.active{animation:fadeIn .22s ease}
+.page-title{font-size:23px;font-weight:700;color:var(--t1);letter-spacing:-.3px;padding:8px 0 14px}
+
+/* --- navigation --- */
+.nav{max-width:none;background:rgba(250,248,243,.95);
+  backdrop-filter:blur(20px) saturate(140%);-webkit-backdrop-filter:blur(20px) saturate(140%);
+  border-top:1px solid var(--line)}
+.nav::before{display:none}
+.nav-btn{padding:6px 14px;min-width:56px;border-radius:10px}
+.nav-btn svg{stroke:var(--t3);filter:none;width:22px;height:22px}
+.nav-btn span{color:var(--t3);font-weight:500}
+.nav-btn.active svg{stroke:var(--accent);filter:none}
+.nav-btn.active span{color:var(--accent);font-weight:600}
+
+/* --- headers / top bars --- */
+.home-top-bar{padding:calc(var(--st)+2px) 0 10px;margin-bottom:4px}
+.home-top-bar .htb-title,.home-title .ht-main{font-size:23px;font-weight:700;color:var(--t1);
+  background:none;-webkit-text-fill-color:var(--t1);letter-spacing:-.3px}
+.htb-btn{width:36px;height:36px;border-radius:10px;background:var(--surface);
+  border:1px solid var(--line);box-shadow:var(--shadow-sm)}
+.htb-btn svg{stroke:var(--t2);width:17px;height:17px}
+.htb-btn:active{background:var(--surface-2)}
+.topbar{background:linear-gradient(180deg,var(--bg) 76%,rgba(247,245,240,0));border:none;padding-top:calc(var(--st)+6px)}
+.back-btn{background:var(--surface);border:1px solid var(--line);box-shadow:var(--shadow-sm)}
+.back-btn svg{stroke:var(--t2)}
+.ptitle{color:var(--t1);font-weight:600}
+.pbadge.done{background:var(--accent-soft);color:var(--accent-strong);border:1px solid var(--accent-line)}
+.pbadge.pending{background:var(--surface-2);color:var(--t3);border:1px solid var(--line)}
+
+/* --- home layout --- */
+.home-layout{display:block}
+.home-main,.home-side{display:block;min-width:0}
+#daily-sentence-container:empty,#mixed-review-container:empty,#review-banner-container:empty{display:none}
+
+/* --- today's goal card --- */
+.hero-card{background:var(--surface);border:1px solid var(--line);border-radius:20px;
+  padding:22px;margin-bottom:16px;box-shadow:var(--shadow-sm)}
+.hero-card::before,.hero-card::after{display:none}
+.hero-top{align-items:flex-start}
+.hero-eyebrow{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--accent);margin-bottom:8px}
+.hero-title{font-size:20px;font-weight:700;line-height:1.35;color:var(--t1);letter-spacing:-.2px}
+.hero-num{font-size:30px;font-weight:700;color:var(--t1);background:none;
+  -webkit-text-fill-color:var(--t1);letter-spacing:-.6px}
+.hero-num small{font-size:14px;font-weight:500;color:var(--t3);-webkit-text-fill-color:var(--t3);letter-spacing:0}
+.hero-label{font-size:12px;color:var(--t3);margin-top:2px}
+.hero-meta{font-size:13px;color:var(--t3);margin-top:6px}
+.hero-meta b{color:var(--t1);font-weight:600}
+.hero-pct{font-size:22px;font-weight:700;color:var(--accent);background:none}
+.hero-pct span{font-size:13px;color:var(--t3);font-weight:500}
+.hero-bar{margin-top:14px;height:8px;background:var(--bg2);border:none}
+.hero-bar-fill{background:var(--accent);box-shadow:none}
+.hero-bar-fill::after{display:none}
+.hero-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:16px}
+.hero-stat{background:var(--surface-2);border:1px solid var(--line);border-radius:12px;padding:10px 12px}
+.hero-stat b{display:block;font-size:18px;font-weight:700;color:var(--t1);line-height:1.2}
+.hero-stat span{display:block;font-size:11px;color:var(--t3);margin-top:2px}
+.hero-cta{display:flex;align-items:center;justify-content:space-between;gap:10px;width:100%;
+  margin-top:16px;padding:14px 16px;border-radius:12px;background:var(--accent);color:#fff;
+  font-size:15px;font-weight:600;transition:background .15s,transform .15s}
+.hero-cta:hover{background:var(--accent-strong)}
+.hero-cta:active{transform:scale(.99)}
+.hero-cta small{font-size:12px;font-weight:500;opacity:.82}
+
+/* --- sections & quick stats --- */
+.section-header{margin:4px 2px 12px}
+.section-title{font-size:14px;font-weight:700;color:var(--t2)}
+.section-title::before{background:var(--accent);width:3px;height:14px}
+.stats-quick{gap:10px;margin-bottom:16px}
+.sq-item{background:var(--surface);border:1px solid var(--line);border-radius:var(--rs);
+  padding:14px 10px;box-shadow:var(--shadow-sm)}
+.sq-num{font-size:20px;font-weight:700;color:var(--t1)}
+.sq-label{font-size:11px;color:var(--t3);font-weight:500}
+.home-actions{gap:8px;margin-bottom:16px}
+.home-action-btn{background:var(--surface);border:1px solid var(--line);border-radius:var(--rs);
+  padding:12px 6px;box-shadow:var(--shadow-sm)}
+.home-action-btn svg{stroke:var(--accent)}
+.home-action-btn span{font-size:11px;color:var(--t2);font-weight:500}
+
+/* --- search --- */
+.search-bar{background:var(--surface);border:1px solid var(--line);border-radius:var(--rs);box-shadow:var(--shadow-sm)}
+.search-bar svg{stroke:var(--t3)}
+.search-bar input{color:var(--t1)}
+.search-bar input::placeholder{color:var(--t4)}
+.search-bar:focus-within{border-color:var(--accent-line);box-shadow:0 0 0 3px rgba(62,122,107,.08)}
+.search-clear{background:var(--bg2)}
+.search-clear svg{stroke:var(--t3)}
+.search-result-item{background:var(--surface);border:1px solid var(--line)}
+.sr-day{background:var(--accent-soft);color:var(--accent-strong);border-radius:8px}
+.sr-word .sr-en{color:var(--t1)}
+.sr-word .sr-cn{color:var(--t3)}
+
+/* --- daily sentence / review banners --- */
+.daily-sentence-card{background:var(--surface);border:1px solid var(--line);
+  border-left:3px solid var(--accent);border-radius:var(--r);padding:18px 20px;box-shadow:var(--shadow-sm)}
+.daily-sentence-card::before{display:none}
+.ds-label{color:var(--accent);font-size:11px;letter-spacing:.1em}
+.ds-label svg{fill:var(--accent)}
+.ds-text{color:var(--t1);font-style:normal;font-size:16px;font-weight:600;line-height:1.55}
+.ds-text-cn{color:var(--t3);font-size:13px}
+.ds-btn{background:var(--accent-soft);border:1px solid var(--accent-line);color:var(--accent-strong);
+  border-radius:999px;padding:7px 14px}
+.ds-btn svg{fill:currentColor}
+.mixed-review-banner{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow-sm)}
+.mixed-review-banner::before{display:none}
+.mrb-icon svg{width:24px;height:24px;stroke:var(--accent);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.mrb-title{color:var(--t1);font-size:15px;font-weight:600}
+.mrb-desc{color:var(--t3);font-size:12px}
+.mrb-count{color:var(--accent);font-size:26px;font-weight:700}
+.review-banner{background:var(--surface);border:1px solid var(--line);border-radius:var(--rs);box-shadow:var(--shadow-sm)}
+.review-banner .rb-icon svg{width:22px;height:22px;stroke:var(--accent);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.review-banner .rb-title{color:var(--t1);font-weight:600}
+.review-banner .rb-desc{color:var(--t3)}
+.review-banner .rb-count{color:var(--accent);font-weight:700}
+.reminder-banner{background:#FBF4E9;border:1px solid #EBDCC6}
+.reminder-text .rt-title{color:var(--org)}
+.reminder-text .rt-desc{color:var(--t3)}
+
+/* --- categories --- */
+.cat-grid{gap:12px}
+.cat-card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);
+  padding:20px;box-shadow:var(--shadow-sm)}
+.cat-card.cyan,.cat-card.gradient-orange{background:var(--surface);border-color:var(--line)}
+.cat-icon{width:48px;height:48px;border-radius:14px;background:var(--accent-soft);
+  border:1px solid var(--accent-line);font-size:0}
+.cat-icon svg{width:23px;height:23px;stroke:var(--accent);fill:none;stroke-width:1.8;
+  stroke-linecap:round;stroke-linejoin:round}
+.cat-name{font-size:16px;font-weight:700;color:var(--t1)}
+.cat-desc{font-size:13px;color:var(--t3)}
+.cat-arrow{background:var(--surface-2);border:1px solid var(--line)}
+.cat-arrow svg{stroke:var(--t3)}
+.cat-back svg{stroke:var(--t3)}
+.cat-back span{color:var(--t1);font-weight:600}
+.cat-stat{background:var(--surface);border:1px solid var(--line)}
+.cat-stat-num{color:var(--t1);font-weight:700}
+.cat-stat-label{color:var(--t3)}
+
+/* --- day cards --- */
+.phase-label{background:var(--surface-2);border:1px solid var(--line);color:var(--t2);
+  letter-spacing:.08em;padding:6px 12px;font-size:11px}
+.day-card{background:var(--surface);border:1px solid var(--line);border-radius:var(--rs);box-shadow:var(--shadow-sm)}
+.day-card::before{display:none}
+.day-card:active{background:var(--surface-2)}
+.dc-num{color:var(--accent);background:none;-webkit-text-fill-color:var(--accent);font-weight:700;font-size:24px}
+.dc-title{color:var(--t1);font-weight:600}
+.dc-sub{color:var(--t3)}
+.dc-tag{background:var(--surface-2);color:var(--t3)}
+.dc-tag.purp{background:var(--accent-soft);color:var(--accent-strong)}
+.dc-tag.cyan{background:var(--bg2);color:var(--t2)}
+.dc-done-mark{background:var(--accent-soft);border-color:var(--accent)}
+.dc-done-mark svg{stroke:var(--accent)}
+
+/* --- day detail --- */
+.dd-hero{background:var(--surface);border:1px solid var(--line);box-shadow:var(--shadow-sm)}
+.dd-hero::before{display:none}
+.dd-day{color:var(--accent)}
+.dd-title{color:var(--t1);font-weight:700;font-size:22px}
+.dd-sub{color:var(--t3)}
+.dd-tag{background:var(--surface-2);border:1px solid var(--line);color:var(--t3)}
+.dd-tag.purp{background:var(--accent-soft);color:var(--accent-strong);border-color:var(--accent-line)}
+.dd-tag.cyan{background:var(--bg2);color:var(--t2);border-color:var(--line)}
+.dd-tag.org{background:#FBF3E8;color:var(--org);border-color:#EDDFCB}
+.dd-tag.ylw{background:#FAF5E8;color:var(--ylw);border-color:#EADFC4}
+
+/* --- module cards --- */
+.mc{background:var(--surface);border:1px solid var(--line);border-radius:var(--rs);box-shadow:var(--shadow-sm)}
+.mc:active{background:var(--surface-2)}
+.mc::before{display:none}
+.mc-icon{width:44px;height:44px;border-radius:12px;background:var(--accent-soft);font-size:0}
+.mc-icon.words,.mc-icon.review,.mc-icon.dialog,.mc-icon.essay{background:var(--accent-soft)}
+.mc-icon svg{width:21px;height:21px;stroke:var(--accent);fill:none;stroke-width:1.8;
+  stroke-linecap:round;stroke-linejoin:round}
+.mc-title{color:var(--t1);font-weight:600}
+.mc-desc{color:var(--t3)}
+.mc-arrow{color:var(--t3);font-size:16px}
+.word-preview-section{background:var(--surface);border:1px solid var(--line);box-shadow:var(--shadow-sm)}
+.wp-title{color:var(--t1);font-weight:600}
+.wp-count{background:var(--bg2);color:var(--t3)}
+.wp-item{background:var(--surface-2);border:1px solid var(--line)}
+.wp-item:active{background:var(--accent-soft)}
+.wp-word{color:var(--t1)}
+.wp-pinyin{color:var(--accent)}
+.wp-trans{color:var(--t3)}
+
+/* --- buttons --- */
+.btn{border-radius:12px;font-weight:600;letter-spacing:0}
+.btn.primary{background:var(--accent);color:#fff;box-shadow:none}
+.btn.primary::after{display:none}
+.btn.sec{background:var(--surface);color:var(--t1);border:1px solid var(--line)}
+.btn.green,.btn.cyan{background:var(--accent);color:#fff;box-shadow:none}
+.btn.orange{background:#A4703C;color:#fff;box-shadow:none}
+
+/* --- word cards --- */
+.wc-mode{background:var(--surface);border:1px solid var(--line)}
+.wc-mode button{color:var(--t3)}
+.wc-mode button.active{background:var(--accent-soft);color:var(--accent-strong);box-shadow:none}
+.flip-f{background:var(--surface);border-color:var(--line);box-shadow:var(--shadow-sm)}
+.flip-f::before,.flip-b::before{display:none}
+.flip-f .ff-word{color:var(--t1);font-weight:700}
+.flip-f .ff-phonetic{color:var(--t3)}
+.flip-f .ff-hint{color:var(--t4)}
+.flip-f .ff-pinyin{background:var(--accent-soft);color:var(--accent-strong)}
+.flip-f .ff-speak{background:var(--accent-soft);border:1px solid var(--accent-line)}
+.flip-f .ff-speak svg{stroke:var(--accent)}
+.ff-bd-part{background:var(--surface-2);border:1px solid var(--line);color:var(--t2)}
+.ff-bd-part:active{background:var(--accent-soft)}
+.ff-bd-speak{background:var(--accent-soft);border:1px solid var(--accent-line);color:var(--accent-strong)}
+.flip-b{background:var(--accent-soft);border-color:var(--accent-line);box-shadow:var(--shadow-sm)}
+.flip-b .fb-trans{color:var(--accent-strong)}
+.flip-b .fb-word{color:var(--t2)}
+.wi{background:var(--surface);border:1px solid var(--line);box-shadow:var(--shadow-sm)}
+.wi-ex{background:var(--surface-2);border-left:3px solid var(--accent)}
+.wi-ex .en{color:var(--t1)}
+.wi-ex .cn{color:var(--t3)}
+.wi-ex:active{background:var(--accent-soft)}
+.wc-action-btn.bookmark{background:var(--surface);border:1px solid var(--line);color:var(--t2)}
+.wc-action-btn.bookmark.saved{background:var(--accent-soft);border-color:var(--accent-line);color:var(--accent-strong)}
+.eb-badge.due{background:#FBF3E8;color:var(--org);border-color:#EDDFCB}
+.eb-badge.known{background:var(--accent-soft);color:var(--accent-strong);border-color:var(--accent-line)}
+.eb-badge.new{background:var(--surface-2);color:var(--t3);border-color:var(--line)}
+
+/* --- dictation / quiz --- */
+.listen-card{background:var(--surface);border:1px solid var(--line);box-shadow:var(--shadow-sm)}
+.listen-card .lc-hint{color:var(--t3)}
+.dict-in{background:var(--surface);border:1.5px solid var(--line);color:var(--t1)}
+.dict-in:focus{border-color:var(--accent)}
+.dict-in.correct{border-color:var(--accent);background:var(--accent-soft)}
+.dict-in.wrong{border-color:var(--red);background:#FBF0EF}
+.dict-hint{color:var(--t3)}
+.qo{background:var(--surface);border:1.5px solid var(--line);color:var(--t1)}
+.qo:active{background:var(--surface-2)}
+.qo.correct{border-color:var(--accent);background:var(--accent-soft);color:var(--accent-strong)}
+.qo.wrong{border-color:var(--red);background:#FBF0EF;color:var(--red)}
+.pbar{background:var(--bg2);border:none}
+.pbar-fill{background:var(--accent)}
+.dict-mode-card{background:var(--surface);border:1px solid var(--line);box-shadow:var(--shadow-sm)}
+.dict-mode-card .dmc-hint{color:var(--t3)}
+.dict-ctrl-btn.play{background:var(--accent-soft);border-color:var(--accent-line);color:var(--accent-strong)}
+.dict-ctrl-btn.slow{background:var(--surface-2);border-color:var(--line);color:var(--t2)}
+.dict-ctrl-btn.hint{background:#FBF3E8;border-color:#EDDFCB;color:var(--org)}
+.dict-hint-display{color:var(--org)}
+.dict-dot{background:var(--line)}
+.dict-dot.correct{background:var(--accent)}
+.dict-dot.wrong{background:var(--red)}
+.dict-dot.current{background:var(--accent-strong)}
+
+/* --- dialog / essay --- */
+.dl-scene{background:var(--surface-2);border-left:3px solid #B08050;color:var(--t2)}
+.dl-role.you{background:var(--accent-soft);color:var(--accent-strong)}
+.dl-role.other{background:var(--bg2);color:var(--t2)}
+.dl-text{background:var(--surface);border:1px solid var(--line);color:var(--t1)}
+.dl-text:active{background:var(--surface-2)}
+.dl-text .cn{color:var(--t3)}
+.essay-card{background:var(--surface);border:1px solid var(--line);box-shadow:var(--shadow-sm)}
+.es-title{color:var(--t1);background:none;-webkit-text-fill-color:var(--t1)}
+.es-title-cn{color:var(--t3)}
+.es-item{background:var(--surface-2);border-left:3px solid transparent}
+.es-item.active{border-left-color:var(--accent);background:var(--accent-soft)}
+.es-item .en{color:var(--t1)}
+.es-item .cn{color:var(--t3)}
+
+/* --- word lookup / empty / toast / modal --- */
+.wl-tip{background:var(--surface);border:1px solid var(--line);box-shadow:var(--shadow-md)}
+.wl-tip-word{color:var(--t1)}
+.wl-tip-pinyin{color:var(--accent)}
+.wl-tip-trans{color:var(--accent-strong)}
+.wl-tip-example{border-top-color:var(--line)}
+.wl-tip-example .en{color:var(--t2)}
+.wl-tip-example .cn{color:var(--t3)}
+.wl-tip-btn{background:var(--accent-soft);color:var(--accent-strong);border:1px solid var(--accent-line)}
+.wl-word:active,.wl-word.lookuped{background:var(--accent-soft)}
+.wl-tip-online{border-top-color:var(--line)}
+.wl-tip-online-btn{background:var(--accent-soft);border-color:var(--accent-line);color:var(--accent-strong)}
+.wl-tip-api-def{background:var(--surface-2);color:var(--t2)}
+.wl-tip-api-def b{color:var(--t1)}
+.empty-state{color:var(--t3)}
+.empty-state .es-title{color:var(--t1)}
+.empty-state .es-desc{color:var(--t3)}
+.toast{background:#2C2A25;border:none;color:#fff;box-shadow:var(--shadow-md);border-radius:12px}
+.modal-overlay{background:rgba(38,35,30,.38)}
+.modal{background:var(--surface);border:1px solid var(--line);box-shadow:var(--shadow-md);border-radius:18px}
+.modal-title{color:var(--t1);font-weight:700}
+.modal-close{background:var(--surface-2);border:1px solid var(--line)}
+.modal-close svg{stroke:var(--t3)}
+.modal-label{color:var(--t2)}
+.modal-input,.modal-textarea{background:var(--surface);border:1px solid var(--line);color:var(--t1)}
+.modal-input:focus,.modal-textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(62,122,107,.08)}
+.modal-hint{color:var(--t3)}
+.modal-divider{color:var(--t4)}
+.modal-divider::before,.modal-divider::after{background:var(--line)}
+
+/* --- notebook / error pool --- */
+.nb-word-card{background:var(--surface);border:1px solid var(--line);box-shadow:var(--shadow-sm)}
+.nbw-day{background:var(--accent-soft);color:var(--accent-strong)}
+.nbw-en{color:var(--t1)}
+.nbw-cn{color:var(--t3)}
+.nbw-btn{background:var(--surface-2);border:1px solid var(--line)}
+.nbw-btn svg{stroke:var(--t3)}
+.nbw-btn.del svg{stroke:var(--red)}
+.nb-error-card{background:#FBF3E8;border:1px solid #EDDFCB}
+.nb-error-title{color:var(--org)}
+.nb-error-count{background:#F6E8D5;color:var(--org)}
+
+/* --- stats --- */
+.stats-filter-btn{background:var(--surface);border:1px solid var(--line);color:var(--t3)}
+.stats-filter-btn.active{background:var(--accent-soft);border-color:var(--accent-line);color:var(--accent-strong);font-weight:600}
+.stats-hero{background:var(--surface);border:1px solid var(--line);box-shadow:var(--shadow-sm)}
+.stats-hero::before{display:none}
+.sh-num{color:var(--t1);background:none;-webkit-text-fill-color:var(--t1);font-weight:700;font-size:46px}
+.sh-label{color:var(--t3)}
+.sh-progress{background:var(--bg2);border:none}
+.sh-progress-fill{background:var(--accent);box-shadow:none}
+.stats-grid{gap:10px}
+.stat-card{background:var(--surface);border:1px solid var(--line);box-shadow:var(--shadow-sm)}
+.stat-card::before{display:none}
+.sc-icon{background:var(--accent-soft)!important;box-shadow:none!important}
+.sc-num{color:var(--t1)}
+.sc-label{color:var(--t3)}
+.stats-section{background:var(--surface);border:1px solid var(--line);box-shadow:var(--shadow-sm)}
+.stats-section-title{color:var(--t1);font-weight:600}
+.stats-section-title::before{background:var(--accent)}
+.phase-name{color:var(--t2)}
+.phase-bar{background:var(--bg2)}
+.phase-bar-fill{background:var(--accent)}
+.phase-count{color:var(--t3)}
+.recent-item{border-bottom-color:var(--line)}
+.ri-day.done{background:var(--accent-soft);color:var(--accent-strong)}
+.ri-day.pending{background:var(--surface-2);color:var(--t3)}
+.ri-title{color:var(--t1)}
+.ri-status{color:var(--t3)}
+.ri-status.done{color:var(--accent)}
+.total-item{background:var(--surface-2);border:1px solid var(--line)}
+.total-num{color:var(--t1)}
+.total-label{color:var(--t3)}
+.heatmap-cell{background:var(--bg2)}
+.heatmap-cell.l1{background:#DCEAE5}
+.heatmap-cell.l2{background:#B7D6CD}
+.heatmap-cell.l3{background:#7FB3A5}
+.heatmap-cell.l4{background:var(--accent)}
+.heatmap-stat .hs-num{color:var(--t1)}
+.heatmap-stat .hs-label{color:var(--t3)}
+.heatmap-legend{color:var(--t4)}
+.freq-word{color:var(--t2)}
+.freq-bar-wrap{background:var(--bg2)}
+.freq-bar{background:var(--accent)}
+.freq-count{color:var(--t3)}
+.weak-row:active{background:var(--surface-2)}
+.weak-title{color:var(--t2)}
+.weak-bar-wrap{background:var(--bg2)}
+.weak-bar.high{background:#B2544A}
+.weak-bar.mid{background:#C08A55}
+.weak-bar.low{background:var(--accent)}
+.weak-day{color:var(--org)}
+.weak-count{color:var(--t3)}
+
+/* --- settings --- */
+.settings-group-title{color:var(--t3);font-size:11px;letter-spacing:.12em}
+.settings-row{border-bottom-color:var(--line)}
+.settings-label{color:var(--t1)}
+.settings-desc{color:var(--t3)}
+.settings-value{color:var(--accent)}
+.settings-slider{background:var(--bg2)}
+.settings-slider::-webkit-slider-thumb{background:var(--accent);box-shadow:none}
+.settings-slider::-moz-range-thumb{background:var(--accent)}
+.settings-select{background:var(--surface);border:1px solid var(--line);color:var(--t1)}
+.settings-select:focus{border-color:var(--accent)}
+.settings-select option{background:#fff;color:var(--t1)}
+
+/* --- sentence builder --- */
+.sb-prompt{background:var(--surface);border:1px solid var(--line);box-shadow:var(--shadow-sm)}
+.sb-prompt-cn{color:var(--t1)}
+.sb-prompt-hint{color:var(--t3)}
+.sb-answer-area{background:var(--surface-2);border:1.5px dashed var(--line-strong)}
+.sb-answer-area.correct{border-color:var(--accent);background:var(--accent-soft)}
+.sb-answer-area.wrong{border-color:var(--red);background:#FBF0EF}
+.sb-answer-placeholder{color:var(--t4)}
+.sb-word-chip{background:var(--surface);border:1px solid var(--line);color:var(--t1)}
+.sb-word-chip.in-answer{background:var(--accent-soft);border-color:var(--accent-line);color:var(--accent-strong)}
+.sb-word-chip.used{opacity:.35}
+.sb-result.correct{background:var(--accent-soft);border:1px solid var(--accent-line)}
+.sb-result.wrong{background:#FBF0EF;border:1px solid #ECCFCC}
+.sb-result-answer{color:var(--t2)}
+
+/* --- pronunciation --- */
+.pron-btn{background:var(--accent-soft);border:1px solid var(--accent-line);color:var(--accent-strong)}
+.pron-btn.recording{background:#FBF0EF;border-color:#ECC9C5;color:var(--red)}
+.pron-stop-btn{background:#FBF0EF;border-color:#ECC9C5;color:var(--red)}
+.pron-recording{color:var(--accent-strong)}
+.pron-result{background:var(--surface);border:1px solid var(--line)}
+.pron-target{color:var(--t2)}
+.pron-recognized{color:var(--accent)}
+.pron-avg-label{color:var(--t3)}
+.pron-recent-item{background:var(--surface-2);color:var(--t2)}
+.word-ex-item{background:var(--surface-2);border-left-color:var(--accent-line)}
+.word-ex-item .en{color:var(--t1)}
+.word-ex-item .cn{color:var(--t2)}
+.voice-gender-label{color:var(--t3);border-top-color:var(--line)}
+
+/* --- review modal --- */
+.review-modal-day-label{color:var(--accent)}
+.review-modal-word{background:var(--surface-2);border:1px solid var(--line);color:var(--t1)}
+
+/* --- tts status + diagnostics --- */
+.tts-status{position:fixed;left:50%;bottom:calc(var(--nav-h) + var(--sb) + 14px);
+  transform:translate(-50%,10px);display:flex;align-items:center;gap:10px;
+  padding:9px 10px 9px 16px;background:var(--surface);border:1px solid var(--line);
+  border-radius:999px;box-shadow:var(--shadow-md);color:var(--t1);font-size:13px;font-weight:500;
+  opacity:0;visibility:hidden;z-index:500;max-width:calc(100vw - 32px);
+  transition:opacity .18s,transform .18s,visibility .18s}
+.tts-status.show{opacity:1;visibility:visible;transform:translate(-50%,0)}
+.tts-status-dot{width:8px;height:8px;border-radius:50%;background:var(--accent);flex-shrink:0;
+  animation:pulse 1.4s ease infinite}
+.tts-status button{background:var(--accent-soft);border:1px solid var(--accent-line);
+  color:var(--accent-strong);border-radius:999px;padding:5px 12px;font-size:12px;font-weight:600}
+#tts-status-text{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:46vw}
+.tts-debug{background:var(--surface);border:1px solid var(--line);color:var(--t2);box-shadow:var(--shadow-md)}
+.tts-debug .td-head{color:var(--t1)}
+.tts-debug button{background:var(--accent-soft);border:1px solid var(--accent-line);color:var(--accent-strong)}
+.tts-debug .td-list{background:var(--surface-2)}
+
+/* --- responsive --- */
+@media (min-width:700px) and (max-width:899px){
+  #app{max-width:860px;left:50%;transform:translateX(-50%)}
+  .nav{max-width:860px}
+  .page{padding-left:28px;padding-right:28px}
+}
+@media (min-width:900px){
+  #app{display:flex;flex-direction:row;align-items:stretch}
+  .nav{order:-1;flex:0 0 234px;width:234px;max-width:234px;height:100%;
+    flex-direction:column;align-items:stretch;justify-content:flex-start;gap:4px;
+    padding:26px 14px;border-top:none;border-right:1px solid var(--line);
+    background:#FBFAF5;backdrop-filter:none;-webkit-backdrop-filter:none}
+  .nav::before{display:block;content:'谢飞机';position:static;width:auto;height:auto;
+    transform:none;background:none;color:var(--t1);font-size:19px;font-weight:700;
+    letter-spacing:-.2px;padding:0 12px 20px}
+  .nav-btn{flex-direction:row;justify-content:flex-start;gap:12px;padding:11px 12px;
+    min-width:0;width:100%}
+  .nav-btn span{font-size:14px;font-weight:500}
+  .nav-btn.active{background:var(--accent-soft)}
+  .nav-btn svg{width:20px;height:20px}
+  .page{flex:1;padding:34px 40px 52px}
+  .page.active{display:block;width:100%;max-width:1100px;margin:0 auto}
+  .home-top-bar{padding:0 0 16px}
+  .home-layout{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(290px,1fr);
+    gap:22px;align-items:start}
+  .home-main,.home-side{display:flex;flex-direction:column;gap:16px}
+  .home-main>*,.home-side>*{margin-bottom:0!important}
+  .phase-card-grid{grid-template-columns:repeat(2,1fr)}
+  .cat-grid{grid-template-columns:1fr 1fr}
+  .wp-grid{grid-template-columns:repeat(2,1fr)}
+  #pg-day,#pg-words,#pg-dlg,#pg-essay,#pg-notebook{max-width:820px}
+  #tts-status{bottom:24px}
+  .kb-hint{display:block}
+}
+@media (min-width:1280px){
+  .nav{flex-basis:256px;width:256px;max-width:256px}
+  .home-layout{grid-template-columns:minmax(0,1.75fr) minmax(320px,1fr)}
+}
+@media (hover:hover) and (pointer:fine){
+  .day-card:hover,.cat-card:hover{transform:translateY(-1px);box-shadow:var(--shadow-md);
+    border-color:var(--line-strong);background:var(--surface)}
+  .mc:hover{transform:translateY(-1px);box-shadow:var(--shadow-md)}
+  .btn:hover{filter:none;opacity:.94}
+  .qo:hover{background:var(--surface-2);border-color:var(--line-strong)}
+  .nav-btn:hover svg{stroke:var(--accent)}
+  .nav-btn:hover span{color:var(--accent)}
+  .home-action-btn:hover{background:var(--surface-2)}
+  .flip-c:hover .flip-f,.flip-c:hover .flip-b{border-color:var(--line-strong)}
+}
 </style>
 </head>
 <body>
@@ -913,32 +1412,35 @@ body:not(.cat-view) #home-cards{display:none !important}
   <svg style="position:absolute;width:0;height:0">
     <defs>
       <linearGradient id="navGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-        <stop offset="0%" style="stop-color:#A78BFA"/>
-        <stop offset="50%" style="stop-color:#60A5FA"/>
-        <stop offset="100%" style="stop-color:#22D3EE"/>
+        <stop offset="0%" style="stop-color:#4B8A79"/>
+        <stop offset="100%" style="stop-color:#3E7A6B"/>
       </linearGradient>
       <!-- V8: Stat icon gradients -->
       <linearGradient id="starGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-        <stop offset="0%" style="stop-color:#C084FC"/>
-        <stop offset="100%" style="stop-color:#8B5CF6"/>
+        <stop offset="0%" style="stop-color:#4B8A79"/>
+        <stop offset="100%" style="stop-color:#3E7A6B"/>
       </linearGradient>
       <linearGradient id="reviewGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-        <stop offset="0%" style="stop-color:#22D3EE"/>
-        <stop offset="100%" style="stop-color:#06B6D4"/>
+        <stop offset="0%" style="stop-color:#4B8A79"/>
+        <stop offset="100%" style="stop-color:#3E7A6B"/>
       </linearGradient>
       <linearGradient id="dialogGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-        <stop offset="0%" style="stop-color:#FB923C"/>
-        <stop offset="100%" style="stop-color:#F97316"/>
+        <stop offset="0%" style="stop-color:#4B8A79"/>
+        <stop offset="100%" style="stop-color:#3E7A6B"/>
       </linearGradient>
       <linearGradient id="bookGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-        <stop offset="0%" style="stop-color:#34D399"/>
-        <stop offset="100%" style="stop-color:#10B981"/>
+        <stop offset="0%" style="stop-color:#4B8A79"/>
+        <stop offset="100%" style="stop-color:#3E7A6B"/>
       </linearGradient>
     </defs>
   </svg>
 
   <!-- Toast -->
   <div class="toast" id="toast"></div>
+  <div class="tts-status" id="tts-status" role="status" aria-live="polite">
+    <span class="tts-status-dot"></span><span id="tts-status-text">正在朗读</span>
+    <button type="button" onclick="TTS.stop('user')" aria-label="停止朗读">停止</button>
+  </div>
 
   <!-- Word lookup tooltip -->
   <div class="wl-tip" id="wl-tip" style="display:none"></div>
@@ -954,68 +1456,73 @@ body:not(.cat-view) #home-cards{display:none !important}
       </div>
     </div>
     <input type="file" id="import-file" accept=".json" class="import-hidden" onchange="handleImportFile(this)">
-    <div class="hero-card">
-      <div class="hero-top">
-        <div>
-          <div class="hero-num"><span id="hm-done">0</span><small>/<span id="hm-total">69</span></small></div>
-          <div class="hero-label">已完成天数</div>
+    <div class="home-layout">
+      <div class="home-main">
+        <div class="hero-card">
+          <div class="hero-eyebrow">今日学习</div>
+          <div class="hero-title" id="hero-title">继续你的英语学习</div>
+          <div class="hero-meta">已完成 <b id="hm-done">0</b> / <span id="hm-total">69</span> 天 · <span id="hm-pct">0</span>%</div>
+          <div class="hero-bar">
+            <div class="hero-bar-fill" id="hm-pbar" style="width:0%"></div>
+          </div>
+          <div class="hero-stats">
+            <div class="hero-stat"><b id="hero-new">0</b><span>今日新词</span></div>
+            <div class="hero-stat"><b id="hero-review">0</b><span>复习词</span></div>
+            <div class="hero-stat"><b id="hero-dialog">0</b><span>口语句子</span></div>
+          </div>
+          <button class="hero-cta" type="button" onclick="continueLearning()">
+            <span>继续学习</span><small id="hero-next">从 Day 1 开始</small>
+          </button>
         </div>
-        <div style="text-align:right">
-          <div class="hero-pct"><span id="hm-pct">0</span>%</div>
-          <div style="font-size:12px;color:var(--t3);font-weight:600">完成进度</div>
+
+        <div id="daily-sentence-container"></div>
+
+        <div id="category-container"></div>
+        <div id="category-detail-container" style="display:none"></div>
+        <div class="section-header" id="home-section-header">
+          <div class="section-title">学习计划</div>
         </div>
+        <div id="home-cards"></div>
       </div>
-      <div class="hero-bar">
-        <div class="hero-bar-fill" id="hm-pbar" style="width:0%"></div>
-      </div>
-    </div>
 
-    <div id="daily-sentence-container"></div>
-    <div id="mixed-review-container"></div>
-    <div id="review-banner-container"></div>
+      <aside class="home-side">
+        <div id="mixed-review-container"></div>
+        <div id="review-banner-container"></div>
 
-    <div class="search-bar">
-      <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
-      <input type="text" id="global-search" placeholder="搜索单词或释义..." autocomplete="off" oninput="onSearchInput(this.value)">
-      <div class="search-clear" id="search-clear" style="display:none" onclick="clearSearch()"><svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg></div>
-    </div>
-    <div id="search-results" style="display:none"></div>
+        <div class="search-bar">
+          <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+          <input type="text" id="global-search" placeholder="搜索单词或释义..." autocomplete="off" oninput="onSearchInput(this.value)">
+          <div class="search-clear" id="search-clear" style="display:none" onclick="clearSearch()"><svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg></div>
+        </div>
+        <div id="search-results" style="display:none"></div>
 
-    <div class="stats-quick">
-      <div class="sq-item"><div class="sq-num" id="sq-new">0</div><div class="sq-label">新词</div></div>
-      <div class="sq-item"><div class="sq-num" id="sq-review">0</div><div class="sq-label">复习词</div></div>
-      <div class="sq-item"><div class="sq-num" id="sq-dialog">0</div><div class="sq-label">句数</div></div>
-    </div>
+        <div class="stats-quick">
+          <div class="sq-item"><div class="sq-num" id="sq-new">0</div><div class="sq-label">新词</div></div>
+          <div class="sq-item"><div class="sq-num" id="sq-review">0</div><div class="sq-label">复习词</div></div>
+          <div class="sq-item"><div class="sq-num" id="sq-dialog">0</div><div class="sq-label">句数</div></div>
+        </div>
 
-    <div class="home-actions">
-      <div class="home-action-btn" onclick="switchNav('notebook')">
-        <svg viewBox="0 0 24 24"><path d="M19 21l-7-5-7 5V5a2 2 0 012-2h10a2 2 0 012 2z"/></svg>
-        <span>生词本</span>
-      </div>
-      <div class="home-action-btn" onclick="startReview()">
-        <svg viewBox="0 0 24 24"><path d="M23 4v6h-6M1 20v-6h6M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/></svg>
-        <span>今日复习</span>
-      </div>
-      <div class="home-action-btn" onclick="openSettings()">
-        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 1v6m0 10v6m11-11h-6M7 12H1"/></svg>
-        <span>设置</span>
-      </div>
+        <div class="home-actions">
+          <div class="home-action-btn" onclick="switchNav('notebook')">
+            <svg viewBox="0 0 24 24"><path d="M19 21l-7-5-7 5V5a2 2 0 012-2h10a2 2 0 012 2z"/></svg>
+            <span>生词本</span>
+          </div>
+          <div class="home-action-btn" onclick="startReview()">
+            <svg viewBox="0 0 24 24"><path d="M23 4v6h-6M1 20v-6h6M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/></svg>
+            <span>今日复习</span>
+          </div>
+          <div class="home-action-btn" onclick="openSettings()">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 1v6m0 10v6m11-11h-6M7 12H1"/></svg>
+            <span>设置</span>
+          </div>
+        </div>
+      </aside>
     </div>
-
-    <div id="category-container"></div>
-    <div id="category-detail-container" style="display:none"></div>
-    <div class="section-header" id="home-section-header">
-      <div class="section-title">学习计划</div>
-    </div>
-    <div id="home-cards"></div>
   </div>
 
   <!-- ===== STATS ===== -->
   <div class="page" id="pg-stats">
-    <div style="padding:calc(var(--st)+6px) 0 6px;font-size:24px;font-weight:800;
-      background:linear-gradient(135deg,#E8EDF5 0%,#94A3B8 100%);
-      -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
-      letter-spacing:-.5px">学习统计</div>
+    <div class="page-title">学习统计</div>
     <div id="stats-content"></div>
   </div>
 
@@ -1093,7 +1600,7 @@ body:not(.cat-view) #home-cards{display:none !important}
           <div class="settings-desc" id="tts-current" style="margin-top:6px">正在检测可用语音…</div>
         </div>
         <div class="btn-row">
-          <button class="btn sec" onclick="speak('Hello, welcome to travel English learning app.')">试听</button>
+          <button class="btn sec" onclick="previewSelectedVoice()">试听所选语音</button>
           <button class="btn primary" onclick="saveTtsSettings()">保存</button>
         </div>
       </div>
@@ -1111,7 +1618,7 @@ body:not(.cat-view) #home-cards{display:none !important}
         <div class="settings-group-title">关于</div>
         <div class="settings-row">
           <div class="settings-label">版本</div>
-          <div class="settings-value" onclick="voiceDebugTap()" style="-webkit-user-select:none;user-select:none">te_v33</div>
+          <div class="settings-value" onclick="voiceDebugTap()" style="-webkit-user-select:none;user-select:none">te_v34</div>
         </div>
       </div>
     </div>
@@ -1149,9 +1656,9 @@ const DATA = [{"day":1,"dayTitle":"机场基础","daySubtitle":"Airport Basics",
 
 // ===== V16: Category System =====
 var CATEGORIES = [
-  {id:'travel', name:'旅行英语', desc:'Travel English · 39天旅行场景', icon:'✈️', color:''},
-  {id:'daily', name:'日常交流', desc:'Daily Communication · 30天日常沟通', icon:'💬', color:'cyan'},
-  {id:'easy', name:'日常基础交流', desc:'Easy Daily · 30天基础对话', icon:'🗣️', color:'green'},
+  {id:'travel', name:'旅行英语', desc:'Travel English · 39天旅行场景', icon:'<svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 12-9 12S3 17 3 10a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>', color:''},
+  {id:'daily', name:'日常交流', desc:'Daily Communication · 30天日常沟通', icon:'<svg viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/></svg>', color:'cyan'},
+  {id:'easy', name:'日常基础交流', desc:'Easy Daily · 30天基础对话', icon:'<svg viewBox="0 0 24 24"><path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z"/><path d="M19 10v2a7 7 0 01-14 0v-2M12 19v4M8 23h8"/></svg>', color:'green'},
 ];
 var curCategory = null; // null = show category list, 'travel'/'daily' = show days
 
@@ -1388,6 +1895,17 @@ function showToast(msg, duration) {
   toastTimer = setTimeout(() => t.classList.remove('show'), duration || 1800);
 }
 
+document.addEventListener('tts-state', function(e) {
+  var panel = document.getElementById('tts-status');
+  var label = document.getElementById('tts-status-text');
+  if (!panel || !label) return;
+  var d = e.detail || {};
+  var visible = d.state === 'queued' || d.state === 'playing';
+  panel.classList.toggle('show', visible);
+  document.body.classList.toggle('tts-active', visible);
+  label.textContent = d.state === 'playing' ? (d.text || '正在朗读') : '准备朗读…';
+});
+
 function checkReminder() {
   const last = Store.get('lastStudy', 0);
   const now = Date.now();
@@ -1582,7 +2100,7 @@ function renderDailyReview() {
   var rbc = document.getElementById("review-banner-container");
   if (rbc) {
     if (reviewCount > 0) {
-      rbc.innerHTML = '<div class="review-banner" onclick="startReview()"><div class="rb-icon">\uD83D\uDD04</div><div class="rb-info"><div class="rb-title">今日复习</div><div class="rb-desc">基于艾宾浩斯记忆曲线</div></div><div class="rb-count">' + reviewCount + '</div></div>';
+      rbc.innerHTML = '<div class="review-banner" onclick="startReview()"><div class="rb-icon"><svg viewBox="0 0 24 24"><path d="M23 4v6h-6M1 20v-6h6"/><path d="M3.5 9a9 9 0 0114.9-3.4L23 10M1 14l4.6 4.4A9 9 0 0020.5 15"/></svg></div><div class="rb-info"><div class="rb-title">今日复习</div><div class="rb-desc">基于艾宾浩斯记忆曲线</div></div><div class="rb-count">' + reviewCount + '</div></div>';
     } else {
       rbc.innerHTML = '';
     }
@@ -1600,7 +2118,7 @@ function renderMixedReview() {
   var poolSize = Math.max(errorPool.length, reviewCount, 10);
   poolSize = Math.min(poolSize, 20);
   var html = '<div class="mixed-review-banner" onclick="startMixedReview()">';
-  html += '<div class="mrb-icon">\uD83D\uDD00</div>';
+  html += '<div class="mrb-icon"><svg viewBox="0 0 24 24"><path d="M16 3h5v5M4 20L21 3M21 16v5h-5M15 15l6 6M4 4l5 5"/></svg></div>';
   html += '<div class="mrb-title">混合复习</div>';
   html += '<div class="mrb-desc">跨天随机抽取 ' + poolSize + ' 词，检验长期记忆</div>';
   if (errorPool.length > 0) {
@@ -1645,6 +2163,26 @@ function startMixedReview() {
   renderWords();
 }
 
+// ===== V34: continue learning =====
+function getContinueTarget() {
+  var done = Store.get('done', {});
+  var pool = getCurData().filter(function(d){ return d; }).slice();
+  pool.sort(function(a, b){ return a.day - b.day; });
+  var first = null;
+  for (var i = 0; i < pool.length; i++) {
+    if (!first) first = pool[i];
+    var key = (pool[i].category || 'travel') + '_' + pool[i].day;
+    if (!done[key]) return pool[i];
+  }
+  return first;
+}
+
+function continueLearning() {
+  var t = getContinueTarget();
+  if (!t) { showToast('暂无学习内容'); return; }
+  openDayDetail(t.day, t.category || 'travel');
+}
+
 // ===== HOME =====
 function renderHome() {
   var done = Store.get('done', {});
@@ -1659,12 +2197,30 @@ function renderHome() {
   if (hmPct) hmPct.textContent = allPct;
   var hmPbar = document.getElementById('hm-pbar');
   if (hmPbar) hmPbar.style.width = allPct + '%';
-  
+
+  // V34: today's next lesson
+  var target = getContinueTarget();
+  var heroTitle = document.getElementById('hero-title');
+  var heroNext = document.getElementById('hero-next');
+  var heroNew = document.getElementById('hero-new');
+  var heroReview = document.getElementById('hero-review');
+  var heroDialog = document.getElementById('hero-dialog');
+  if (target) {
+    var allDone = allTotal > 0 && allDoneCount >= allTotal;
+    if (heroTitle) heroTitle.textContent = allDone ? '全部课程已完成，来复习一下吧' : 'Day ' + target.day + ' · ' + (target.dayTitle || '继续学习');
+    if (heroNext) heroNext.textContent = '第 ' + target.day + ' 天 / 共 ' + allTotal + ' 天';
+    if (heroNew) heroNew.textContent = (target.newWords || []).length;
+    if (heroReview) heroReview.textContent = (target.reviewWords || []).length;
+    if (heroDialog) {
+      heroDialog.textContent = (target.dialog || []).filter(function(l){ return l && l.role && l.role.toUpperCase() === 'YOU'; }).length;
+    }
+  }
+
   var reviewCount = getTodayReviewCount();
   var rbc = document.getElementById('review-banner-container');
   if (rbc) {
     if (reviewCount > 0) {
-      rbc.innerHTML = '<div class="review-banner" onclick="startReview()"><div class="rb-icon">\uD83D\uDD04</div><div class="rb-info"><div class="rb-title">今日复习</div><div class="rb-desc">基于艾宾浩斯记忆曲线</div></div><div class="rb-count">' + reviewCount + '</div></div>';
+      rbc.innerHTML = '<div class="review-banner" onclick="startReview()"><div class="rb-icon"><svg viewBox="0 0 24 24"><path d="M23 4v6h-6M1 20v-6h6"/><path d="M3.5 9a9 9 0 0114.9-3.4L23 10M1 14l4.6 4.4A9 9 0 0020.5 15"/></svg></div><div class="rb-info"><div class="rb-title">今日复习</div><div class="rb-desc">基于艾宾浩斯记忆曲线</div></div><div class="rb-count">' + reviewCount + '</div></div>';
     } else {
       rbc.innerHTML = '';
     }
@@ -1748,7 +2304,7 @@ function renderPhaseCards() {
   var curData = getCurData();
 
   if (!curData.length) {
-    container.innerHTML = '<div class="cat-empty"><div class="cat-empty-icon">📝</div><div class="cat-empty-text">内容即将上线</div><div class="cat-empty-sub">敬请期待</div></div>';
+    container.innerHTML = '<div class="cat-empty"><div class="cat-empty-icon"><svg viewBox="0 0 24 24" width="44" height="44" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></div><div class="cat-empty-text">内容即将上线</div><div class="cat-empty-sub">敬请期待</div></div>';
     return;
   }
 
@@ -1884,25 +2440,25 @@ function renderDay() {
   html += '</div></div>';
 
   if (nw.length) {
-    html += '<div class="mc" onclick="openWords(false)"><div class="mc-icon words">📝</div><div class="mc-body"><div class="mc-title">今日新词</div><div class="mc-desc">' + nw.length + ' 个新单词</div></div><div class="mc-arrow">→</div></div>';
+    html += '<div class="mc" onclick="openWords(false)"><div class="mc-icon words"><svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg></div><div class="mc-body"><div class="mc-title">今日新词</div><div class="mc-desc">' + nw.length + ' 个新单词</div></div><div class="mc-arrow">→</div></div>';
   }
   if (rw.length) {
-    html += '<div class="mc" onclick="openWords(true)"><div class="mc-icon review">🔄</div><div class="mc-body"><div class="mc-title">艾宾浩斯复习</div><div class="mc-desc">' + rw.length + ' 个词汇巩固</div></div><div class="mc-arrow">→</div></div>';
+    html += '<div class="mc" onclick="openWords(true)"><div class="mc-icon review"><svg viewBox="0 0 24 24"><path d="M23 4v6h-6M1 20v-6h6"/><path d="M3.5 9a9 9 0 0114.9-3.4L23 10M1 14l4.6 4.4A9 9 0 0020.5 15"/></svg></div><div class="mc-body"><div class="mc-title">艾宾浩斯复习</div><div class="mc-desc">' + rw.length + ' 个词汇巩固</div></div><div class="mc-arrow">→</div></div>';
   }
   if (dlg.length) {
     const youLines = dlg.filter(l => l && l.role && l.role.toUpperCase() === 'YOU');
-    html += '<div class="mc" onclick="openDlg()"><div class="mc-icon dialog">🗣</div><div class="mc-body"><div class="mc-title">口语练习</div><div class="mc-desc">' + youLines.length + ' 句台词</div></div><div class="mc-arrow">→</div></div>';
+    html += '<div class="mc" onclick="openDlg()"><div class="mc-icon dialog"><svg viewBox="0 0 24 24"><path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z"/><path d="M19 10v2a7 7 0 01-14 0v-2M12 19v4M8 23h8"/></svg></div><div class="mc-body"><div class="mc-title">口语练习</div><div class="mc-desc">' + youLines.length + ' 句台词</div></div><div class="mc-arrow">→</div></div>';
   }
   if (sentences.length) {
-    html += '<div class="mc" onclick="openEssay()"><div class="mc-icon essay">📖</div><div class="mc-body"><div class="mc-title">阅读理解</div><div class="mc-desc">' + esc(essay.title||'') + '</div></div><div class="mc-arrow">→</div></div>';
+    html += '<div class="mc" onclick="openEssay()"><div class="mc-icon essay"><svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg></div><div class="mc-body"><div class="mc-title">阅读理解</div><div class="mc-desc">' + esc(essay.title||'') + '</div></div><div class="mc-arrow">→</div></div>';
   } else if (hasEssay) {
-    html += '<div class="mc" onclick="openEssay()"><div class="mc-icon essay">📖</div><div class="mc-body"><div class="mc-title">阅读理解</div><div class="mc-desc">' + (d.essayEn||[]).length + ' 段中英对照</div></div><div class="mc-arrow">→</div></div>';
+    html += '<div class="mc" onclick="openEssay()"><div class="mc-icon essay"><svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg></div><div class="mc-body"><div class="mc-title">阅读理解</div><div class="mc-desc">' + (d.essayEn||[]).length + ' 段中英对照</div></div><div class="mc-arrow">→</div></div>';
   }
 
   // Word preview list with pinyin
   if (nw.length) {
     html += '<div class="word-preview-section">';
-    html += '<div class="wp-title">📝 今日新词 <span class="wp-count">' + nw.length + '</span></div>';
+    html += '<div class="wp-title">今日新词 <span class="wp-count">' + nw.length + '</span></div>';
     html += '<div class="wp-grid">';
     nw.forEach(function(w, i) {
       var py = getPinyin(w.word);
@@ -1916,7 +2472,7 @@ function renderDay() {
   }
   if (rw.length) {
     html += '<div class="word-preview-section">';
-    html += '<div class="wp-title">🔄 复习词汇 <span class="wp-count">' + rw.length + '</span></div>';
+    html += '<div class="wp-title">复习词汇 <span class="wp-count">' + rw.length + '</span></div>';
     html += '<div class="wp-grid">';
     rw.forEach(function(w, i) {
       var py = getPinyin(w.word);
@@ -2026,7 +2582,7 @@ function renderCard() {
   const words = curWords;
   const c = document.getElementById('w-content');
   if (wIdx >= words.length) {
-    c.innerHTML = '<div class="empty-state"><div class="es-icon">🎉</div><div class="es-title">全部学完了！</div><div class="es-desc">已掌握 ' + words.length + ' 个词汇</div>';
+    c.innerHTML = '<div class="empty-state"><div class="es-icon"><svg viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="m8.5 12.5 2.5 2.5 4.5-5.5"/></svg></div><div class="es-title">全部学完了！</div><div class="es-desc">已掌握 ' + words.length + ' 个词汇</div>';
     c.innerHTML += '<div class="btn-row" style="margin-top:16px"><button class="btn primary" onclick="finishPractice()">完成返回</button></div></div>';
     return;
   }
@@ -2102,14 +2658,14 @@ function renderCard() {
     html += '</div>';
   }
 
-  html += '<div style="margin-top:16px;padding-top:12px;border-top:1px solid rgba(255,255,255,.04)"><button class="pron-btn" onclick="startPronunciation(\'' + w.word.replace(/'/g,"\\'") + '\', document.getElementById(\'pron-result-' + wIdx + '\'), this)">🎤 跟读评分</button><div id="pron-result-' + wIdx + '"></div></div>';
+  html += '<div style="margin-top:16px;padding-top:12px;border-top:1px solid var(--line)"><button class="pron-btn" onclick="startPronunciation(\'' + w.word.replace(/'/g,"\\'") + '\', document.getElementById(\'pron-result-' + wIdx + '\'), this)">跟读评分</button><div id="pron-result-' + wIdx + '"></div></div>';
 
   // V10: Ebbinghaus status badge
   var ebStatus = getWordEbbinghausStatus(w.word);
   if (ebStatus === 'due') {
-    html += '<div class="eb-badge due">\uD83D\uDD04 今日复习</div>';
+    html += '<div class="eb-badge due">今日复习</div>';
   } else if (ebStatus === 'known') {
-    html += '<div class="eb-badge known">\u2705 已掌握</div>';
+    html += '<div class="eb-badge known">已掌握</div>';
   }
 
   // V10: Bookmark button
@@ -2128,7 +2684,7 @@ function renderDict() {
   var c = document.getElementById('w-content');
   if (wIdx >= words.length) {
     var correctCount = (dictResults ? dictResults.filter(function(r){return r;}).length : 0);
-    c.innerHTML = '<div class="empty-state"><div class="es-icon">✍️</div><div class="es-title">听写完成！</div><div class="es-desc">正确率 ' + Math.round(correctCount/words.length*100) + '% (' + correctCount + '/' + words.length + ')</div>';
+    c.innerHTML = '<div class="empty-state"><div class="es-icon"><svg viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg></div><div class="es-title">听写完成！</div><div class="es-desc">正确率 ' + Math.round(correctCount/words.length*100) + '% (' + correctCount + '/' + words.length + ')</div>';
     c.innerHTML += '<div class="btn-row" style="margin-top:16px"><button class="btn primary" onclick="finishPractice()">完成返回</button></div></div>';
     return;
   }
@@ -2152,14 +2708,14 @@ function renderDict() {
   html += '</div>';
 
   html += '<div class="dict-mode-card">';
-  html += '<div class="dmc-icon">🔊</div>';
+  html += '<div class="dmc-icon"><svg viewBox="0 0 24 24" width="44" height="44" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H2v6h4l5 4V5z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M18.5 5.5a9 9 0 0 1 0 13"/></svg></div>';
   html += '<div class="dmc-hint">听发音后拼写单词</div>';
   html += '<div class="dict-mode-controls">';
-  html += '<button class="dict-ctrl-btn play" onclick="dictPlayWord()">🔊 播放</button>';
-  html += '<button class="dict-ctrl-btn slow" onclick="dictPlayWordSlow()">🐢 慢速</button>';
-  html += '<button class="dict-ctrl-btn hint" onclick="dictShowHint()">💡 提示</button>';
-  html += '<button class="dict-ctrl-btn hint" onclick="dictShowLength()">📊 字数</button>';
-  html += '<button class="dict-ctrl-btn hint" onclick="dictShowTranslation()">🇨🇳 释义</button>';
+  html += '<button class="dict-ctrl-btn play" onclick="dictPlayWord()">播放</button>';
+  html += '<button class="dict-ctrl-btn slow" onclick="dictPlayWordSlow()">慢速</button>';
+  html += '<button class="dict-ctrl-btn hint" onclick="dictShowHint()">提示</button>';
+  html += '<button class="dict-ctrl-btn hint" onclick="dictShowLength()">字数</button>';
+  html += '<button class="dict-ctrl-btn hint" onclick="dictShowTranslation()">释义</button>';
   html += '</div>';
   html += '<div class="dict-hint-display" id="dict-hint-display" style="display:none">' + esc(hint) + '</div>';
   html += '<div class="dict-hint-display" id="dict-length-display" style="display:none;font-size:14px;color:var(--cyan2)">共 ' + w.word.length + ' 个字母</div>';
@@ -2240,7 +2796,7 @@ function checkDict() {
   if (!dictResults) dictResults = new Array(curWords.length).fill(null);
   if (val === ans) {
     inp.classList.add('correct');
-    document.getElementById('dict-hint').innerHTML = '<span style="color:#34D399;font-weight:700">✓ 正确！</span>';
+    document.getElementById('dict-hint').innerHTML = '<span style="color:#2F6D53;font-weight:700">✓ 正确！</span>';
     dictResults[wIdx] = true;
     markWordKnown(w.word);
   } else {
@@ -2285,9 +2841,9 @@ function renderQuiz() {
     html += 'background:var(--ga);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">';
     html += quizState.score + '/' + quizState.total + '</div>';
     html += '<div style="color:var(--t2);margin:8px 0 4px;font-size:14px">答对 ' + quizState.score + ' 题 · 正确率 ' + pct + '%</div>';
-    if (pct >= 80) html += '<div style="color:#34D399;font-size:13px;margin-bottom:16px">优秀！继续加油</div>';
-    else if (pct >= 60) html += '<div style="color:#FBBF24;font-size:13px;margin-bottom:16px">不错，还可以更好</div>';
-    else html += '<div style="color:#FB923C;font-size:13px;margin-bottom:16px">需要多加练习</div>';
+    if (pct >= 80) html += '<div style="color:#2F6D53;font-size:13px;margin-bottom:16px">优秀！继续加油</div>';
+    else if (pct >= 60) html += '<div style="color:#A9761F;font-size:13px;margin-bottom:16px">不错，还可以更好</div>';
+    else html += '<div style="color:var(--org);font-size:13px;margin-bottom:16px">需要多加练习</div>';
     html += '<div class="btn-row"><button class="btn primary" onclick="finishPractice()">完成返回</button><button class="btn sec" onclick="quizState=null;renderWords()">再来一轮</button></div></div>';
     c.innerHTML = html;
     return;
@@ -2297,12 +2853,12 @@ function renderQuiz() {
   let html = '<div class="word-nav"><span class="wn-progress">第 ' + (quizState.round+1) + ' / ' + quizState.total + ' 题 · 得分 ' + quizState.score + '</span></div>';
   html += '<div class="pbar" style="margin-bottom:14px"><div class="pbar-fill" style="width:' + (quizState.round/quizState.total*100) + '%"></div></div>';
   html += '<div style="text-align:center;padding:24px 20px;';
-  html += 'background:linear-gradient(135deg,rgba(139,92,246,.06) 0%,rgba(6,182,212,.03) 100%);';
-  html += 'border:1px solid rgba(139,92,246,.1);border-radius:var(--r);margin-bottom:14px">';
+  html += 'background:var(--surface-2);';
+  html += 'border:1px solid var(--line);border-radius:var(--r);margin-bottom:14px">';
   html += '<div style="display:flex;flex-direction:column;align-items:center;gap:6px">';
   html += '<div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:center;max-width:100%">';
   html += '<span style="font-size:24px;font-weight:800;color:var(--t1);word-break:break-word;overflow-wrap:break-word;line-height:1.35;text-align:center;max-width:100%;display:block;padding:0 4px">' + esc(q.word) + '</span>';
-  html += '<span style="cursor:pointer;display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:50%;background:rgba(139,92,246,.12);transition:background .2s" data-word="' + escAttr(q.word) + '" onclick="event.stopPropagation();speakWord(this)" ontouchstart="this.style.background=\'rgba(139,92,246,.25)\'" ontouchend="this.style.background=\'rgba(139,92,246,.12)\'">';
+  html += '<span style="cursor:pointer;display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:50%;background:var(--accent-soft);border:1px solid var(--accent-line);transition:background .2s" data-word="' + escAttr(q.word) + '" onclick="event.stopPropagation();speakWord(this)" ontouchstart="this.style.background=\'var(--accent-line)\'" ontouchend="this.style.background=\'var(--accent-soft)\'">';
   html += '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="var(--purp2)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5L6 9H2v6h4l5 4V5z"/><path d="M15.54 8.46a5 5 0 010 7.07"/><path d="M19.07 4.93a10 10 0 010 14.14"/></svg>';
   html += '</span>';
   html += '</div>';
@@ -2351,7 +2907,7 @@ function renderBuild() {
       });
     }
     if (!sentences.length) {
-      c.innerHTML = '<div class="empty-state"><div class="es-icon">\uD83D\uDCDD</div><div class="es-title">暂无造句素材</div><div class="es-desc">需要至少一个含4-12个单词的句子</div></div>';
+      c.innerHTML = '<div class="empty-state"><div class="es-icon"><svg viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg></div><div class="es-title">暂无造句素材</div><div class="es-desc">需要至少一个含4-12个单词的句子</div></div>';
       return;
     }
     sentences.sort(function(){return Math.random()-0.5;});
@@ -2364,9 +2920,9 @@ function renderBuild() {
     html += 'background:var(--ga);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">';
     html += buildState.score + '/' + buildState.total + '</div>';
     html += '<div style="color:var(--t2);margin:8px 0 4px;font-size:14px">造句完成 · 正确率 ' + pct + '%</div>';
-    if (pct >= 80) html += '<div style="color:#34D399;font-size:13px;margin-bottom:16px">语法掌握很好！</div>';
-    else if (pct >= 60) html += '<div style="color:#FBBF24;font-size:13px;margin-bottom:16px">不错，注意语序</div>';
-    else html += '<div style="color:#FB923C;font-size:13px;margin-bottom:16px">多读句子，培养语感</div>';
+    if (pct >= 80) html += '<div style="color:#2F6D53;font-size:13px;margin-bottom:16px">语法掌握很好！</div>';
+    else if (pct >= 60) html += '<div style="color:#A9761F;font-size:13px;margin-bottom:16px">不错，注意语序</div>';
+    else html += '<div style="color:#B5573E;font-size:13px;margin-bottom:16px">多读句子，培养语感</div>';
     html += '<div class="btn-row"><button class="btn primary" onclick="finishPractice()">完成返回</button><button class="btn sec" onclick="buildState=null;renderWords()">再来一轮</button></div></div>';
     c.innerHTML = html;
     return;
@@ -2473,7 +3029,7 @@ function sbCheck() {
   if (userAnswer === correct) {
     buildState.score++;
     area.classList.add("correct");
-    resultEl.innerHTML = '<div class="sb-result correct"><div class="sb-result-icon">\u2705</div><div class="sb-result-text">\u6B63\u786E\uFF01</div></div>';
+    resultEl.innerHTML = '<div class="sb-result correct"><div class="sb-result-icon">✓</div><div class="sb-result-text">\u6B63\u786E\uFF01</div></div>';
     document.querySelectorAll("#sb-word-bank .sb-word-chip").forEach(function(c){c.style.pointerEvents="none";});
     // Correct: auto-advance after 1.5s
     setTimeout(function() { buildState.round++; renderWords(); }, 1500);
@@ -2484,7 +3040,7 @@ function sbCheck() {
     var correctWords = correct.split(" ");
     var detailHtml = sbGenerateErrorDetail(userWords, correctWords);
     resultEl.innerHTML = '<div class="sb-result wrong">';
-    resultEl.innerHTML += '<div class="sb-result-icon">\u274C</div>';
+    resultEl.innerHTML += '<div class="sb-result-icon">✕</div>';
     resultEl.innerHTML += '<div class="sb-result-text">\u8BED\u5E8F\u4E0D\u6B63\u786E</div>';
     resultEl.innerHTML += detailHtml;
     resultEl.innerHTML += '<div class="sb-result-answer">\u6B63\u786E\u7B54\u6848: ' + esc(buildState.sentences[buildState.round].en) + '</div>';
@@ -2508,19 +3064,19 @@ function sbGenerateErrorDetail(userWords, correctWords) {
     var cw = i < correctWords.length ? correctWords[i] : '';
     if (uw === cw) {
       correctCount++;
-      html += '<div style="color:#34D399">\u2713 \u4F4D\u7F6E' + (i+1) + ': ' + esc(cw) + ' \u2714</div>';
+      html += '<div style="color:#2F6D53">\u2713 \u4F4D\u7F6E' + (i+1) + ': ' + esc(cw) + ' \u2714</div>';
     } else if (cw) {
-      html += '<div style="color:#FB923C">\u2717 \u4F4D\u7F6E' + (i+1) + ': \u4F60\u5199\u4E86 "' + esc(uw) + '"\uFF0C\u5E94\u8BE5\u662F "' + esc(cw) + '"</div>';
+      html += '<div style="color:#B5573E">\u2717 \u4F4D\u7F6E' + (i+1) + ': \u4F60\u5199\u4E86 "' + esc(uw) + '"\uFF0C\u5E94\u8BE5\u662F "' + esc(cw) + '"</div>';
     }
   }
   // Grammar hint
-  html += '<div style="margin-top:8px;padding-top:6px;border-top:1px solid rgba(255,255,255,.06);color:var(--cyan2)">';
+  html += '<div style="margin-top:8px;padding-top:6px;border-top:1px solid var(--line);color:var(--cyan2)">';
   if (correctCount === 0) {
-    html += '\uD83D\uDCD6 \u63D0\u793A: \u6CE8\u610F\u53E5\u5B50\u5F00\u5934\uFF0C\u82F1\u8BED\u901A\u5E38\u4EE5\u4E3B\u8BED\u5F00\u5934';
+    html += '\u63D0\u793A: \u6CE8\u610F\u53E5\u5B50\u5F00\u5934\uFF0C\u82F1\u8BED\u901A\u5E38\u4EE5\u4E3B\u8BED\u5F00\u5934';
   } else if (correctCount < maxLen / 2) {
-    html += '\uD83D\uDCD6 \u63D0\u793A: \u524D\u9762\u51E0\u4E2A\u8BCD\u987A\u5E8F\u6B63\u786E\uFF0C\u6CE8\u610F\u540E\u534A\u53E5\u7684\u7ED3\u6784\uFF08\u52A8\u8BCD\u4F4D\u7F6E\u3001\u4ECB\u8BCD\u77ED\u8BED\uFF09';
+    html += '\u63D0\u793A: \u524D\u9762\u51E0\u4E2A\u8BCD\u987A\u5E8F\u6B63\u786E\uFF0C\u6CE8\u610F\u540E\u534A\u53E5\u7684\u7ED3\u6784\uFF08\u52A8\u8BCD\u4F4D\u7F6E\u3001\u4ECB\u8BCD\u77ED\u8BED\uFF09';
   } else {
-    html += '\uD83D\uDCD6 \u63D0\u793A: \u5927\u90E8\u5206\u6B63\u786E\uFF01\u53EA\u6709\u5C11\u6570\u4F4D\u7F6E\u9700\u8C03\u6574\uFF0C\u518D\u8BD5\u4E00\u6B21';
+    html += '\u63D0\u793A: \u5927\u90E8\u5206\u6B63\u786E\uFF01\u53EA\u6709\u5C11\u6570\u4F4D\u7F6E\u9700\u8C03\u6574\uFF0C\u518D\u8BD5\u4E00\u6B21';
   }
   html += '</div></div>';
   return html;
@@ -2537,7 +3093,7 @@ function sbHint() {
   var s = buildState.sentences[buildState.round];
   var words = s.en.replace(/[^a-zA-Z\s']/g, "").trim().split(/\s+/);
   var hintHtml = '<div class="sb-result" style="background:rgba(251,191,36,.06);border:1px solid rgba(251,191,36,.2)">';
-  hintHtml += '<div style="font-size:14px;font-weight:700;color:var(--ylw);margin-bottom:6px">\uD83D\uDCD6 \u8BED\u5E8F\u63D0\u793A</div>';
+  hintHtml += '<div style="font-size:14px;font-weight:700;color:var(--ylw);margin-bottom:6px">\u8BED\u5E8F\u63D0\u793A</div>';
   // Show first 2 words as hint
   hintHtml += '<div style="font-size:13px;color:var(--t2);line-height:1.6">\u53E5\u5B50\u5F00\u5934: <b style="color:var(--t1)">' + esc(words.slice(0, Math.min(2, words.length)).join(" ")) + '</b>';
   if (words.length > 2) hintHtml += ' ...';
@@ -2584,10 +3140,10 @@ function openDlg() {
     html += '<div class="dl-line"><div class="dl-role ' + (isYou?'you':'other') + '">' + (line.role||'') + '</div>';
     html += '<div class="dl-text" onclick="speakText(this,event)" data-text="' + escAttr(line.textEn||'') + '">';
     html += '<div class="en">' + makeClickableWords(line.textEn||'') + '</div><div class="cn">' + esc(line.textCn||'') + '</div></div></div>';
-    html += '<div style="margin-top:14px;padding-top:10px;border-top:1px solid rgba(255,255,255,.04)"><button class="pron-btn" onclick="event.stopPropagation();startPronunciation(\'' + (line.textEn||'').replace(/'/g,"\\'") + '\', this.nextElementSibling, this)">🎤 跟读</button><div></div></div>';
+    html += '<div style="margin-top:14px;padding-top:10px;border-top:1px solid var(--line)"><button class="pron-btn" onclick="event.stopPropagation();startPronunciation(\'' + (line.textEn||'').replace(/'/g,"\\'") + '\', this.nextElementSibling, this)">跟读</button><div></div></div>';
   });
-  html += '<div style="margin-top:16px"><button class="btn cyan" onclick="speakDlg()">🔊 朗读全部对话</button>';
-  html += '<div class="btn-row"><button class="btn sec" onclick="speakRole()">🎤 朗读我的台词</button></div></div>';
+  html += '<div style="margin-top:16px"><button class="btn cyan" onclick="speakDlg()">朗读全部对话</button>';
+  html += '<div class="btn-row"><button class="btn sec" onclick="speakRole()">朗读我的台词</button></div></div>';
   html += '<div class="btn-row" style="margin-top:12px"><button class="btn primary" onclick="finishPractice()">完成返回</button></div>';
   document.getElementById('d-content').innerHTML = html;
 }
@@ -2622,10 +3178,10 @@ function openEssay() {
       html += '<div class="en">' + makeClickableWords(enArr[i]||'') + '</div>';
       if (cnArr[i]) html += '<div class="cn">' + esc(cnArr[i]||'') + '</div>';
       html += '</div>';
-      html += '<div style="margin-top:14px;padding-top:10px;border-top:1px solid rgba(255,255,255,.04)"><button class="pron-btn" onclick="event.stopPropagation();startPronunciation(\'' + (enArr[i]||'').replace(/'/g,"\\'") + '\', this.nextElementSibling, this)">🎤 跟读</button><div></div></div>';
+      html += '<div style="margin-top:14px;padding-top:10px;border-top:1px solid var(--line)"><button class="pron-btn" onclick="event.stopPropagation();startPronunciation(\'' + (enArr[i]||'').replace(/'/g,"\\'") + '\', this.nextElementSibling, this)">跟读</button><div></div></div>';
     }
     html += '</div>';
-    html += '<button class="btn cyan" onclick="speakEssayDaily()">🔊 朗读全文</button>';
+    html += '<button class="btn cyan" onclick="speakEssayDaily()">朗读全文</button>';
     html += '<div class="btn-row" style="margin-top:12px"><button class="btn primary" onclick="finishPractice()">完成返回</button></div>';
     document.getElementById('e-content').innerHTML = html;
     return;
@@ -2639,10 +3195,10 @@ function openEssay() {
     if (!s) return;
     html += '<div class="es-item" onclick="speakSentence(this,event)" data-text="' + escAttr(s.en||'') + '">';
     html += '<div class="en">' + makeClickableWords(s.en||'') + '</div><div class="cn">' + esc(s.cn||'') + '</div></div>';
-    html += '<div style="margin-top:14px;padding-top:10px;border-top:1px solid rgba(255,255,255,.04)"><button class="pron-btn" onclick="event.stopPropagation();startPronunciation(\'' + (s.en||'').replace(/'/g,"\\'") + '\', this.nextElementSibling, this)">🎤 跟读</button><div></div></div>';
+    html += '<div style="margin-top:14px;padding-top:10px;border-top:1px solid var(--line)"><button class="pron-btn" onclick="event.stopPropagation();startPronunciation(\'' + (s.en||'').replace(/'/g,"\\'") + '\', this.nextElementSibling, this)">跟读</button><div></div></div>';
   });
   html += '</div>';
-  html += '<button class="btn cyan" onclick="speakEssay()">🔊 朗读全文</button>';
+  html += '<button class="btn cyan" onclick="speakEssay()">朗读全文</button>';
   html += '<div class="btn-row" style="margin-top:12px"><button class="btn primary" onclick="finishPractice()">完成返回</button></div>';
   document.getElementById('e-content').innerHTML = html;
 }
@@ -2720,7 +3276,7 @@ function lookupOnline(word) {
     .catch(function(err) {
       // Fallback: open online dictionary link
       if (loadingEl) {
-        loadingEl.innerHTML = '<div style="text-align:center"><button class="wl-tip-online-btn" onclick="window.open(\'https://dict.youdao.com/w/' + encodeURIComponent(word) + '\', \'_blank\')">\uD83D\uDD17 在线词典查询</button></div>';
+        loadingEl.innerHTML = '<div style="text-align:center"><button class="wl-tip-online-btn" onclick="window.open(\'https://dict.youdao.com/w/' + encodeURIComponent(word) + '\', \'_blank\')">在线词典查询</button></div>';
       }
     });
 }
@@ -2761,7 +3317,7 @@ function lookupWord(word, el) {
       if (found.exampleCn) html += '<div class="cn">' + esc(found.exampleCn) + '</div>';
       html += '</div>';
     }
-    html += '<div class="wl-tip-actions"><button class="wl-tip-btn" onclick="speakSingleWord(\'' + word.replace(/'/g, "\\'") + '\')">🔊 朗读</button><button class="wl-tip-online-btn" onclick="lookupOnline(\'' + word.replace(/'/g, "\\'") + '\')">🔗 在线查询</button></div>';
+    html += '<div class="wl-tip-actions"><button class="wl-tip-btn" onclick="speakSingleWord(\'' + word.replace(/'/g, "\\'") + '\')">朗读</button><button class="wl-tip-online-btn" onclick="lookupOnline(\'' + word.replace(/'/g, "\\'") + '\')">在线查询</button></div>';
     html += '<div class="wl-tip-online" id="wl-online-area"></div>';
   } else {
     var basicTrans = lookupBasicWord(word);
@@ -2770,7 +3326,7 @@ function lookupWord(word, el) {
     } else {
       html += '<div class="wl-tip-notfound">正在联网查询...</div>';
     }
-    html += '<div class="wl-tip-actions"><button class="wl-tip-btn" onclick="speakSingleWord(\'' + word.replace(/'/g, "\\'") + '\')">🔊 朗读</button></div>';
+    html += '<div class="wl-tip-actions"><button class="wl-tip-btn" onclick="speakSingleWord(\'' + word.replace(/'/g, "\\'") + '\')">朗读</button></div>';
     html += '<div class="wl-tip-online" id="wl-online-area"></div>';
   }
 
@@ -2878,19 +3434,19 @@ function renderStats() {
   // New words - glowing star
   html += '<div class="stat-card purple"><div class="sc-icon"><svg viewBox="0 0 32 32" fill="none">';
   html += '<path d="M16 2l3.5 7.5L28 11l-5.5 5 1.5 8L16 20l-8 4 1.5-8L4 11l8.5-1.5z" fill="url(#starGrad)" stroke="none"/>';
-  html += '<path d="M16 2l3.5 7.5L28 11l-5.5 5 1.5 8L16 20l-8 4 1.5-8L4 11l8.5-1.5z" fill="none" stroke="rgba(192,132,252,.5)" stroke-width=".5"/>';
-  html += '<circle cx="13" cy="10" r="1.5" fill="rgba(255,255,255,.4)"/>';
-  html += '<path d="M14 6l1-2 1 2" stroke="rgba(255,255,255,.5)" stroke-width="1" stroke-linecap="round"/>';
+  html += '<path d="M16 2l3.5 7.5L28 11l-5.5 5 1.5 8L16 20l-8 4 1.5-8L4 11l8.5-1.5z" fill="none" stroke="rgba(62,122,107,.45)" stroke-width=".5"/>';
+  html += '<circle cx="13" cy="10" r="1.5" fill="rgba(255,255,255,.65)"/>';
+  html += '<path d="M14 6l1-2 1 2" stroke="rgba(255,255,255,.7)" stroke-width="1" stroke-linecap="round"/>';
   html += '</svg></div><div><div class="sc-num">' + totalNew + '</div><div class="sc-label">新词</div></div></div>';
 
   // Review - circular arrows + gear
   html += '<div class="stat-card cyan"><div class="sc-icon"><svg viewBox="0 0 32 32" fill="none">';
   html += '<path d="M8 12a7 7 0 0112.5-4.5" stroke="url(#reviewGrad)" stroke-width="2.5" stroke-linecap="round"/>';
   html += '<path d="M22 20a7 7 0 01-12.5 4.5" stroke="url(#reviewGrad)" stroke-width="2.5" stroke-linecap="round"/>';
-  html += '<path d="M20 6l.5 2 2-.5" stroke="#22D3EE" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>';
-  html += '<path d="M10 26l-.5-2-2 .5" stroke="#22D3EE" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>';
+  html += '<path d="M20 6l.5 2 2-.5" stroke="#3E7A6B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>';
+  html += '<path d="M10 26l-.5-2-2 .5" stroke="#3E7A6B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>';
   html += '<circle cx="16" cy="16" r="3" stroke="url(#reviewGrad)" stroke-width="2"/>';
-  html += '<circle cx="16" cy="16" r="1" fill="#22D3EE"/>';
+  html += '<circle cx="16" cy="16" r="1" fill="#3E7A6B"/>';
   html += '</svg></div><div><div class="sc-num">' + totalReview + '</div><div class="sc-label">复习词</div></div></div>';
 
   // Dialog - chat bubbles
@@ -2906,12 +3462,12 @@ function renderStats() {
 
   // Essay - open book with bookmark
   html += '<div class="stat-card green"><div class="sc-icon"><svg viewBox="0 0 32 32" fill="none">';
-  html += '<path d="M4 6c4-1 8 0 12 2 4-2 8-3 12-2v20c-4-1-8 0-12 2-4-2-8-3-12-2V6z" fill="rgba(16,185,129,.12)" stroke="url(#bookGrad)" stroke-width="1.5" stroke-linejoin="round"/>';
+  html += '<path d="M4 6c4-1 8 0 12 2 4-2 8-3 12-2v20c-4-1-8 0-12 2-4-2-8-3-12-2V6z" fill="rgba(62,122,107,.12)" stroke="url(#bookGrad)" stroke-width="1.5" stroke-linejoin="round"/>';
   html += '<path d="M16 8v20" stroke="url(#bookGrad)" stroke-width="1.5"/>';
-  html += '<path d="M8 11h4M8 15h5M8 19h3" stroke="rgba(52,211,153,.4)" stroke-width="1.2" stroke-linecap="round"/>';
-  html += '<path d="M20 11h4M20 15h5M20 19h3" stroke="rgba(52,211,153,.4)" stroke-width="1.2" stroke-linecap="round"/>';
-  html += '<path d="M22 4l2 3-2 1" fill="#34D399" opacity=".6"/>';
-  html += '<line x1="22" y1="4" x2="22" y2="8" stroke="#10B981" stroke-width="1.2" stroke-linecap="round"/>';
+  html += '<path d="M8 11h4M8 15h5M8 19h3" stroke="rgba(62,122,107,.4)" stroke-width="1.2" stroke-linecap="round"/>';
+  html += '<path d="M20 11h4M20 15h5M20 19h3" stroke="rgba(62,122,107,.4)" stroke-width="1.2" stroke-linecap="round"/>';
+  html += '<path d="M22 4l2 3-2 1" fill="#3E7A6B" opacity=".6"/>';
+  html += '<line x1="22" y1="4" x2="22" y2="8" stroke="#3E7A6B" stroke-width="1.2" stroke-linecap="round"/>';
   html += '</svg></div><div><div class="sc-num">' + totalEssay + '</div><div class="sc-label">阅读句</div></div></div>';
 
   html += '</div>';
@@ -3840,11 +4396,9 @@ var TTS = (function() {
   var utter = null;
   var log = [];
   var lastError = '';
-  var noEnglishWarned = false;
   var voiceCache = [];
   var voiceCacheAt = 0;
-  var US_PRIORITY = ['google us english','samantha','ava','allison','susan','zoe','alex','joanna',
-    'kendra','kimberly','matthew','tom','aaron','nicky','aria','jenny','guy','zira','david','mark'];
+  var voiceNotice = '';
 
   function stamp() {
     var d = new Date();
@@ -3854,6 +4408,14 @@ var TTS = (function() {
   function logAdd(type, msg) {
     log.push({ t: stamp(), type: type, msg: String(msg || '').slice(0, 80) });
     if (log.length > 30) log.shift();
+  }
+  function notify(state) {
+    if (typeof document === 'undefined' || !document.dispatchEvent) return;
+    try {
+      document.dispatchEvent(new CustomEvent('tts-state', { detail: {
+        state: state, id: taskSeq, text: active && active.currentText ? active.currentText : ''
+      } }));
+    } catch (e) {}
   }
   function synth() { return window.speechSynthesis || null; }
 
@@ -3868,24 +4430,14 @@ var TTS = (function() {
   }
   function isEnglish(v) { return !!v && !!v.lang && /^en([-_]|$)/i.test(v.lang); }
   function isUS(v) { return isEnglish(v) && /^en[-_]US$/i.test(String(v.lang)); }
-  function voiceScore(v) {
-    var name = (v.name || '').toLowerCase();
-    var score = 0;
-    if (isUS(v)) score += 100;
-    if (v.localService) score += 20;
-    if (v.default) score += 5;
-    for (var i = 0; i < US_PRIORITY.length; i++) {
-      if (name.indexOf(US_PRIORITY[i]) > -1) { score += 60 - i * 2; break; }
-    }
-    if (/\b(compact|novelty|whisper|bells|boing|bad news|good news|organ|cellos|jester|superstar|wobble|bahh|bubbles|trinoids|zarvox|albert|fred)\b/.test(name)) score -= 80;
-    if (/\(enhanced\)|premium|neural|natural/.test(name)) score += 25;
-    return score;
-  }
   function bestEnglish() {
-    var list = refreshVoices().filter(isEnglish).slice();
-    if (!list.length) return null;
-    list.sort(function(a, b) { return voiceScore(b) - voiceScore(a); });
-    return list[0];
+    // Use system metadata and stable OS order, never infer quality from a voice name.
+    var list = refreshVoices().filter(isEnglish);
+    var us = list.filter(isUS);
+    var i;
+    for (i = 0; i < us.length; i++) if (us[i].default) return us[i];
+    for (i = 0; i < list.length; i++) if (list[i].default) return list[i];
+    return us[0] || list[0] || null;
   }
   function savedPref() {
     var s = Store.get('ttsSettings', { rate: 0.95, voice: '', voiceURI: '' });
@@ -3895,25 +4447,31 @@ var TTS = (function() {
   function resolveVoice() {
     var list = refreshVoices();
     var pref = savedPref();
-    if (pref.voiceURI) {
-      for (var i = 0; i < list.length; i++) {
-        if ((list[i].voiceURI || list[i].name) === pref.voiceURI) return { voice: list[i], fallback: false };
+    var requested = pref.voiceURI || pref.voice || '';
+    if (!list.length) return { voice: null, fallback: false, reason: 'voices-loading', requested: requested };
+    var english = list.filter(isEnglish);
+    if (requested) {
+      for (var i = 0; i < english.length; i++) {
+        if ((pref.voiceURI && (english[i].voiceURI || english[i].name) === pref.voiceURI) ||
+            (!pref.voiceURI && pref.voice && english[i].name === pref.voice)) {
+          return { voice: english[i], fallback: false, reason: '', requested: requested };
+        }
       }
+      return { voice: null, fallback: false, reason: 'saved-voice-unavailable', requested: requested };
     }
-    if (pref.voice) {
-      for (var j = 0; j < list.length; j++) {
-        if (list[j].name === pref.voice) return { voice: list[j], fallback: false };
-      }
-    }
-    var pick = bestEnglish();
-    if (pick) return { voice: pick, fallback: !!(pref.voiceURI || pref.voice) };
-    return { voice: null, fallback: false };
+    return { voice: english.length ? bestEnglish() : null, fallback: false,
+      reason: english.length ? '' : 'no-english-voice', requested: '' };
   }
   function effectiveRate(mode) {
     var base = Number(savedPref().rate);
     if (!isFinite(base) || base <= 0) base = 0.95;
     if (mode === 'slow') return Math.max(0.6, Math.min(1.0, Math.round((base - 0.15) * 20) / 20));
     return Math.max(0.6, Math.min(1.4, base));
+  }
+  function taskRate(opts) {
+    var custom = Number(opts.rate);
+    if (isFinite(custom) && custom > 0) return Math.max(0.6, Math.min(1.4, custom));
+    return effectiveRate(opts.mode);
   }
   function splitText(text) {
     var t = String(text || '').trim();
@@ -3952,6 +4510,7 @@ var TTS = (function() {
     if (a) {
       logAdd('cancel', reason || '');
       try { if (a.onState) a.onState('canceled'); } catch (e) {}
+      notify('canceled');
     }
     return shouldCancel;
   }
@@ -3965,6 +4524,7 @@ var TTS = (function() {
       logAdd('done', a.mode);
       try { if (a.onState) a.onState('done'); } catch (e) {}
       try { if (a.onDone) a.onDone(true); } catch (e) {}
+      notify('done');
     }
   }
   function abort(id, err) {
@@ -3981,6 +4541,7 @@ var TTS = (function() {
     if (a) {
       try { if (a.onState) a.onState('error', lastError); } catch (e) {}
       try { if (a.onDone) a.onDone(false); } catch (e) {}
+      notify('error');
     }
   }
   function speakOne(text, id) {
@@ -3988,28 +4549,50 @@ var TTS = (function() {
     var s = synth();
     if (!s) { abort(id, 'unsupported'); return; }
     // Keep one voice for the whole task; changing voices mid-sequence sounds broken.
-    var rv = active.voice ? { voice: active.voice, fallback: false } : resolveVoice();
-    if (!rv.voice) {
-      if (!noEnglishWarned) {
-        noEnglishWarned = true;
-        if (typeof showToast === 'function') showToast('未检测到英语语音，请在系统设置中添加英语语音');
+    var rv = active.voice ? { voice: active.voice, fallback: false, reason: '' } : resolveVoice();
+    if (!rv.voice && rv.reason === 'voices-loading') {
+      if (!active.voiceWaitAt) {
+        active.voiceWaitAt = Date.now();
+        logAdd('voice-wait', '#' + id);
       }
-      abort(id, 'no-english-voice');
+      if (Date.now() - active.voiceWaitAt < 3000) {
+        if (watchdog) { clearTimeout(watchdog); watchdog = null; }
+        watchdog = setTimeout(function() {
+          watchdog = null;
+          if (id === taskSeq && active) speakOne(text, id);
+        }, 120);
+        return;
+      }
+      rv.reason = 'voices-unavailable';
+    }
+    if (!rv.voice) {
+      var reason = rv.reason || 'no-english-voice';
+      var message = reason === 'saved-voice-unavailable' ?
+        '保存的英语语音已不可用，请在设置中重新选择' : '未检测到英语语音，请在系统设置中添加英语语音';
+      if (voiceNotice !== reason) {
+        voiceNotice = reason;
+        if (typeof showToast === 'function') showToast(message);
+      }
+      abort(id, reason);
       return;
     }
+    active.voiceWaitAt = 0;
     active.voice = rv.voice;
+    active.currentText = text;
     var u = new SpeechSynthesisUtterance(text);
     u.voice = rv.voice;
     u.lang = rv.voice.lang || 'en-US';
     u.rate = active.rate;
-    u.pitch = 1;
-    u.volume = 1;
+    u.pitch = active.pitch;
+    u.volume = active.volume;
 
     var settled = false;
     var started = false;
+    var boundaryLogged = false;
     var startupAt = Date.now();
 
-    logAdd('uttr', '#' + id + ' ' + rv.voice.name + '/' + rv.voice.lang + ' r=' + active.rate);
+    logAdd('uttr', '#' + id + ' ' + rv.voice.name + '/' + rv.voice.lang +
+      ' r=' + active.rate + ' p=' + active.pitch + ' v=' + active.volume);
 
     function clearGuard() {
       if (playGuard) { clearTimeout(playGuard); playGuard = null; }
@@ -4045,12 +4628,17 @@ var TTS = (function() {
       active.startedAt = Date.now();
       active.started = true;
       logAdd(source === 'event' ? 'start' : 'start-' + source, text);
+      notify('playing');
       schedulePlaybackGuard();
     }
 
     u.onstart = function() { markStarted('event'); };
-    // Some Safari builds omit onstart; a boundary is also proof of real audio.
-    u.onboundary = function() { markStarted('boundary'); };
+    // Boundary support varies by Safari. Log it, but require engine activity too.
+    u.onboundary = function() {
+      if (id !== taskSeq || settled) return;
+      if (!boundaryLogged) { boundaryLogged = true; logAdd('boundary', text); }
+      if (s.speaking) markStarted('engine-boundary');
+    };
     u.onend = function() {
       if (settled) return;
       settled = true;
@@ -4121,26 +4709,35 @@ var TTS = (function() {
   }
   function play(text, opts) {
     opts = opts || {};
-    var dialogues = splitDialogue(text);
+    var dialogues = opts.split === false ? [String(text || '')] : splitDialogue(text);
     var segs = [];
     dialogues.forEach(function(seg) {
       var clean = cleanSpeechText(seg);
-      if (clean) splitText(clean).forEach(function(x) { segs.push(x); });
+      if (!clean) return;
+      if (opts.split === false) segs.push(clean);
+      else splitText(clean).forEach(function(x) { segs.push(x); });
     });
     if (!segs.length) return false;
     var canceled = stop('replace');
     var id = ++taskSeq;
+    lastError = '';
     queue = segs;
     active = {
       id: id,
+      voice: opts.voice || null,
+      pitch: 1,
+      volume: 1,
       mode: opts.mode || 'normal',
-      rate: effectiveRate(opts.mode),
+      rate: taskRate(opts),
       gap: opts.gap === undefined ? (dialogues.length > 1 ? 320 : 240) : opts.gap,
       onDone: opts.onDone,
       onState: opts.onState,
       started: false,
-      startedAt: Date.now()
+      queuedAt: Date.now(),
+      startedAt: 0,
+      voiceWaitAt: 0
     };
+    notify('queued');
     logAdd('play', '#' + id + ' ' + segs.join(' | '));
     launch(id, canceled);
     return true;
@@ -4149,25 +4746,35 @@ var TTS = (function() {
     opts = opts || {};
     var list = [];
     (texts || []).forEach(function(item) {
-      splitDialogue(item).forEach(function(seg) {
+      var dialogues = opts.split === false ? [String(item || '')] : splitDialogue(item);
+      dialogues.forEach(function(seg) {
         var clean = cleanSpeechText(seg);
-        if (clean) splitText(clean).forEach(function(x) { list.push(x); });
+        if (!clean) return;
+        if (opts.split === false) list.push(clean);
+        else splitText(clean).forEach(function(x) { list.push(x); });
       });
     });
     if (!list.length) return false;
     var canceled = stop('replace');
     var id = ++taskSeq;
+    lastError = '';
     queue = list;
     active = {
       id: id,
+      voice: opts.voice || null,
+      pitch: 1,
+      volume: 1,
       mode: opts.mode || 'sequence',
-      rate: effectiveRate(opts.mode),
+      rate: taskRate(opts),
       gap: opts.gap === undefined ? 320 : opts.gap,
       onDone: opts.onDone,
       onState: opts.onState,
       started: false,
-      startedAt: Date.now()
+      queuedAt: Date.now(),
+      startedAt: 0,
+      voiceWaitAt: 0
     };
+    notify('queued');
     logAdd('seq', '#' + id + ' ' + list.length + ' segments');
     launch(id, canceled);
     return true;
@@ -4175,17 +4782,23 @@ var TTS = (function() {
   function getState() {
     var rv = resolveVoice();
     var s = synth();
+    var actualVoice = active && active.voice ? active.voice : rv.voice;
     return {
       supported: !!s,
       speaking: !!(s && s.speaking),
       pending: !!(s && s.pending),
       taskId: taskSeq,
-      active: active ? { mode: active.mode, rate: active.rate, started: !!active.started, remaining: queue.length, startedAt: active.startedAt } : null,
-      currentVoice: rv.voice ? { name: rv.voice.name, lang: rv.voice.lang, local: !!rv.voice.localService, uri: rv.voice.voiceURI } : null,
-      fallback: rv.fallback,
+      active: active ? {
+        id: active.id, mode: active.mode, rate: active.rate, pitch: active.pitch, volume: active.volume,
+        started: !!active.started, remaining: queue.length, startedAt: active.startedAt,
+        currentText: active.currentText || '', waitingForVoices: !!active.voiceWaitAt
+      } : null,
+      currentVoice: actualVoice ? { name: actualVoice.name, lang: actualVoice.lang, local: !!actualVoice.localService, uri: actualVoice.voiceURI } : null,
+      voiceError: rv.reason || '',
+      fallback: false,
       lastError: lastError,
       voices: refreshVoices().filter(isEnglish).map(function(v) {
-        return { name: v.name, lang: v.lang, local: !!v.localService, default: !!v.default };
+        return { name: v.name, lang: v.lang, local: !!v.localService, default: !!v.default, uri: v.voiceURI || v.name };
       }),
       log: log.slice(-24)
     };
@@ -5619,7 +6232,7 @@ function startPronunciation(targetText, resultEl, btnEl) {
   if (recognition) {
     try { recognition.stop(); } catch(e){}
     recognition = null;
-    if (window._currentPronBtn) { window._currentPronBtn.classList.remove('recording'); window._currentPronBtn.textContent = '🎤 跟读'; }
+    if (window._currentPronBtn) { window._currentPronBtn.classList.remove('recording'); window._currentPronBtn.textContent = '跟读'; }
     return;
   }
   if (btnEl) { btnEl.classList.add('recording'); btnEl.textContent = '⏹ 停止'; window._currentPronBtn = btnEl; }
@@ -5642,7 +6255,7 @@ function startPronunciation(targetText, resultEl, btnEl) {
     }
     showPronResult(resultEl, bestScore, bestText, targetText);
     savePronScore(targetText, bestScore);
-    if (window._currentPronBtn) { window._currentPronBtn.classList.remove('recording'); window._currentPronBtn.textContent = '🎤 跟读'; window._currentPronBtn = null; }
+    if (window._currentPronBtn) { window._currentPronBtn.classList.remove('recording'); window._currentPronBtn.textContent = '跟读'; window._currentPronBtn = null; }
   };
   recognition.onerror = function(event) {
     if (event.error === 'not-allowed') {
@@ -5657,7 +6270,7 @@ function startPronunciation(targetText, resultEl, btnEl) {
   };
   recognition.onend = function() {
     recognition = null;
-    if (window._currentPronBtn) { window._currentPronBtn.classList.remove('recording'); window._currentPronBtn.textContent = '🎤 跟读'; window._currentPronBtn = null; }
+    if (window._currentPronBtn) { window._currentPronBtn.classList.remove('recording'); window._currentPronBtn.textContent = '跟读'; window._currentPronBtn = null; }
   };
   recognition.start();
 }
@@ -5667,7 +6280,7 @@ function stopPronunciation() {
     try { recognition.stop(); } catch(e){}
     recognition = null;
   }
-  if (window._currentPronBtn) { window._currentPronBtn.classList.remove('recording'); window._currentPronBtn.textContent = '🎤 跟读'; window._currentPronBtn = null; }
+  if (window._currentPronBtn) { window._currentPronBtn.classList.remove('recording'); window._currentPronBtn.textContent = '跟读'; window._currentPronBtn = null; }
 }
 
 // Levenshtein distance for text comparison
@@ -5707,13 +6320,13 @@ function calculatePronScore(target, recognized, confidence) {
 }
 
 function showPronResult(el, score, recognized, target) {
-  var grade, color, emoji;
-  if (score >= 90) { grade='优秀'; color='#34D399'; emoji='🌟'; }
-  else if (score >= 75) { grade='良好'; color='#22D3EE'; emoji='👍'; }
-  else if (score >= 60) { grade='及格'; color='#FBBF24'; emoji='💪'; }
-  else { grade='需练习'; color='#FB923C'; emoji='🔄'; }
+  var grade, color;
+  if (score >= 90) { grade='优秀'; color='#2F6D53'; }
+  else if (score >= 75) { grade='良好'; color='#3E7A6B'; }
+  else if (score >= 60) { grade='及格'; color='#A9761F'; }
+  else { grade='需练习'; color='#B5573E'; }
   var html = '<div class="pron-result">';
-  html += '<div class="pron-score" style="color:' + color + '">' + emoji + ' ' + score + '分</div>';
+  html += '<div class="pron-score" style="color:' + color + '">' + score + '分</div>';
   html += '<div class="pron-grade">' + grade + '</div>';
   html += '<div class="pron-detail">';
   html += '<div class="pron-target">目标: ' + esc(target) + '</div>';
@@ -5810,11 +6423,11 @@ function renderPronStats() {
   recent.sort(function(a,b){return b.date-a.date;});
   var avg = Math.round(total/count);
   var html = '<div class="pron-summary">';
-  html += '<div class="pron-avg" style="color:' + (avg>=75?'#34D399':avg>=60?'#FBBF24':'#FB923C') + '">' + avg + '</div>';
+  html += '<div class="pron-avg" style="color:' + (avg>=75?'#2F6D53':avg>=60?'#A9761F':'#B5573E') + '">' + avg + '</div>';
   html += '<div class="pron-avg-label">平均发音评分</div></div>';
   html += '<div class="pron-recent">';
   recent.slice(0,8).forEach(function(r) {
-    var color = r.score>=90?'#34D399':r.score>=75?'#22D3EE':r.score>=60?'#FBBF24':'#FB923C';
+    var color = r.score>=90?'#2F6D53':r.score>=75?'#3E7A6B':r.score>=60?'#A9761F':'#B5573E';
     html += '<div class="pron-recent-item"><span style="color:'+color+';font-weight:700">' + r.score + '</span> ' + esc(r.text.substring(0,20)) + (r.text.length>20?'...':'') + '</div>';
   });
   html += '</div>';
@@ -5919,7 +6532,7 @@ function startReview() {
 
   var catNames = {travel:'旅行英语', daily:'日常交流', easy:'日常基础交流'};
   var html = '<div style="font-size:13px;color:var(--t2);margin-bottom:4px">基于艾宾浩斯记忆曲线，以下词汇需要复习：</div>';
-  html += '<div style="font-size:24px;font-weight:900;color:#60A5FA;margin-bottom:12px">' + reviewWords.length + ' 个词汇</div>';
+  html += '<div style="font-size:24px;font-weight:700;color:var(--accent);margin-bottom:12px">' + reviewWords.length + ' 个词汇</div>';
   html += '<div class="review-modal-list">';
   groups.forEach(function(g) {
     var dayData = DATA.find(function(dd){return dd && dd.day === g.day && (dd.category||'travel') === g.category;});
@@ -6100,14 +6713,14 @@ function renderNotebook() {
   if (countEl) countEl.textContent = (notebook.length + errorPool.length) + ' 词';
   if (!container) return;
   if (!notebook.length && !errorPool.length) {
-    container.innerHTML = '<div class="empty-state"><div class="es-icon">📝</div><div class="es-title">生词本为空</div><div class="es-desc">在卡片、听写或选择题中答错的单词会自动加入</div></div>';
+    container.innerHTML = '<div class="empty-state"><div class="es-icon"><svg viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg></div><div class="es-title">生词本为空</div><div class="es-desc">在卡片、听写或选择题中答错的单词会自动加入</div></div>';
     return;
   }
   var html = '';
   // Error pool section
   if (errorPool.length) {
     html += '<div class="nb-error-section">';
-    html += '<div class="nb-error-header"><div class="nb-error-title">⚠️ 易错词池 (' + errorPool.length + ')</div>';
+    html += '<div class="nb-error-header"><div class="nb-error-title">易错词池 (' + errorPool.length + ')</div>';
     html += '<div class="nb-error-actions">';
     html += '<button class="btn primary sm" onclick="startErrorPoolReview()">复习错词</button>';
     html += '<button class="btn sec sm" onclick="clearErrorPool()">清空</button>';
@@ -6126,7 +6739,7 @@ var _epy = getPinyin(p.word || '');
     html += '</div>';
   }
   if (notebook.length) {
-    html += '<div style="font-size:13px;font-weight:800;color:var(--purp2);margin-bottom:8px;padding:0 4px">📚 生词本 (' + notebook.length + ')</div>';
+    html += '<div style="font-size:13px;font-weight:800;color:var(--accent-strong);margin-bottom:8px;padding:0 4px">生词本 (' + notebook.length + ')</div>';
   }
   notebook.forEach(function(n, i) {
     if (!n) return;
@@ -6303,7 +6916,7 @@ var _voicesBound = false, _voicesRetry = 0, _voicesTimer = null, _voiceWarned = 
 
 function voiceLabel(v) {
   var name = (v.name || '').replace(/\s*\(.*?\)\s*/g, '').replace(/^(Microsoft|Google|Apple)\s+/i, '');
-  return name + ' · ' + (v.lang || '') + ' · ' + (v.localService ? '本地' : '在线');
+  return name + ' · ' + (v.lang || '') + ' · ' + (v.localService ? '本地' : '在线') + (v.default ? ' · 系统默认' : '');
 }
 
 function loadVoices() {
@@ -6317,14 +6930,10 @@ function loadVoices() {
       _voicesRetry++;
       if (_voicesTimer) clearTimeout(_voicesTimer);
       _voicesTimer = setTimeout(function() { _voicesTimer = null; loadVoices(); }, delay);
-      if (select && select.options.length <= 1) {
-        select.innerHTML = '<option value="">正在加载语音…</option>';
-      }
+      if (select && select.options.length <= 1) select.innerHTML = '<option value="">正在加载语音…</option>';
       return;
     }
-    if (select && select.options.length <= 1) {
-      select.innerHTML = '<option value="">无可用语音（请在系统中安装英语语音）</option>';
-    }
+    if (select) select.innerHTML = '<option value="">无可用语音（请在系统中安装英语语音）</option>';
     var none = document.getElementById('tts-current');
     if (none) {
       none.textContent = '未找到任何语音，请在系统设置中添加英语语音';
@@ -6339,26 +6948,32 @@ function loadVoices() {
   var en = voices.filter(TTS.isEnglish);
   var us = en.filter(TTS.isUS);
   var others = en.filter(function(v) { return !TTS.isUS(v); });
-  var pref = Store.get('ttsSettings', { rate: 0.95, voice: '', voiceURI: '' });
+  var pref = Store.get('ttsSettings', { rate: 0.95, voice: '', voiceURI: '' }) || {};
+  var requested = pref.voiceURI || pref.voice || '';
+  var matched = false;
   var auto = TTS.bestEnglish();
-  var autoLabel = auto ? '自动（' + voiceLabel(auto) + '）' : '无可用英语语音';
+  var autoLabel = auto ? '系统默认（' + voiceLabel(auto) + '）' : '无可用英语语音';
   var opts = '<option value="">' + esc(autoLabel) + '</option>';
 
   function buildGroup(title, list) {
     if (!list.length) return '';
     var seen = {}, html = '<optgroup label="' + title + '">';
-    list.sort(function(a, b) { return (a.name || '').localeCompare(b.name || ''); });
+    list.sort(function(a, b) {
+      return (Number(!!b.default) - Number(!!a.default)) || (a.name || '').localeCompare(b.name || '');
+    });
     list.forEach(function(v) {
       var key = v.voiceURI || v.name;
       if (seen[key]) return;
       seen[key] = true;
       var selected = (pref.voiceURI === key) || (!pref.voiceURI && pref.voice && pref.voice === v.name);
+      if (selected) matched = true;
       html += '<option value="' + escAttr(key) + '"' + (selected ? ' selected' : '') + '>' + esc(voiceLabel(v)) + '</option>';
     });
     return html + '</optgroup>';
   }
   opts += buildGroup('美式英语 en-US', us);
   opts += buildGroup('其他英语', others);
+  if (requested && !matched) opts = '<option value="" selected disabled>原语音不可用，请重新选择</option>' + opts;
   select.innerHTML = opts;
 
   if (!en.length && !_voiceWarned) {
@@ -6369,16 +6984,35 @@ function loadVoices() {
   var info = document.getElementById('tts-current');
   if (info) {
     var rv = TTS.resolveVoice();
-    if (rv.voice) {
+    if (rv.reason === 'saved-voice-unavailable') {
+      info.textContent = '保存的语音“' + requested + '”当前不可用，请重新试听并选择。';
+      info.style.color = 'var(--red)';
+    } else if (rv.voice) {
       info.textContent = '当前使用：' + rv.voice.name + ' (' + rv.voice.lang + ')' +
-        (rv.voice.localService ? ' · 系统本地语音' : ' · 在线语音') +
-        (rv.fallback ? ' · 原语音不可用，已自动切换' : '');
-      info.style.color = rv.fallback ? 'var(--ylw)' : 'var(--t3)';
+        (rv.voice.localService ? ' · 系统本地语音' : ' · 在线语音');
+      info.style.color = 'var(--t3)';
     } else {
       info.textContent = '未找到英语语音，请先在系统设置中添加英语语音';
       info.style.color = 'var(--red)';
     }
   }
+}
+
+function previewSelectedVoice() {
+  var voices = TTS.refreshVoices(true).filter(TTS.isEnglish);
+  if (!voices.length) {
+    showToast('英语语音尚未加载，请稍候再试');
+    loadVoices();
+    return;
+  }
+  var select = document.getElementById('tts-voice');
+  var key = select ? select.value : '';
+  var voice = null;
+  for (var i = 0; i < voices.length; i++) {
+    if ((voices[i].voiceURI || voices[i].name) === key) { voice = voices[i]; break; }
+  }
+  if (!voice) voice = TTS.bestEnglish();
+  TTS.play('I am happy today.', { voice: voice, rate: 1, split: false, mode: 'preview' });
 }
 
 function initVoices() {
@@ -6449,6 +7083,17 @@ function closeVoiceDebug() {
   var p = document.getElementById('tts-debug-panel');
   if (p) p.classList.remove('show');
 }
+function runVoiceAcceptance(all) {
+  var sentences = ['I am tired.', 'I am hungry.', 'I want some water.', 'I am happy today.'];
+  if (!all) {
+    TTS.play(sentences[0], { rate: 1, split: false, mode: 'diagnostic' });
+  } else {
+    var list = [];
+    sentences.forEach(function(text) { for (var i = 0; i < 3; i++) list.push(text); });
+    TTS.playSequence(list, { rate: 1, split: false, gap: 450, mode: 'acceptance' });
+  }
+  setTimeout(openVoiceDebug, 140);
+}
 function openVoiceDebug() {
   var st = TTS.getState();
   var panel = document.getElementById('tts-debug-panel');
@@ -6465,20 +7110,24 @@ function openVoiceDebug() {
     return '<div><span style="color:#64748b">' + esc(l.t) + '</span> [' + esc(l.type) + '] ' + esc(l.msg) + '</div>';
   }).join('') : '<div>—</div>';
   panel.innerHTML =
-    '<div class="td-head"><span>语音诊断 V33</span><button onclick="closeVoiceDebug()">关闭</button></div>' +
+    '<div class="td-head"><span>语音诊断 V34</span><button onclick="closeVoiceDebug()">关闭</button></div>' +
     '<div class="td-body">' +
+      '<div><b>浏览器：</b>' + esc(navigator.userAgent) + '</div>' +
       '<div><b>支持 SpeechSynthesis：</b>' + (st.supported ? '是' : '否') + '</div>' +
       '<div><b>引擎状态：</b>speaking=' + (st.speaking ? 'true' : 'false') + ' · pending=' + (st.pending ? 'true' : 'false') + '</div>' +
-      '<div><b>当前任务：</b>' + (st.active ? ('已启动 ' + (st.active.started ? '是' : '否') + ' · ' + st.active.mode + ' · 语速 ' + st.active.rate.toFixed(2) + ' · 剩余 ' + st.active.remaining) : '空闲') + '</div>' +
+      '<div><b>当前任务：</b>' + (st.active ? ('已启动 ' + (st.active.started ? '是' : '否') + ' · ' + st.active.mode + ' · rate=' + st.active.rate.toFixed(2) + ' · pitch=' + st.active.pitch + ' · volume=' + st.active.volume + ' · 剩余 ' + st.active.remaining) : '空闲') + '</div>' +
+      '<div><b>当前文本：</b>' + (st.active && st.active.currentText ? esc(st.active.currentText) : '—') + '</div>' +
       '<div><b>任务 ID：</b>' + st.taskId + '</div>' +
       '<div><b>语音监听器：</b>' + (_voicesBound ? '已绑定（单例）' : '未绑定') + '</div>' +
       '<div><b>实际语音：</b>' + (st.currentVoice ? esc(st.currentVoice.name + ' (' + st.currentVoice.lang + ')' + (st.currentVoice.local ? ' 本地' : ' 在线')) : '未选择') + (st.fallback ? ' <span style="color:#fbbf24">已回退</span>' : '') + '</div>' +
+      '<div><b>语音选择状态：</b>' + (st.voiceError ? esc(st.voiceError) : '正常') + '</div>' +
       '<div><b>最近错误：</b>' + (st.lastError ? esc(st.lastError) : '无') + '</div>' +
       '<div style="margin-top:8px"><b>可用英语语音 (' + st.voices.length + ')</b></div>' +
       '<div class="td-list">' + voiceRows + '</div>' +
       '<div style="margin-top:8px"><b>播放日志</b></div>' +
       '<div class="td-list">' + logRows + '</div>' +
-      '<div class="td-actions"><button onclick="openVoiceDebug()">刷新</button><button onclick="speak(\'Hello, this is a voice test.\')">试听</button></div>' +
+      '<div class="td-actions"><button onclick="openVoiceDebug()">刷新</button><button onclick="runVoiceAcceptance(false)">单句 1.0</button><button onclick="runVoiceAcceptance(true)">四句各 3 遍</button><button onclick="TTS.stop(\'user\')">停止</button></div>' +
+      '<div class="td-note">事件测试可自动记录；颤音、断音和自然度仍需在 Mac Safari 人工试听。</div>' +
     '</div>';
   panel.classList.add('show');
 }
@@ -6617,7 +7266,7 @@ document.addEventListener('keydown', function(e) {
 // ===== PWA / Service Worker =====
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', function() {
-    navigator.serviceWorker.register('service-worker.js?v=33').then(function(reg) {
+    navigator.serviceWorker.register('service-worker.js?v=34').then(function(reg) {
       reg.addEventListener('updatefound', function() {
         var nw = reg.installing;
         if (nw) {
