@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
-<meta name="theme-color" content="#F7F5F0">
+<meta name="theme-color" content="#F5F7FA">
 <meta name="apple-mobile-web-app-title" content="谢飞机">
 <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v8">
 <link rel="apple-touch-icon" sizes="120x120" href="apple-touch-icon.png?v8">
@@ -912,22 +912,24 @@ body:not(.cat-view) #home-cards{display:none !important}
 :root{
   --nav-h:64px;
   --r:18px;--rs:13px;
-  --accent:#3E7A6B;--accent-strong:#2F5F54;--accent-soft:#E8F1ED;--accent-line:#CBDED7;
-  --surface:#FFFFFF;--surface-2:#FAF8F3;--line:#E7E1D6;--line-strong:#D8D0C2;
-  --bg:#F7F5F0;--bg2:#EFEBE3;
-  --t1:#26231E;--t2:#57514A;--t3:#857D72;--t4:#AAA297;
-  --grn:#3E7A6B;--red:#B2544A;--org:#A4703C;--ylw:#A5812F;--blue:#4E6F8E;
-  --purp:#3E7A6B;--purp2:#2F5F54;--cyan:#3E7A6B;--cyan2:#4B8A79;
-  --ga:linear-gradient(135deg,#4B8A79 0%,#3E7A6B 100%);
-  --gb:linear-gradient(135deg,#4B8A79 0%,#3E7A6B 100%);
-  --gc:linear-gradient(135deg,#4B8A79 0%,#3E7A6B 100%);
-  --gd:linear-gradient(135deg,#4B8A79 0%,#3E7A6B 100%);
-  --go:linear-gradient(135deg,#B07B46 0%,#9A683A 100%);
-  --gy:linear-gradient(135deg,#B08A3E 0%,#96742C 100%);
+  --accent:#2563EB;--accent-strong:#1D4ED8;--accent-soft:#E0ECFF;--accent-line:#BFDBFE;
+  --amber:#F59E0B;--amber-soft:#FEF3C7;
+  --teal:#0EA5E9;--teal-soft:#E0F2FE;
+  --surface:#FFFFFF;--surface-2:#F0F3F8;--line:#E5E9F0;--line-strong:#CBD3DF;
+  --bg:#F5F7FA;--bg2:#E8EDF2;
+  --t1:#1F2937;--t2:#4B5563;--t3:#6B7280;--t4:#9CA3AF;
+  --grn:#10B981;--red:#DC2626;--org:#F97316;--ylw:#F59E0B;--blue:#2563EB;
+  --purp:#2563EB;--purp2:#1D4ED8;--cyan:#0EA5E9;--cyan2:#38BDF8;
+  --ga:linear-gradient(135deg,#3B82F6 0%,#2563EB 100%);
+  --gb:linear-gradient(135deg,#3B82F6 0%,#2563EB 100%);
+  --gc:linear-gradient(135deg,#38BDF8 0%,#0EA5E9 100%);
+  --gd:linear-gradient(135deg,#10B981 0%,#059669 100%);
+  --go:linear-gradient(135deg,#F97316 0%,#EA580C 100%);
+  --gy:linear-gradient(135deg,#F59E0B 0%,#D97706 100%);
   --glow-p:none;--glow-c:none;
   --st:max(env(safe-area-inset-top,0px),16px);
-  --shadow-sm:0 1px 2px rgba(38,35,30,.05);
-  --shadow-md:0 12px 32px rgba(38,35,30,.10);
+  --shadow-sm:0 1px 2px rgba(31,41,55,.06);
+  --shadow-md:0 16px 40px rgba(31,41,55,.10);
 }
 html,body{background:var(--bg)}
 body{color:var(--t1);font-family:'Inter',-apple-system,BlinkMacSystemFont,"PingFang SC","Noto Sans SC",sans-serif;
@@ -939,7 +941,7 @@ body{color:var(--t1);font-family:'Inter',-apple-system,BlinkMacSystemFont,"PingF
 .page-title{font-size:23px;font-weight:700;color:var(--t1);letter-spacing:-.3px;padding:8px 0 14px}
 
 /* --- navigation --- */
-.nav{max-width:none;background:rgba(250,248,243,.95);
+.nav{background:rgba(255,255,255,.95);
   backdrop-filter:blur(20px) saturate(140%);-webkit-backdrop-filter:blur(20px) saturate(140%);
   border-top:1px solid var(--line)}
 .nav::before{display:none}
@@ -970,34 +972,55 @@ body{color:var(--t1);font-family:'Inter',-apple-system,BlinkMacSystemFont,"PingF
 #daily-sentence-container:empty,#mixed-review-container:empty,#review-banner-container:empty{display:none}
 
 /* --- today's goal card --- */
-.hero-card{background:var(--surface);border:1px solid var(--line);border-radius:20px;
-  padding:22px;margin-bottom:16px;box-shadow:var(--shadow-sm)}
+.hero-card{background:transparent;border:none;border-radius:20px;padding:0;margin-bottom:16px;box-shadow:none}
 .hero-card::before,.hero-card::after{display:none}
-.hero-top{align-items:flex-start}
-.hero-eyebrow{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;
-  color:var(--accent);margin-bottom:8px}
-.hero-title{font-size:20px;font-weight:700;line-height:1.35;color:var(--t1);letter-spacing:-.2px}
-.hero-num{font-size:30px;font-weight:700;color:var(--t1);background:none;
-  -webkit-text-fill-color:var(--t1);letter-spacing:-.6px}
-.hero-num small{font-size:14px;font-weight:500;color:var(--t3);-webkit-text-fill-color:var(--t3);letter-spacing:0}
-.hero-label{font-size:12px;color:var(--t3);margin-top:2px}
-.hero-meta{font-size:13px;color:var(--t3);margin-top:6px}
-.hero-meta b{color:var(--t1);font-weight:600}
-.hero-pct{font-size:22px;font-weight:700;color:var(--accent);background:none}
-.hero-pct span{font-size:13px;color:var(--t3);font-weight:500}
-.hero-bar{margin-top:14px;height:8px;background:var(--bg2);border:none}
-.hero-bar-fill{background:var(--accent);box-shadow:none}
-.hero-bar-fill::after{display:none}
-.hero-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:16px}
-.hero-stat{background:var(--surface-2);border:1px solid var(--line);border-radius:12px;padding:10px 12px}
-.hero-stat b{display:block;font-size:18px;font-weight:700;color:var(--t1);line-height:1.2}
-.hero-stat span{display:block;font-size:11px;color:var(--t3);margin-top:2px}
-.hero-cta{display:flex;align-items:center;justify-content:space-between;gap:10px;width:100%;
-  margin-top:16px;padding:14px 16px;border-radius:12px;background:var(--accent);color:#fff;
-  font-size:15px;font-weight:600;transition:background .15s,transform .15s}
+/* dark mission banner */
+.hero-banner{
+  position:relative;overflow:hidden;border-radius:20px 20px 16px 16px;
+  background:
+    radial-gradient(120% 80% at 20% 0%,rgba(59,130,246,.55) 0%,transparent 55%),
+    radial-gradient(100% 70% at 85% 15%,rgba(14,165,233,.35) 0%,transparent 50%),
+    linear-gradient(135deg,#0F2654 0%,#1E3A8A 55%,#1D4ED8 100%);
+  padding:22px 22px 24px;color:#fff;box-shadow:0 12px 28px rgba(30,58,138,.28);
+}
+.hero-banner::after{content:'';position:absolute;inset:auto -40% -60% auto;width:300px;height:300px;border-radius:50%;
+  background:radial-gradient(circle,rgba(255,255,255,.08) 0%,transparent 65%);pointer-events:none}
+.hero-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.12);
+  backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.18);
+  border-radius:999px;padding:5px 12px;font-size:11px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:#BFDBFE;margin-bottom:14px}
+.hero-badge-dot{width:7px;height:7px;border-radius:50%;background:#F59E0B;box-shadow:0 0 10px rgba(245,158,11,.7)}
+.hero-greet{font-size:13px;color:#BFDBFE;font-weight:500;margin-bottom:3px}
+.hero-title{font-size:22px;font-weight:700;line-height:1.3;letter-spacing:-.2px}
+.hero-meta{font-size:12.5px;color:rgba(255,255,255,.72);margin-top:10px}
+.hero-meta b{color:#fff;font-weight:600}
+/* rings row */
+.hero-ring-row{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;padding:16px 18px 18px;
+  background:var(--surface);border:1px solid var(--line);border-top:none;border-radius:0 0 20px 20px;box-shadow:var(--shadow-sm)}
+.hero-ring{--p:0;position:relative;width:100%;aspect-ratio:1/1;border-radius:50%;
+  background:conic-gradient(var(--ring-c,#2563EB) calc(var(--p)*1%),var(--ring-track,#E5E9F0) 0);
+  display:flex;align-items:center;justify-content:center}
+.hero-ring::before{content:'';position:absolute;inset:5px;border-radius:50%;background:#fff;box-shadow:inset 0 1px 2px rgba(31,41,55,.05)}
+.hero-ring-inner{position:relative;z-index:1;text-align:center;line-height:1}
+.hero-ring-pct{display:block;font-size:16px;font-weight:700;color:var(--t1);letter-spacing:-.3px}
+.hero-ring-lbl{display:block;font-size:10.5px;color:var(--t3);margin-top:3px;font-weight:500;white-space:nowrap}
+.hero-ring.blue{--ring-c:#2563EB}
+.hero-ring.teal{--ring-c:#0EA5E9}
+.hero-ring.indigo{--ring-c:#6366F1}
+.hero-ring.amber{--ring-c:#F59E0B}
+/* secondary CTA strip */
+.hero-cta-row{display:flex;gap:10px;margin-top:14px}
+.hero-cta{display:inline-flex;align-items:center;justify-content:center;gap:10px;flex:1;
+  padding:13px 18px;border-radius:12px;background:var(--accent);color:#fff;
+  font-size:14.5px;font-weight:600;letter-spacing:.01em;transition:background .15s,transform .15s;box-shadow:0 6px 16px rgba(37,99,235,.28)}
 .hero-cta:hover{background:var(--accent-strong)}
 .hero-cta:active{transform:scale(.99)}
-.hero-cta small{font-size:12px;font-weight:500;opacity:.82}
+.hero-cta small{font-size:11.5px;font-weight:500;opacity:.85}
+.hero-cta.ghost{background:var(--surface);color:var(--t1);border:1px solid var(--line);box-shadow:none}
+.hero-cta.ghost:hover{background:var(--surface-2)}
+.hero-cta.ghost svg{stroke:var(--t2);width:17px;height:17px}
+.hero-cta svg{width:17px;height:17px;stroke:#fff;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+/* legacy selectors retained but hidden/moved */
+.hero-bar{display:none}
 
 /* --- sections & quick stats --- */
 .section-header{margin:4px 2px 12px}
@@ -1271,9 +1294,9 @@ body{color:var(--t1);font-family:'Inter',-apple-system,BlinkMacSystemFont,"PingF
 .total-num{color:var(--t1)}
 .total-label{color:var(--t3)}
 .heatmap-cell{background:var(--bg2)}
-.heatmap-cell.l1{background:#DCEAE5}
-.heatmap-cell.l2{background:#B7D6CD}
-.heatmap-cell.l3{background:#7FB3A5}
+.heatmap-cell.l1{background:#DBEAFE}
+.heatmap-cell.l2{background:#BFDBFE}
+.heatmap-cell.l3{background:#60A5FA}
 .heatmap-cell.l4{background:var(--accent)}
 .heatmap-stat .hs-num{color:var(--t1)}
 .heatmap-stat .hs-label{color:var(--t3)}
@@ -1367,7 +1390,7 @@ body{color:var(--t1);font-family:'Inter',-apple-system,BlinkMacSystemFont,"PingF
   .nav{order:-1;flex:0 0 234px;width:234px;max-width:234px;height:100%;
     flex-direction:column;align-items:stretch;justify-content:flex-start;gap:4px;
     padding:26px 14px;border-top:none;border-right:1px solid var(--line);
-    background:#FBFAF5;backdrop-filter:none;-webkit-backdrop-filter:none}
+    background:#FFFFFF;backdrop-filter:none;-webkit-backdrop-filter:none}
   .nav::before{display:block;content:'谢飞机';position:static;width:auto;height:auto;
     transform:none;background:none;color:var(--t1);font-size:19px;font-weight:700;
     letter-spacing:-.2px;padding:0 12px 20px}
@@ -1414,25 +1437,25 @@ body{color:var(--t1);font-family:'Inter',-apple-system,BlinkMacSystemFont,"PingF
   <svg style="position:absolute;width:0;height:0">
     <defs>
       <linearGradient id="navGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-        <stop offset="0%" style="stop-color:#4B8A79"/>
-        <stop offset="100%" style="stop-color:#3E7A6B"/>
+        <stop offset="0%" style="stop-color:#3B82F6"/>
+        <stop offset="100%" style="stop-color:#2563EB"/>
       </linearGradient>
       <!-- V8: Stat icon gradients -->
       <linearGradient id="starGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-        <stop offset="0%" style="stop-color:#4B8A79"/>
-        <stop offset="100%" style="stop-color:#3E7A6B"/>
+        <stop offset="0%" style="stop-color:#3B82F6"/>
+        <stop offset="100%" style="stop-color:#2563EB"/>
       </linearGradient>
       <linearGradient id="reviewGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-        <stop offset="0%" style="stop-color:#4B8A79"/>
-        <stop offset="100%" style="stop-color:#3E7A6B"/>
+        <stop offset="0%" style="stop-color:#3B82F6"/>
+        <stop offset="100%" style="stop-color:#2563EB"/>
       </linearGradient>
       <linearGradient id="dialogGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-        <stop offset="0%" style="stop-color:#4B8A79"/>
-        <stop offset="100%" style="stop-color:#3E7A6B"/>
+        <stop offset="0%" style="stop-color:#3B82F6"/>
+        <stop offset="100%" style="stop-color:#2563EB"/>
       </linearGradient>
       <linearGradient id="bookGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-        <stop offset="0%" style="stop-color:#4B8A79"/>
-        <stop offset="100%" style="stop-color:#3E7A6B"/>
+        <stop offset="0%" style="stop-color:#3B82F6"/>
+        <stop offset="100%" style="stop-color:#2563EB"/>
       </linearGradient>
     </defs>
   </svg>
@@ -1461,20 +1484,28 @@ body{color:var(--t1);font-family:'Inter',-apple-system,BlinkMacSystemFont,"PingF
     <div class="home-layout">
       <div class="home-main">
         <div class="hero-card">
-          <div class="hero-eyebrow">今日学习</div>
-          <div class="hero-title" id="hero-title">继续你的英语学习</div>
-          <div class="hero-meta">已完成 <b id="hm-done">0</b> / <span id="hm-total">69</span> 天 · <span id="hm-pct">0</span>%</div>
-          <div class="hero-bar">
-            <div class="hero-bar-fill" id="hm-pbar" style="width:0%"></div>
+          <div class="hero-banner">
+            <div class="hero-badge"><span class="hero-badge-dot"></span>MISSION · 谢飞机</div>
+            <div class="hero-greet" id="hero-greet">下午好，继续你的英语之旅</div>
+            <div class="hero-title" id="hero-title">继续你的英语学习</div>
+            <div class="hero-meta">已完成 <b id="hm-done">0</b> / <span id="hm-total">69</span> 天 · <b id="hm-pct">0</b>% 整体进度</div>
           </div>
-          <div class="hero-stats">
-            <div class="hero-stat"><b id="hero-new">0</b><span>今日新词</span></div>
-            <div class="hero-stat"><b id="hero-review">0</b><span>复习词</span></div>
-            <div class="hero-stat"><b id="hero-dialog">0</b><span>口语句子</span></div>
+          <div class="hero-ring-row">
+            <div class="hero-ring blue" id="ring-overall" style="--p:0"><div class="hero-ring-inner"><span class="hero-ring-pct" id="ring-overall-pct">0%</span><span class="hero-ring-lbl">整体完成</span></div></div>
+            <div class="hero-ring teal" id="ring-new" style="--p:0"><div class="hero-ring-inner"><span class="hero-ring-pct" id="ring-new-pct">0</span><span class="hero-ring-lbl">今日新词</span></div></div>
+            <div class="hero-ring indigo" id="ring-review" style="--p:0"><div class="hero-ring-inner"><span class="hero-ring-pct" id="ring-review-pct">0</span><span class="hero-ring-lbl">复习词汇</span></div></div>
+            <div class="hero-ring amber" id="ring-dialog" style="--p:0"><div class="hero-ring-inner"><span class="hero-ring-pct" id="ring-dialog-pct">0</span><span class="hero-ring-lbl">口语句子</span></div></div>
           </div>
-          <button class="hero-cta" type="button" onclick="continueLearning()">
-            <span>继续学习</span><small id="hero-next">从 Day 1 开始</small>
-          </button>
+          <div class="hero-cta-row">
+            <button class="hero-cta" type="button" onclick="continueLearning()">
+              <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+              <span>继续学习</span><small id="hero-next">从 Day 1 开始</small>
+            </button>
+            <button class="hero-cta ghost" type="button" onclick="switchNav('stats')">
+              <svg viewBox="0 0 24 24"><path d="M3 3v18h18M7 14l4-4 3 3 5-6"/></svg>
+              <span>看统计</span>
+            </button>
+          </div>
         </div>
 
         <div id="daily-sentence-container"></div>
@@ -2197,25 +2228,38 @@ function renderHome() {
   if (hmDone) hmDone.textContent = allDoneCount;
   var hmPct = document.getElementById('hm-pct');
   if (hmPct) hmPct.textContent = allPct;
-  var hmPbar = document.getElementById('hm-pbar');
-  if (hmPbar) hmPbar.style.width = allPct + '%';
+
+  // rings
+  var tgtNew = 120, tgtReview = 120, tgtDialog = 220;  // baseline totals for ring scale
+  var totalNew = 0, totalReview = 0, totalDialog = 0;
+  DATA.forEach(function(d){ if(!d)return; totalNew+=(d.newWords||[]).length; totalReview+=(d.reviewWords||[]).length; totalDialog+=(d.dialog||[]).filter(function(l){return l.role&&l.role.toUpperCase()==='YOU'}).length; });
+  function ring(elId, pctElId, pct, asPercent){
+    var el = document.getElementById(elId), pctEl = document.getElementById(pctElId);
+    var p = Math.max(0, Math.min(100, Math.round(pct)));
+    if (el) el.style.setProperty('--p', p);
+    if (pctEl) pctEl.textContent = asPercent ? p + '%' : p;
+  }
+  ring('ring-overall','ring-overall-pct', allPct, true);
+  ring('ring-new','ring-new-pct', totalNew >= tgtNew ? totalNew : totalNew/tgtNew*100, totalNew >= tgtNew);
+  ring('ring-review','ring-review-pct', totalReview >= tgtReview ? totalReview : totalReview/tgtReview*100, totalReview >= tgtReview);
+  ring('ring-dialog','ring-dialog-pct', totalDialog >= tgtDialog ? totalDialog : totalDialog/tgtDialog*100, totalDialog >= tgtDialog);
+
+  // greeting
+  var greetEl = document.getElementById('hero-greet');
+  if (greetEl) {
+    var h = new Date().getHours();
+    var greet = h < 6 ? '夜深了，注意休息' : h < 11 ? '早上好，充满能量地出发吧' : h < 14 ? '中午好，继续你的英语之旅' : h < 18 ? '下午好，坚持就是胜利' : '晚上好，今天也很棒';
+    greetEl.textContent = greet;
+  }
 
   // V34: today's next lesson
   var target = getContinueTarget();
   var heroTitle = document.getElementById('hero-title');
   var heroNext = document.getElementById('hero-next');
-  var heroNew = document.getElementById('hero-new');
-  var heroReview = document.getElementById('hero-review');
-  var heroDialog = document.getElementById('hero-dialog');
   if (target) {
     var allDone = allTotal > 0 && allDoneCount >= allTotal;
     if (heroTitle) heroTitle.textContent = allDone ? '全部课程已完成，来复习一下吧' : 'Day ' + target.day + ' · ' + (target.dayTitle || '继续学习');
-    if (heroNext) heroNext.textContent = '第 ' + target.day + ' 天 / 共 ' + allTotal + ' 天';
-    if (heroNew) heroNew.textContent = (target.newWords || []).length;
-    if (heroReview) heroReview.textContent = (target.reviewWords || []).length;
-    if (heroDialog) {
-      heroDialog.textContent = (target.dialog || []).filter(function(l){ return l && l.role && l.role.toUpperCase() === 'YOU'; }).length;
-    }
+    if (heroNext) heroNext.textContent = allDone ? '回顾你的学习数据' : '第 ' + target.day + ' 天 · 点击开始';
   }
 
   var reviewCount = getTodayReviewCount();
@@ -2798,7 +2842,7 @@ function checkDict() {
   if (!dictResults) dictResults = new Array(curWords.length).fill(null);
   if (val === ans) {
     inp.classList.add('correct');
-    document.getElementById('dict-hint').innerHTML = '<span style="color:#2F6D53;font-weight:700">✓ 正确！</span>';
+    document.getElementById('dict-hint').innerHTML = '<span style="color:#1D4ED8;font-weight:700">✓ 正确！</span>';
     dictResults[wIdx] = true;
     markWordKnown(w.word);
   } else {
@@ -2843,8 +2887,8 @@ function renderQuiz() {
     html += 'background:var(--ga);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">';
     html += quizState.score + '/' + quizState.total + '</div>';
     html += '<div style="color:var(--t2);margin:8px 0 4px;font-size:14px">答对 ' + quizState.score + ' 题 · 正确率 ' + pct + '%</div>';
-    if (pct >= 80) html += '<div style="color:#2F6D53;font-size:13px;margin-bottom:16px">优秀！继续加油</div>';
-    else if (pct >= 60) html += '<div style="color:#A9761F;font-size:13px;margin-bottom:16px">不错，还可以更好</div>';
+    if (pct >= 80) html += '<div style="color:#1D4ED8;font-size:13px;margin-bottom:16px">优秀！继续加油</div>';
+    else if (pct >= 60) html += '<div style="color:#B45309;font-size:13px;margin-bottom:16px">不错，还可以更好</div>';
     else html += '<div style="color:var(--org);font-size:13px;margin-bottom:16px">需要多加练习</div>';
     html += '<div class="btn-row"><button class="btn primary" onclick="finishPractice()">完成返回</button><button class="btn sec" onclick="quizState=null;renderWords()">再来一轮</button></div></div>';
     c.innerHTML = html;
@@ -2922,9 +2966,9 @@ function renderBuild() {
     html += 'background:var(--ga);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">';
     html += buildState.score + '/' + buildState.total + '</div>';
     html += '<div style="color:var(--t2);margin:8px 0 4px;font-size:14px">造句完成 · 正确率 ' + pct + '%</div>';
-    if (pct >= 80) html += '<div style="color:#2F6D53;font-size:13px;margin-bottom:16px">语法掌握很好！</div>';
-    else if (pct >= 60) html += '<div style="color:#A9761F;font-size:13px;margin-bottom:16px">不错，注意语序</div>';
-    else html += '<div style="color:#B5573E;font-size:13px;margin-bottom:16px">多读句子，培养语感</div>';
+    if (pct >= 80) html += '<div style="color:#1D4ED8;font-size:13px;margin-bottom:16px">语法掌握很好！</div>';
+    else if (pct >= 60) html += '<div style="color:#B45309;font-size:13px;margin-bottom:16px">不错，注意语序</div>';
+    else html += '<div style="color:#B91C1C;font-size:13px;margin-bottom:16px">多读句子，培养语感</div>';
     html += '<div class="btn-row"><button class="btn primary" onclick="finishPractice()">完成返回</button><button class="btn sec" onclick="buildState=null;renderWords()">再来一轮</button></div></div>';
     c.innerHTML = html;
     return;
@@ -3066,9 +3110,9 @@ function sbGenerateErrorDetail(userWords, correctWords) {
     var cw = i < correctWords.length ? correctWords[i] : '';
     if (uw === cw) {
       correctCount++;
-      html += '<div style="color:#2F6D53">\u2713 \u4F4D\u7F6E' + (i+1) + ': ' + esc(cw) + ' \u2714</div>';
+      html += '<div style="color:#1D4ED8">\u2713 \u4F4D\u7F6E' + (i+1) + ': ' + esc(cw) + ' \u2714</div>';
     } else if (cw) {
-      html += '<div style="color:#B5573E">\u2717 \u4F4D\u7F6E' + (i+1) + ': \u4F60\u5199\u4E86 "' + esc(uw) + '"\uFF0C\u5E94\u8BE5\u662F "' + esc(cw) + '"</div>';
+      html += '<div style="color:#B91C1C">\u2717 \u4F4D\u7F6E' + (i+1) + ': \u4F60\u5199\u4E86 "' + esc(uw) + '"\uFF0C\u5E94\u8BE5\u662F "' + esc(cw) + '"</div>';
     }
   }
   // Grammar hint
@@ -3436,7 +3480,7 @@ function renderStats() {
   // New words - glowing star
   html += '<div class="stat-card purple"><div class="sc-icon"><svg viewBox="0 0 32 32" fill="none">';
   html += '<path d="M16 2l3.5 7.5L28 11l-5.5 5 1.5 8L16 20l-8 4 1.5-8L4 11l8.5-1.5z" fill="url(#starGrad)" stroke="none"/>';
-  html += '<path d="M16 2l3.5 7.5L28 11l-5.5 5 1.5 8L16 20l-8 4 1.5-8L4 11l8.5-1.5z" fill="none" stroke="rgba(62,122,107,.45)" stroke-width=".5"/>';
+  html += '<path d="M16 2l3.5 7.5L28 11l-5.5 5 1.5 8L16 20l-8 4 1.5-8L4 11l8.5-1.5z" fill="none" stroke="rgba(37,99,235,.45)" stroke-width=".5"/>';
   html += '<circle cx="13" cy="10" r="1.5" fill="rgba(255,255,255,.65)"/>';
   html += '<path d="M14 6l1-2 1 2" stroke="rgba(255,255,255,.7)" stroke-width="1" stroke-linecap="round"/>';
   html += '</svg></div><div><div class="sc-num">' + totalNew + '</div><div class="sc-label">新词</div></div></div>';
@@ -3445,10 +3489,10 @@ function renderStats() {
   html += '<div class="stat-card cyan"><div class="sc-icon"><svg viewBox="0 0 32 32" fill="none">';
   html += '<path d="M8 12a7 7 0 0112.5-4.5" stroke="url(#reviewGrad)" stroke-width="2.5" stroke-linecap="round"/>';
   html += '<path d="M22 20a7 7 0 01-12.5 4.5" stroke="url(#reviewGrad)" stroke-width="2.5" stroke-linecap="round"/>';
-  html += '<path d="M20 6l.5 2 2-.5" stroke="#3E7A6B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>';
-  html += '<path d="M10 26l-.5-2-2 .5" stroke="#3E7A6B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>';
+  html += '<path d="M20 6l.5 2 2-.5" stroke="#2563EB" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>';
+  html += '<path d="M10 26l-.5-2-2 .5" stroke="#2563EB" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>';
   html += '<circle cx="16" cy="16" r="3" stroke="url(#reviewGrad)" stroke-width="2"/>';
-  html += '<circle cx="16" cy="16" r="1" fill="#3E7A6B"/>';
+  html += '<circle cx="16" cy="16" r="1" fill="#2563EB"/>';
   html += '</svg></div><div><div class="sc-num">' + totalReview + '</div><div class="sc-label">复习词</div></div></div>';
 
   // Dialog - chat bubbles
@@ -3464,12 +3508,12 @@ function renderStats() {
 
   // Essay - open book with bookmark
   html += '<div class="stat-card green"><div class="sc-icon"><svg viewBox="0 0 32 32" fill="none">';
-  html += '<path d="M4 6c4-1 8 0 12 2 4-2 8-3 12-2v20c-4-1-8 0-12 2-4-2-8-3-12-2V6z" fill="rgba(62,122,107,.12)" stroke="url(#bookGrad)" stroke-width="1.5" stroke-linejoin="round"/>';
+  html += '<path d="M4 6c4-1 8 0 12 2 4-2 8-3 12-2v20c-4-1-8 0-12 2-4-2-8-3-12-2V6z" fill="rgba(37,99,235,.12)" stroke="url(#bookGrad)" stroke-width="1.5" stroke-linejoin="round"/>';
   html += '<path d="M16 8v20" stroke="url(#bookGrad)" stroke-width="1.5"/>';
-  html += '<path d="M8 11h4M8 15h5M8 19h3" stroke="rgba(62,122,107,.4)" stroke-width="1.2" stroke-linecap="round"/>';
-  html += '<path d="M20 11h4M20 15h5M20 19h3" stroke="rgba(62,122,107,.4)" stroke-width="1.2" stroke-linecap="round"/>';
-  html += '<path d="M22 4l2 3-2 1" fill="#3E7A6B" opacity=".6"/>';
-  html += '<line x1="22" y1="4" x2="22" y2="8" stroke="#3E7A6B" stroke-width="1.2" stroke-linecap="round"/>';
+  html += '<path d="M8 11h4M8 15h5M8 19h3" stroke="rgba(37,99,235,.4)" stroke-width="1.2" stroke-linecap="round"/>';
+  html += '<path d="M20 11h4M20 15h5M20 19h3" stroke="rgba(37,99,235,.4)" stroke-width="1.2" stroke-linecap="round"/>';
+  html += '<path d="M22 4l2 3-2 1" fill="#2563EB" opacity=".6"/>';
+  html += '<line x1="22" y1="4" x2="22" y2="8" stroke="#2563EB" stroke-width="1.2" stroke-linecap="round"/>';
   html += '</svg></div><div><div class="sc-num">' + totalEssay + '</div><div class="sc-label">阅读句</div></div></div>';
 
   html += '</div>';
@@ -6323,10 +6367,10 @@ function calculatePronScore(target, recognized, confidence) {
 
 function showPronResult(el, score, recognized, target) {
   var grade, color;
-  if (score >= 90) { grade='优秀'; color='#2F6D53'; }
-  else if (score >= 75) { grade='良好'; color='#3E7A6B'; }
-  else if (score >= 60) { grade='及格'; color='#A9761F'; }
-  else { grade='需练习'; color='#B5573E'; }
+  if (score >= 90) { grade='优秀'; color='#1D4ED8'; }
+  else if (score >= 75) { grade='良好'; color='#2563EB'; }
+  else if (score >= 60) { grade='及格'; color='#B45309'; }
+  else { grade='需练习'; color='#B91C1C'; }
   var html = '<div class="pron-result">';
   html += '<div class="pron-score" style="color:' + color + '">' + score + '分</div>';
   html += '<div class="pron-grade">' + grade + '</div>';
@@ -6425,11 +6469,11 @@ function renderPronStats() {
   recent.sort(function(a,b){return b.date-a.date;});
   var avg = Math.round(total/count);
   var html = '<div class="pron-summary">';
-  html += '<div class="pron-avg" style="color:' + (avg>=75?'#2F6D53':avg>=60?'#A9761F':'#B5573E') + '">' + avg + '</div>';
+  html += '<div class="pron-avg" style="color:' + (avg>=75?'#1D4ED8':avg>=60?'#B45309':'#B91C1C') + '">' + avg + '</div>';
   html += '<div class="pron-avg-label">平均发音评分</div></div>';
   html += '<div class="pron-recent">';
   recent.slice(0,8).forEach(function(r) {
-    var color = r.score>=90?'#2F6D53':r.score>=75?'#3E7A6B':r.score>=60?'#A9761F':'#B5573E';
+    var color = r.score>=90?'#1D4ED8':r.score>=75?'#2563EB':r.score>=60?'#B45309':'#B91C1C';
     html += '<div class="pron-recent-item"><span style="color:'+color+';font-weight:700">' + r.score + '</span> ' + esc(r.text.substring(0,20)) + (r.text.length>20?'...':'') + '</div>';
   });
   html += '</div>';
