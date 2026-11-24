@@ -6,6 +6,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="theme-color" content="#FFFFFF">
+<meta name="color-scheme" content="light">
 <meta name="apple-mobile-web-app-title" content="谢飞机">
 <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v8">
 <link rel="apple-touch-icon" sizes="120x120" href="apple-touch-icon.png?v8">
@@ -15,7 +16,7 @@
 <link rel="icon" type="image/png" sizes="512x512" href="icon-512.png?v8">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png?v8">
 <link rel="manifest" href="manifest.json">
-<meta name="version" content="te_v39">
+<meta name="version" content="te_v40">
 <title>谢飞机</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
 <style>
@@ -900,29 +901,30 @@ body.cat-view #daily-sentence-container{display:none !important}
 .ff-bd-speak.playing{background:rgba(239,68,68,.18);border-color:rgba(239,68,68,.4);color:#FCA5A5}
 
 /* ============================================================
-   V39: Light theme with green accent
+   V40: Calm light theme (low-saturation green)
    ============================================================ */
 :root{
+  color-scheme:light;
   --nav-h:64px;
   --r:18px;--rs:13px;
-  --accent:#58CC02;--accent-strong:#3F8B00;--accent-soft:#EEFADF;--accent-line:#C9EFA7;
-  --amber:#E6A700;--amber-soft:#FFF6D6;
-  --teal:#1CB0F6;--teal-soft:#E6F6FE;
-  --surface:#FFFFFF;--surface-2:#F5F7F9;--line:#E5E7EB;--line-strong:#D1D5DB;
-  --bg:#FFFFFF;--bg2:#F5F7F9;
-  --t1:#111827;--t2:#4B5563;--t3:#6B7280;--t4:#9CA3AF;
-  --grn:#58CC02;--red:#DC2626;--org:#D97706;--ylw:#D69E00;--blue:#0284C7;
-  --purp:#9333EA;--purp2:#7E22CE;--cyan:#0284C7;--cyan2:#0EA5E9;
-  --ga:linear-gradient(135deg,#58CC02 0%,#46A302 100%);
-  --gb:linear-gradient(135deg,#58CC02 0%,#46A302 100%);
-  --gc:linear-gradient(135deg,#38BDF8 0%,#1CB0F6 100%);
-  --gd:linear-gradient(135deg,#58CC02 0%,#46A302 100%);
-  --go:linear-gradient(135deg,#FF9600 0%,#EA580C 100%);
-  --gy:linear-gradient(135deg,#FFC800 0%,#F59E0B 100%);
+  --accent:#4C9A66;--accent-strong:#2E6B44;--accent-soft:#EEF6F0;--accent-line:#CFE4D6;
+  --amber:#C08A2B;--amber-soft:#FAF3E4;
+  --teal:#3D8FA8;--teal-soft:#EAF4F7;
+  --surface:#FFFFFF;--surface-2:#F5F7F8;--line:#E6E9EC;--line-strong:#D3D8DD;
+  --bg:#FFFFFF;--bg2:#F5F7F8;
+  --t1:#1B2430;--t2:#4E5A66;--t3:#6E7A87;--t4:#9AA5B1;
+  --grn:#4C9A66;--red:#C2544A;--org:#B97B32;--ylw:#B8932E;--blue:#3F7FA6;
+  --purp:#7E6DAE;--purp2:#6D5B9E;--cyan:#3D8FA8;--cyan2:#4E9DB4;
+  --ga:linear-gradient(135deg,#6FAE82 0%,#4C9A66 100%);
+  --gb:linear-gradient(135deg,#6FA3C2 0%,#4B87AB 100%);
+  --gc:linear-gradient(135deg,#63A8BC 0%,#3D8FA8 100%);
+  --gd:linear-gradient(135deg,#6FAE82 0%,#4C9A66 100%);
+  --go:linear-gradient(135deg,#CFA066 0%,#B97B32 100%);
+  --gy:linear-gradient(135deg,#CFB862 0%,#B8932E 100%);
   --glow-p:none;--glow-c:none;
   --st:max(env(safe-area-inset-top,0px),16px);
-  --shadow-sm:0 1px 2px rgba(17,24,39,.05),0 2px 8px rgba(17,24,39,.04);
-  --shadow-md:0 18px 44px rgba(17,24,39,.14);
+  --shadow-sm:0 1px 2px rgba(20,30,40,.04),0 2px 8px rgba(20,30,40,.04);
+  --shadow-md:0 14px 34px rgba(20,30,40,.10);
 }
 html,body{background:#FFFFFF}
 body{color:var(--t1);font-family:'Inter',-apple-system,BlinkMacSystemFont,"PingFang SC","Noto Sans SC",sans-serif;
@@ -947,8 +949,8 @@ body{color:var(--t1);font-family:'Inter',-apple-system,BlinkMacSystemFont,"PingF
 .nav-btn{padding:6px 14px;min-width:56px;border-radius:12px}
 .nav-btn svg{stroke:var(--t3);filter:none;width:22px;height:22px}
 .nav-btn span{color:var(--t3);font-weight:500}
-.nav-btn.active svg{stroke:var(--accent);filter:drop-shadow(0 0 8px rgba(88,204,2,.45))}
-.nav-btn.active span{color:var(--accent);font-weight:700}
+.nav-btn.active svg{stroke:var(--accent-strong);filter:none}
+.nav-btn.active span{color:var(--accent-strong);font-weight:700}
 
 /* --- headers / top bars --- */
 .home-top-bar{padding:calc(var(--st) + 2px) 0 10px;margin-bottom:4px}
@@ -976,20 +978,20 @@ body{color:var(--t1);font-family:'Inter',-apple-system,BlinkMacSystemFont,"PingF
 /* bright mission banner */
 .hero-banner{
   position:relative;overflow:hidden;border-radius:20px 20px 16px 16px;
-  background:linear-gradient(135deg,#8BE33F 0%,#58CC02 52%,#3FAE00 100%);
-  border:1px solid #4BBE00;
-  padding:22px 22px 24px;color:#0B2B00;box-shadow:0 14px 34px rgba(88,204,2,.22);
+  background:linear-gradient(135deg,#F3F9F1 0%,#E7F2E1 55%,#DBEBD2 100%);
+  border:1px solid #D3E5CB;
+  padding:22px 22px 24px;color:#223A1D;box-shadow:0 8px 24px rgba(46,107,49,.08);
 }
 .hero-banner::after{content:'';position:absolute;inset:auto -40% -60% auto;width:300px;height:300px;border-radius:50%;
-  background:radial-gradient(circle,rgba(255,255,255,.22) 0%,transparent 65%);pointer-events:none}
-.hero-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.55);
-  backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border:1px solid rgba(11,43,0,.10);
-  border-radius:999px;padding:5px 12px;font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#1A5E00;margin-bottom:14px}
-.hero-badge-dot{width:7px;height:7px;border-radius:50%;background:#0B2B00;box-shadow:0 0 8px rgba(11,43,0,.35)}
-.hero-greet{font-size:13px;color:rgba(11,43,0,.72);font-weight:500;margin-bottom:3px}
-.hero-title{font-size:23px;font-weight:800;line-height:1.3;letter-spacing:-.2px;color:#0B2B00}
-.hero-meta{font-size:12.5px;color:rgba(11,43,0,.72);margin-top:10px}
-.hero-meta b{color:#0B2B00;font-weight:700}
+  background:radial-gradient(circle,rgba(255,255,255,.5) 0%,transparent 65%);pointer-events:none}
+.hero-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.75);
+  backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border:1px solid rgba(34,58,29,.10);
+  border-radius:999px;padding:5px 12px;font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#2E6B44;margin-bottom:14px}
+.hero-badge-dot{width:7px;height:7px;border-radius:50%;background:#4C9A66}
+.hero-greet{font-size:13px;color:rgba(34,58,29,.68);font-weight:500;margin-bottom:3px}
+.hero-title{font-size:23px;font-weight:800;line-height:1.3;letter-spacing:-.2px;color:#1F3A19}
+.hero-meta{font-size:12.5px;color:rgba(34,58,29,.68);margin-top:10px}
+.hero-meta b{color:#1F3A19;font-weight:700}
 /* rings row */
 .hero-ring-row{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;padding:16px 16px 18px;
   background:var(--surface);border:1px solid var(--line);border-top:none;border-radius:0 0 20px 20px;box-shadow:var(--shadow-sm)}
@@ -1005,30 +1007,30 @@ body{color:var(--t1);font-family:'Inter',-apple-system,BlinkMacSystemFont,"PingF
   .hero-cta.ghost{padding:12px 14px}
 }
 .hero-ring{--p:0;position:relative;width:100%;max-width:92px;margin:0 auto;aspect-ratio:1/1;border-radius:50%;
-  background:conic-gradient(var(--ring-c,#58CC02) calc(var(--p)*1%),var(--ring-track,#E5E7EB) 0);
+  background:conic-gradient(var(--ring-c,#4C9A66) calc(var(--p)*1%),var(--ring-track,#E6E9EC) 0);
   display:flex;align-items:center;justify-content:center}
-.hero-ring::before{content:'';position:absolute;inset:5px;border-radius:50%;background:var(--surface);box-shadow:inset 0 1px 2px rgba(0,0,0,.25)}
+.hero-ring::before{content:'';position:absolute;inset:5px;border-radius:50%;background:var(--surface);box-shadow:inset 0 1px 2px rgba(20,30,40,.10)}
 .hero-ring-inner{position:relative;z-index:1;text-align:center;line-height:1}
 .hero-ring-pct{display:block;font-size:16px;font-weight:800;color:var(--t1);letter-spacing:-.3px}
 .hero-ring-lbl{display:block;font-size:10.5px;color:var(--t3);margin-top:3px;font-weight:500;white-space:nowrap}
-.hero-ring.blue{--ring-c:#58CC02}
-.hero-ring.teal{--ring-c:#1CB0F6}
-.hero-ring.indigo{--ring-c:#CE82FF}
-.hero-ring.amber{--ring-c:#FFC800}
+.hero-ring.blue{--ring-c:#4C9A66}
+.hero-ring.teal{--ring-c:#3D8FA8}
+.hero-ring.indigo{--ring-c:#8A78B8}
+.hero-ring.amber{--ring-c:#C0A043}
 /* secondary CTA strip */
 .hero-cta-row{display:flex;gap:10px;margin:14px 2px 0}
 .hero-cta{display:inline-flex;align-items:center;justify-content:center;gap:10px;flex:1;min-width:0;
-  padding:13px 18px;border-radius:14px;background:#58CC02;color:#08300A;white-space:nowrap;
+  padding:13px 18px;border-radius:14px;background:#2E6B44;color:#FFFFFF;white-space:nowrap;
   font-size:14.5px;font-weight:800;letter-spacing:.01em;transition:filter .15s,transform .06s;
-  box-shadow:0 4px 0 #3F8B00,0 10px 22px rgba(88,204,2,.20)}
-.hero-cta:hover{filter:brightness(1.03)}
-.hero-cta:active{transform:translateY(3px);box-shadow:0 1px 0 #3F8B00}
-.hero-cta small{font-size:11.5px;font-weight:600;color:#2E5E00;opacity:1;white-space:nowrap}
-.hero-cta.ghost{background:#FFFFFF;color:#3F8B00;border:1.5px solid #C9EFA7;box-shadow:0 4px 0 #E5F5D5;flex:0 0 auto}
-.hero-cta.ghost:hover{background:#F7FDEE}
-.hero-cta.ghost:active{transform:translateY(3px);box-shadow:0 1px 0 #E5F5D5}
-.hero-cta.ghost svg{stroke:#3F8B00;width:17px;height:17px}
-.hero-cta svg{width:17px;height:17px;stroke:#08300A;fill:none;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+  box-shadow:0 3px 0 #235437,0 8px 18px rgba(46,107,49,.16)}
+.hero-cta:hover{filter:brightness(1.06)}
+.hero-cta:active{transform:translateY(2px);box-shadow:0 1px 0 #235437}
+.hero-cta small{font-size:11.5px;font-weight:600;color:rgba(255,255,255,.78);opacity:1;white-space:nowrap}
+.hero-cta.ghost{background:#FFFFFF;color:#2E6B44;border:1.5px solid #CFE4D6;box-shadow:0 3px 0 #EDF4EA;flex:0 0 auto}
+.hero-cta.ghost:hover{background:#F6FBF7}
+.hero-cta.ghost:active{transform:translateY(2px);box-shadow:0 1px 0 #EDF4EA}
+.hero-cta.ghost svg{stroke:#2E6B44;width:17px;height:17px}
+.hero-cta svg{width:17px;height:17px;stroke:#FFFFFF;fill:none;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
 
 /* --- today's task checklist --- */
 .today-tasks{margin:0 0 16px;background:var(--surface);border:1px solid var(--line);border-radius:18px;
@@ -1044,9 +1046,9 @@ body{color:var(--t1);font-family:'Inter',-apple-system,BlinkMacSystemFont,"PingF
 .tt-item:active{transform:scale(.99);background:var(--surface-2)}
 .tt-icon{width:34px;height:34px;border-radius:11px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
 .tt-icon svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
-.tt-icon.green{background:#EEFADF;color:#3F8B00}
-.tt-icon.sky{background:#E6F6FE;color:#0369A1}
-.tt-icon.purple{background:#F3E8FF;color:#7E22CE}
+.tt-icon.green{background:#EEF6F0;color:#2E6B44}
+.tt-icon.sky{background:#EAF4F7;color:#327086}
+.tt-icon.purple{background:#F2EFF8;color:#6D5B9E}
 .tt-body{flex:1;min-width:0}
 .tt-name{font-size:13.5px;font-weight:700;color:var(--t1);line-height:1.3}
 .tt-sub{font-size:11.5px;color:var(--t3);margin-top:1px}
@@ -1066,10 +1068,10 @@ body{color:var(--t1);font-family:'Inter',-apple-system,BlinkMacSystemFont,"PingF
 .word-fixed-bar.show{display:flex}
 .wfb-btn{flex:1;padding:11px 10px;border-radius:11px;background:var(--surface-2);color:var(--t1);
   font-size:13px;font-weight:600;border:1px solid var(--line)}
-.wfb-btn.primary{background:var(--accent);color:#08300A;border-color:transparent;font-weight:800}
+.wfb-btn.primary{background:var(--accent-strong);color:#FFFFFF;border-color:transparent;font-weight:800}
 .wfb-btn:disabled{opacity:.35}
 .wfb-progress{font-size:12px;color:var(--t3);font-weight:600;white-space:nowrap;min-width:54px;text-align:center}
-#pg-words{padding-bottom:calc(var(--sb) + 96px)}
+#pg-words{padding-bottom:calc(var(--sb) + 112px)}
 @media (min-width:900px){
   .word-fixed-bar{left:calc(50% + 118px);bottom:20px;width:420px}
   #pg-words{padding-bottom:110px}
@@ -1091,7 +1093,7 @@ body.fs-s .word-ex-item .en,body.fs-l .word-ex-item .en{font-size:calc(13px * va
 body.fs-s .dl-text,body.fs-l .dl-text{font-size:calc(14px * var(--rd))}
 .font-scale-seg{display:flex;gap:4px;background:var(--bg2);border:1px solid var(--line);border-radius:10px;padding:3px}
 .font-scale-seg button{padding:6px 12px;border-radius:8px;background:none;color:var(--t3);font-size:12px;font-weight:600}
-.font-scale-seg button.active{background:var(--accent);color:#08300A;font-weight:800}
+.font-scale-seg button.active{background:var(--accent-strong);color:#FFFFFF;font-weight:800}
 
 /* --- collapsible phase groups --- */
 .phase-label .phase-meta{margin-left:auto;font-size:11px;font-weight:700;color:var(--t3);
@@ -1152,7 +1154,7 @@ body.fs-s .dl-text,body.fs-l .dl-text{font-size:calc(14px * var(--rd))}
 .review-banner .rb-title{color:var(--t1);font-weight:600}
 .review-banner .rb-desc{color:var(--t3)}
 .review-banner .rb-count{color:var(--accent);font-weight:700}
-.reminder-banner{background:rgba(255,150,0,.12);border:1px solid rgba(255,150,0,.30)}
+.reminder-banner{background:rgba(190,130,50,.12);border:1px solid rgba(190,130,50,.30)}
 .reminder-text .rt-title{color:var(--org)}
 .reminder-text .rt-desc{color:var(--t3)}
 
@@ -1199,8 +1201,8 @@ body.fs-s .dl-text,body.fs-l .dl-text{font-size:calc(14px * var(--rd))}
 .dd-tag{background:var(--surface-2);border:1px solid var(--line);color:var(--t3)}
 .dd-tag.purp{background:var(--accent-soft);color:var(--accent-strong);border-color:var(--accent-line)}
 .dd-tag.cyan{background:var(--bg2);color:var(--t2);border-color:var(--line)}
-.dd-tag.org{background:rgba(255,150,0,.12);color:#B45309;border-color:rgba(255,150,0,.30)}
-.dd-tag.ylw{background:rgba(255,200,0,.14);color:#946200;border-color:rgba(255,200,0,.30)}
+.dd-tag.org{background:rgba(190,130,50,.12);color:#8A5A24;border-color:rgba(190,130,50,.30)}
+.dd-tag.ylw{background:rgba(190,160,60,.14);color:#7A5F1E;border-color:rgba(190,160,60,.30)}
 
 /* --- module cards --- */
 .mc{background:var(--surface);border:1px solid var(--line);border-radius:var(--rs);box-shadow:var(--shadow-sm)}
@@ -1224,10 +1226,10 @@ body.fs-s .dl-text,body.fs-l .dl-text{font-size:calc(14px * var(--rd))}
 
 /* --- buttons --- */
 .btn{border-radius:12px;font-weight:600;letter-spacing:0}
-.btn.primary{background:var(--accent);color:#08300A;box-shadow:none}
+.btn.primary{background:var(--accent-strong);color:#FFFFFF;box-shadow:none}
 .btn.primary::after{display:none}
 .btn.sec{background:var(--surface);color:var(--t1);border:1px solid var(--line)}
-.btn.green,.btn.cyan{background:var(--accent);color:#08300A;box-shadow:none}
+.btn.green,.btn.cyan{background:var(--accent-strong);color:#FFFFFF;box-shadow:none}
 .btn.orange{background:#A4703C;color:#fff;box-shadow:none}
 
 /* --- word cards --- */
@@ -1245,7 +1247,7 @@ body.fs-s .dl-text,body.fs-l .dl-text{font-size:calc(14px * var(--rd))}
 .ff-bd-part{background:var(--surface-2);border:1px solid var(--line);color:var(--t2)}
 .ff-bd-part:active{background:var(--accent-soft)}
 .ff-bd-speak{background:var(--accent-soft);border:1px solid var(--accent-line);color:var(--accent-strong)}
-.ff-bd-speak.playing{background:rgba(255,75,75,.12);border-color:rgba(255,75,75,.32);color:var(--red)}
+.ff-bd-speak.playing{background:rgba(194,84,74,.12);border-color:rgba(194,84,74,.32);color:var(--red)}
 .flip-b{background:var(--accent-soft);border-color:var(--accent-line);box-shadow:var(--shadow-sm)}
 .flip-b .fb-trans{color:var(--accent-strong)}
 .flip-b .fb-word{color:var(--t2)}
@@ -1257,7 +1259,7 @@ body.fs-s .dl-text,body.fs-l .dl-text{font-size:calc(14px * var(--rd))}
 .wi-ex:active{background:var(--accent-soft)}
 .wc-action-btn.bookmark{background:var(--surface);border:1px solid var(--line);color:var(--t2)}
 .wc-action-btn.bookmark.saved{background:var(--accent-soft);border-color:var(--accent-line);color:var(--accent-strong)}
-.eb-badge.due{background:rgba(255,150,0,.12);color:#B45309;border-color:rgba(255,150,0,.30)}
+.eb-badge.due{background:rgba(190,130,50,.12);color:#8A5A24;border-color:rgba(190,130,50,.30)}
 .eb-badge.known{background:var(--accent-soft);color:var(--accent-strong);border-color:var(--accent-line)}
 .eb-badge.new{background:var(--surface-2);color:var(--t3);border-color:var(--line)}
 
@@ -1267,19 +1269,19 @@ body.fs-s .dl-text,body.fs-l .dl-text{font-size:calc(14px * var(--rd))}
 .dict-in{background:var(--surface);border:1.5px solid var(--line);color:var(--t1)}
 .dict-in:focus{border-color:var(--accent)}
 .dict-in.correct{border-color:var(--accent);background:var(--accent-soft)}
-.dict-in.wrong{border-color:var(--red);background:rgba(255,75,75,.10)}
+.dict-in.wrong{border-color:var(--red);background:rgba(194,84,74,.10)}
 .dict-hint{color:var(--t3)}
 .qo{background:var(--surface);border:1.5px solid var(--line);color:var(--t1)}
 .qo:active{background:var(--surface-2)}
 .qo.correct{border-color:var(--accent);background:var(--accent-soft);color:var(--accent-strong)}
-.qo.wrong{border-color:var(--red);background:rgba(255,75,75,.10);color:var(--red)}
+.qo.wrong{border-color:var(--red);background:rgba(194,84,74,.10);color:var(--red)}
 .pbar{background:var(--bg2);border:none}
 .pbar-fill{background:var(--accent)}
 .dict-mode-card{background:var(--surface);border:1px solid var(--line);box-shadow:var(--shadow-sm)}
 .dict-mode-card .dmc-hint{color:var(--t3)}
 .dict-ctrl-btn.play{background:var(--accent-soft);border-color:var(--accent-line);color:var(--accent-strong)}
 .dict-ctrl-btn.slow{background:var(--surface-2);border-color:var(--line);color:var(--t2)}
-.dict-ctrl-btn.hint{background:rgba(255,150,0,.12);border-color:rgba(255,150,0,.30);color:#B45309}
+.dict-ctrl-btn.hint{background:rgba(190,130,50,.12);border-color:rgba(190,130,50,.30);color:#8A5A24}
 .dict-hint-display{color:var(--org)}
 .dict-dot{background:var(--line)}
 .dict-dot.correct{background:var(--accent)}
@@ -1318,7 +1320,7 @@ body.fs-s .dl-text,body.fs-l .dl-text{font-size:calc(14px * var(--rd))}
 .empty-state{color:var(--t3)}
 .empty-state .es-title{color:var(--t1)}
 .empty-state .es-desc{color:var(--t3)}
-.toast{background:#2C2A25;border:none;color:#fff;box-shadow:var(--shadow-md);border-radius:12px}
+.toast{background:#2C3833;border:none;color:#fff;box-shadow:var(--shadow-md);border-radius:12px}
 .modal-overlay{background:rgba(38,35,30,.38)}
 .modal{background:var(--surface);border:1px solid var(--line);box-shadow:var(--shadow-md);border-radius:18px}
 .modal-title{color:var(--t1);font-weight:700}
@@ -1339,9 +1341,9 @@ body.fs-s .dl-text,body.fs-l .dl-text{font-size:calc(14px * var(--rd))}
 .nbw-btn{background:var(--surface-2);border:1px solid var(--line)}
 .nbw-btn svg{stroke:var(--t3)}
 .nbw-btn.del svg{stroke:var(--red)}
-.nb-error-card{background:rgba(255,150,0,.10);border:1px solid rgba(255,150,0,.28)}
+.nb-error-card{background:rgba(190,130,50,.10);border:1px solid rgba(190,130,50,.28)}
 .nb-error-title{color:var(--org)}
-.nb-error-count{background:rgba(255,150,0,.18);color:#B45309}
+.nb-error-count{background:rgba(190,130,50,.18);color:#8A5A24}
 
 /* --- stats --- */
 .stats-filter-btn{background:var(--surface);border:1px solid var(--line);color:var(--t3)}
@@ -1375,9 +1377,9 @@ body.fs-s .dl-text,body.fs-l .dl-text{font-size:calc(14px * var(--rd))}
 .total-num{color:var(--t1)}
 .total-label{color:var(--t3)}
 .heatmap-cell{background:var(--bg2)}
-.heatmap-cell.l1{background:#DBEAFE}
-.heatmap-cell.l2{background:#BFDBFE}
-.heatmap-cell.l3{background:#60A5FA}
+.heatmap-cell.l1{background:#E9F3EC}
+.heatmap-cell.l2{background:#D3E8D9}
+.heatmap-cell.l3{background:#AFD3B9}
 .heatmap-cell.l4{background:var(--accent)}
 .heatmap-stat .hs-num{color:var(--t1)}
 .heatmap-stat .hs-label{color:var(--t3)}
@@ -1414,19 +1416,19 @@ body.fs-s .dl-text,body.fs-l .dl-text{font-size:calc(14px * var(--rd))}
 .sb-prompt-hint{color:var(--t3)}
 .sb-answer-area{background:var(--surface-2);border:1.5px dashed var(--line-strong)}
 .sb-answer-area.correct{border-color:var(--accent);background:var(--accent-soft)}
-.sb-answer-area.wrong{border-color:var(--red);background:rgba(255,75,75,.10)}
+.sb-answer-area.wrong{border-color:var(--red);background:rgba(194,84,74,.10)}
 .sb-answer-placeholder{color:var(--t4)}
 .sb-word-chip{background:var(--surface);border:1px solid var(--line);color:var(--t1)}
 .sb-word-chip.in-answer{background:var(--accent-soft);border-color:var(--accent-line);color:var(--accent-strong)}
 .sb-word-chip.used{opacity:.35}
 .sb-result.correct{background:var(--accent-soft);border:1px solid var(--accent-line)}
-.sb-result.wrong{background:rgba(255,75,75,.10);border:1px solid rgba(255,75,75,.28)}
+.sb-result.wrong{background:rgba(194,84,74,.10);border:1px solid rgba(194,84,74,.28)}
 .sb-result-answer{color:var(--t2)}
 
 /* --- pronunciation --- */
 .pron-btn{background:var(--accent-soft);border:1px solid var(--accent-line);color:var(--accent-strong)}
-.pron-btn.recording{background:rgba(255,75,75,.12);border-color:rgba(255,75,75,.32);color:#FF7A7A}
-.pron-stop-btn{background:rgba(255,75,75,.12);border-color:rgba(255,75,75,.32);color:#FF7A7A}
+.pron-btn.recording{background:rgba(194,84,74,.12);border-color:rgba(194,84,74,.32);color:#C2544A}
+.pron-stop-btn{background:rgba(194,84,74,.12);border-color:rgba(194,84,74,.32);color:#C2544A}
 .pron-recording{color:var(--accent-strong)}
 .pron-result{background:var(--surface);border:1px solid var(--line)}
 .pron-target{color:var(--t2)}
@@ -1510,6 +1512,13 @@ body.fs-s .dl-text,body.fs-l .dl-text{font-size:calc(14px * var(--rd))}
   .home-action-btn:hover{background:var(--surface-2)}
   .flip-c:hover .flip-f,.flip-c:hover .flip-b{border-color:var(--line-strong)}
 }
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+:focus-visible{outline:2px solid var(--accent-strong);outline-offset:2px}
+button:focus:not(:focus-visible){outline:none}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;
+    transition-duration:.001ms!important;scroll-behavior:auto!important}
+}
 </style>
 </head>
 <body>
@@ -1518,31 +1527,31 @@ body.fs-s .dl-text,body.fs-l .dl-text{font-size:calc(14px * var(--rd))}
   <svg style="position:absolute;width:0;height:0">
     <defs>
       <linearGradient id="navGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-        <stop offset="0%" style="stop-color:#8FE94D"/>
-        <stop offset="100%" style="stop-color:#58CC02"/>
+        <stop offset="0%" style="stop-color:#2E6B44"/>
+        <stop offset="100%" style="stop-color:#4C9A66"/>
       </linearGradient>
       <!-- V8: Stat icon gradients -->
       <linearGradient id="starGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-        <stop offset="0%" style="stop-color:#8FE94D"/>
-        <stop offset="100%" style="stop-color:#58CC02"/>
+        <stop offset="0%" style="stop-color:#2E6B44"/>
+        <stop offset="100%" style="stop-color:#4C9A66"/>
       </linearGradient>
       <linearGradient id="reviewGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-        <stop offset="0%" style="stop-color:#8FE94D"/>
-        <stop offset="100%" style="stop-color:#58CC02"/>
+        <stop offset="0%" style="stop-color:#2E6B44"/>
+        <stop offset="100%" style="stop-color:#4C9A66"/>
       </linearGradient>
       <linearGradient id="dialogGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-        <stop offset="0%" style="stop-color:#8FE94D"/>
-        <stop offset="100%" style="stop-color:#58CC02"/>
+        <stop offset="0%" style="stop-color:#2E6B44"/>
+        <stop offset="100%" style="stop-color:#4C9A66"/>
       </linearGradient>
       <linearGradient id="bookGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-        <stop offset="0%" style="stop-color:#8FE94D"/>
-        <stop offset="100%" style="stop-color:#58CC02"/>
+        <stop offset="0%" style="stop-color:#2E6B44"/>
+        <stop offset="100%" style="stop-color:#4C9A66"/>
       </linearGradient>
     </defs>
   </svg>
 
   <!-- Toast -->
-  <div class="toast" id="toast"></div>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
   <div class="tts-status" id="tts-status" role="status" aria-live="polite">
     <span class="tts-status-dot"></span><span id="tts-status-text">正在朗读</span>
     <button type="button" onclick="TTS.stop('user')" aria-label="停止朗读">停止</button>
@@ -1556,9 +1565,9 @@ body.fs-s .dl-text,body.fs-l .dl-text{font-size:calc(14px * var(--rd))}
     <div class="home-top-bar">
       <div class="htb-title">谢飞机</div>
       <div class="htb-actions">
-        <div class="htb-btn" onclick="exportData()"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg></div>
-        <div class="htb-btn" onclick="document.getElementById('import-file').click()"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg></div>
-        <div class="htb-btn" onclick="openSettings()"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 11-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 11-2.83-2.83l.06-.06A1.65 1.65 0 004.6 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 112.83-2.83l.06.06A1.65 1.65 0 009 4.6a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 112.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg></div>
+        <button type="button" class="htb-btn" aria-label="导出数据" onclick="exportData()"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg></button>
+        <button type="button" class="htb-btn" aria-label="导入数据" onclick="document.getElementById('import-file').click()"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg></button>
+        <button type="button" class="htb-btn" aria-label="打开设置" onclick="openSettings()"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 11-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 11-2.83-2.83l.06-.06A1.65 1.65 0 004.6 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 112.83-2.83l.06.06A1.65 1.65 0 009 4.6a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 112.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg></button>
       </div>
     </div>
     <input type="file" id="import-file" accept=".json" class="import-hidden" onchange="handleImportFile(this)">
@@ -1777,7 +1786,7 @@ body.fs-s .dl-text,body.fs-l .dl-text{font-size:calc(14px * var(--rd))}
         <div class="settings-group-title">关于</div>
         <div class="settings-row">
           <div class="settings-label">版本</div>
-          <div class="settings-value" onclick="voiceDebugTap()" style="-webkit-user-select:none;user-select:none">te_v39</div>
+          <div class="settings-value" onclick="voiceDebugTap()" style="-webkit-user-select:none;user-select:none">te_v40</div>
         </div>
       </div>
     </div>
@@ -3012,7 +3021,7 @@ function checkDict() {
   if (!dictResults) dictResults = new Array(curWords.length).fill(null);
   if (val === ans) {
     inp.classList.add('correct');
-    document.getElementById('dict-hint').innerHTML = '<span style="color:#8FE94D;font-weight:700">✓ 正确！</span>';
+    document.getElementById('dict-hint').innerHTML = '<span style="color:#2E6B44;font-weight:700">✓ 正确！</span>';
     dictResults[wIdx] = true;
     markWordKnown(w.word);
   } else {
@@ -3058,8 +3067,8 @@ function renderQuiz() {
     html += 'background:var(--ga);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">';
     html += quizState.score + '/' + quizState.total + '</div>';
     html += '<div style="color:var(--t2);margin:8px 0 4px;font-size:14px">答对 ' + quizState.score + ' 题 · 正确率 ' + pct + '%</div>';
-    if (pct >= 80) html += '<div style="color:#8FE94D;font-size:13px;margin-bottom:16px">优秀！继续加油</div>';
-    else if (pct >= 60) html += '<div style="color:#FFC800;font-size:13px;margin-bottom:16px">不错，还可以更好</div>';
+    if (pct >= 80) html += '<div style="color:#2E6B44;font-size:13px;margin-bottom:16px">优秀！继续加油</div>';
+    else if (pct >= 60) html += '<div style="color:#B8932E;font-size:13px;margin-bottom:16px">不错，还可以更好</div>';
     else html += '<div style="color:var(--org);font-size:13px;margin-bottom:16px">需要多加练习</div>';
     html += '<div class="btn-row"><button class="btn primary" onclick="finishPractice()">完成返回</button><button class="btn sec" onclick="quizState=null;renderWords()">再来一轮</button></div></div>';
     c.innerHTML = html;
@@ -3138,9 +3147,9 @@ function renderBuild() {
     html += 'background:var(--ga);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">';
     html += buildState.score + '/' + buildState.total + '</div>';
     html += '<div style="color:var(--t2);margin:8px 0 4px;font-size:14px">造句完成 · 正确率 ' + pct + '%</div>';
-    if (pct >= 80) html += '<div style="color:#8FE94D;font-size:13px;margin-bottom:16px">语法掌握很好！</div>';
-    else if (pct >= 60) html += '<div style="color:#FFC800;font-size:13px;margin-bottom:16px">不错，注意语序</div>';
-    else html += '<div style="color:#FF7A7A;font-size:13px;margin-bottom:16px">多读句子，培养语感</div>';
+    if (pct >= 80) html += '<div style="color:#2E6B44;font-size:13px;margin-bottom:16px">语法掌握很好！</div>';
+    else if (pct >= 60) html += '<div style="color:#B8932E;font-size:13px;margin-bottom:16px">不错，注意语序</div>';
+    else html += '<div style="color:#C2544A;font-size:13px;margin-bottom:16px">多读句子，培养语感</div>';
     html += '<div class="btn-row"><button class="btn primary" onclick="finishPractice()">完成返回</button><button class="btn sec" onclick="buildState=null;renderWords()">再来一轮</button></div></div>';
     c.innerHTML = html;
     return;
@@ -3652,7 +3661,7 @@ function renderStats() {
   // New words - glowing star
   html += '<div class="stat-card purple"><div class="sc-icon"><svg viewBox="0 0 32 32" fill="none">';
   html += '<path d="M16 2l3.5 7.5L28 11l-5.5 5 1.5 8L16 20l-8 4 1.5-8L4 11l8.5-1.5z" fill="url(#starGrad)" stroke="none"/>';
-  html += '<path d="M16 2l3.5 7.5L28 11l-5.5 5 1.5 8L16 20l-8 4 1.5-8L4 11l8.5-1.5z" fill="none" stroke="rgba(88,204,2,.45)" stroke-width=".5"/>';
+  html += '<path d="M16 2l3.5 7.5L28 11l-5.5 5 1.5 8L16 20l-8 4 1.5-8L4 11l8.5-1.5z" fill="none" stroke="rgba(76,154,102,.45)" stroke-width=".5"/>';
   html += '<circle cx="13" cy="10" r="1.5" fill="rgba(255,255,255,.65)"/>';
   html += '<path d="M14 6l1-2 1 2" stroke="rgba(255,255,255,.7)" stroke-width="1" stroke-linecap="round"/>';
   html += '</svg></div><div><div class="sc-num">' + totalNew + '</div><div class="sc-label">新词</div></div></div>';
@@ -3661,10 +3670,10 @@ function renderStats() {
   html += '<div class="stat-card cyan"><div class="sc-icon"><svg viewBox="0 0 32 32" fill="none">';
   html += '<path d="M8 12a7 7 0 0112.5-4.5" stroke="url(#reviewGrad)" stroke-width="2.5" stroke-linecap="round"/>';
   html += '<path d="M22 20a7 7 0 01-12.5 4.5" stroke="url(#reviewGrad)" stroke-width="2.5" stroke-linecap="round"/>';
-  html += '<path d="M20 6l.5 2 2-.5" stroke="#58CC02" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>';
-  html += '<path d="M10 26l-.5-2-2 .5" stroke="#58CC02" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>';
+  html += '<path d="M20 6l.5 2 2-.5" stroke="#4C9A66" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>';
+  html += '<path d="M10 26l-.5-2-2 .5" stroke="#4C9A66" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>';
   html += '<circle cx="16" cy="16" r="3" stroke="url(#reviewGrad)" stroke-width="2"/>';
-  html += '<circle cx="16" cy="16" r="1" fill="#58CC02"/>';
+  html += '<circle cx="16" cy="16" r="1" fill="#4C9A66"/>';
   html += '</svg></div><div><div class="sc-num">' + totalReview + '</div><div class="sc-label">复习词</div></div></div>';
 
   // Dialog - chat bubbles
@@ -3680,12 +3689,12 @@ function renderStats() {
 
   // Essay - open book with bookmark
   html += '<div class="stat-card green"><div class="sc-icon"><svg viewBox="0 0 32 32" fill="none">';
-  html += '<path d="M4 6c4-1 8 0 12 2 4-2 8-3 12-2v20c-4-1-8 0-12 2-4-2-8-3-12-2V6z" fill="rgba(88,204,2,.12)" stroke="url(#bookGrad)" stroke-width="1.5" stroke-linejoin="round"/>';
+  html += '<path d="M4 6c4-1 8 0 12 2 4-2 8-3 12-2v20c-4-1-8 0-12 2-4-2-8-3-12-2V6z" fill="rgba(76,154,102,.12)" stroke="url(#bookGrad)" stroke-width="1.5" stroke-linejoin="round"/>';
   html += '<path d="M16 8v20" stroke="url(#bookGrad)" stroke-width="1.5"/>';
-  html += '<path d="M8 11h4M8 15h5M8 19h3" stroke="rgba(88,204,2,.4)" stroke-width="1.2" stroke-linecap="round"/>';
-  html += '<path d="M20 11h4M20 15h5M20 19h3" stroke="rgba(88,204,2,.4)" stroke-width="1.2" stroke-linecap="round"/>';
-  html += '<path d="M22 4l2 3-2 1" fill="#58CC02" opacity=".6"/>';
-  html += '<line x1="22" y1="4" x2="22" y2="8" stroke="#58CC02" stroke-width="1.2" stroke-linecap="round"/>';
+  html += '<path d="M8 11h4M8 15h5M8 19h3" stroke="rgba(76,154,102,.4)" stroke-width="1.2" stroke-linecap="round"/>';
+  html += '<path d="M20 11h4M20 15h5M20 19h3" stroke="rgba(76,154,102,.4)" stroke-width="1.2" stroke-linecap="round"/>';
+  html += '<path d="M22 4l2 3-2 1" fill="#4C9A66" opacity=".6"/>';
+  html += '<line x1="22" y1="4" x2="22" y2="8" stroke="#4C9A66" stroke-width="1.2" stroke-linecap="round"/>';
   html += '</svg></div><div><div class="sc-num">' + totalEssay + '</div><div class="sc-label">阅读句</div></div></div>';
 
   html += '</div>';
@@ -6539,10 +6548,10 @@ function calculatePronScore(target, recognized, confidence) {
 
 function showPronResult(el, score, recognized, target) {
   var grade, color;
-  if (score >= 90) { grade='优秀'; color='#8FE94D'; }
+  if (score >= 90) { grade='优秀'; color='#2E6B44'; }
   else if (score >= 75) { grade='良好'; color='#7BE22A'; }
-  else if (score >= 60) { grade='及格'; color='#FFC800'; }
-  else { grade='需练习'; color='#FF7A7A'; }
+  else if (score >= 60) { grade='及格'; color='#B8932E'; }
+  else { grade='需练习'; color='#C2544A'; }
   var html = '<div class="pron-result">';
   html += '<div class="pron-score" style="color:' + color + '">' + score + '分</div>';
   html += '<div class="pron-grade">' + grade + '</div>';
@@ -6641,11 +6650,11 @@ function renderPronStats() {
   recent.sort(function(a,b){return b.date-a.date;});
   var avg = Math.round(total/count);
   var html = '<div class="pron-summary">';
-  html += '<div class="pron-avg" style="color:' + (avg>=75?'#8FE94D':avg>=60?'#FFC800':'#FF7A7A') + '">' + avg + '</div>';
+  html += '<div class="pron-avg" style="color:' + (avg>=75?'#2E6B44':avg>=60?'#B8932E':'#C2544A') + '">' + avg + '</div>';
   html += '<div class="pron-avg-label">平均发音评分</div></div>';
   html += '<div class="pron-recent">';
   recent.slice(0,8).forEach(function(r) {
-    var color = r.score>=90?'#8FE94D':r.score>=75?'#58CC02':r.score>=60?'#FFC800':'#FF7A7A';
+    var color = r.score>=90?'#2E6B44':r.score>=75?'#4C9A66':r.score>=60?'#B8932E':'#C2544A';
     html += '<div class="pron-recent-item"><span style="color:'+color+';font-weight:700">' + r.score + '</span> ' + esc(r.text.substring(0,20)) + (r.text.length>20?'...':'') + '</div>';
   });
   html += '</div>';
@@ -7385,7 +7394,7 @@ function openVoiceDebug() {
     return '<div><span style="color:#64748b">' + esc(l.t) + '</span> [' + esc(l.type) + '] ' + esc(l.msg) + '</div>';
   }).join('') : '<div>—</div>';
   panel.innerHTML =
-    '<div class="td-head"><span>语音诊断 V39</span><button onclick="closeVoiceDebug()">关闭</button></div>' +
+    '<div class="td-head"><span>语音诊断 V40</span><button onclick="closeVoiceDebug()">关闭</button></div>' +
     '<div class="td-body">' +
       '<div><b>浏览器：</b>' + esc(navigator.userAgent) + '</div>' +
       '<div><b>支持 SpeechSynthesis：</b>' + (st.supported ? '是' : '否') + '</div>' +
@@ -7541,7 +7550,7 @@ document.addEventListener('keydown', function(e) {
 // ===== PWA / Service Worker =====
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', function() {
-    navigator.serviceWorker.register('service-worker.js?v=39').then(function(reg) {
+    navigator.serviceWorker.register('service-worker.js?v=40').then(function(reg) {
       reg.addEventListener('updatefound', function() {
         var nw = reg.installing;
         if (nw) {
