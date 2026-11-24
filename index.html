@@ -15,7 +15,7 @@
 <link rel="icon" type="image/png" sizes="512x512" href="icon-512.png?v8">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png?v8">
 <link rel="manifest" href="manifest.json">
-<meta name="version" content="te_v36">
+<meta name="version" content="te_v37">
 <title>谢飞机</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
 <style>
@@ -900,7 +900,7 @@ body.cat-view #daily-sentence-container{display:none !important}
 .ff-bd-speak.playing{background:rgba(239,68,68,.18);border-color:rgba(239,68,68,.4);color:#FCA5A5}
 
 /* ============================================================
-   V36: Duolingo-inspired dark theme
+   V37: Dark theme + reading comfort improvements
    ============================================================ */
 :root{
   --nav-h:64px;
@@ -1058,6 +1058,46 @@ body{color:var(--t1);font-family:'Inter',-apple-system,BlinkMacSystemFont,"PingF
 .tt-sub{font-size:11.5px;color:var(--t3);margin-top:1px}
 .tt-go{font-size:12px;font-weight:800;color:var(--accent);flex-shrink:0}
 .tt-item.tt-done .tt-go{color:var(--t3)}
+/* daily sentence merged into today's task card */
+.today-tasks #daily-sentence-container{margin-top:10px}
+.today-tasks .daily-sentence-card{margin:0;background:var(--bg2);border:1px solid var(--line);
+  border-left:3px solid var(--accent);border-radius:12px;padding:11px 13px;box-shadow:none}
+.today-tasks .daily-sentence-card::before{display:none}
+/* fixed word navigation */
+.word-fixed-bar{display:none;position:fixed;z-index:95;left:50%;transform:translateX(-50%);
+  bottom:calc(var(--nav-h) + var(--sb) + 12px);width:min(calc(100% - 28px),452px);
+  background:rgba(22,27,51,.97);border:1px solid var(--line-strong);border-radius:16px;
+  padding:8px 10px;align-items:center;gap:10px;box-shadow:0 12px 32px rgba(0,0,0,.5);
+  backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)}
+.word-fixed-bar.show{display:flex}
+.wfb-btn{flex:1;padding:11px 10px;border-radius:11px;background:var(--surface-2);color:var(--t1);
+  font-size:13px;font-weight:600;border:1px solid var(--line)}
+.wfb-btn.primary{background:var(--accent);color:#08300A;border-color:transparent;font-weight:800}
+.wfb-btn:disabled{opacity:.35}
+.wfb-progress{font-size:12px;color:var(--t3);font-weight:600;white-space:nowrap;min-width:54px;text-align:center}
+#pg-words{padding-bottom:calc(var(--sb) + 96px)}
+@media (min-width:900px){
+  .word-fixed-bar{left:calc(50% + 118px);bottom:20px;width:420px}
+  #pg-words{padding-bottom:110px}
+}
+@media (min-width:1280px){
+  .word-fixed-bar{left:calc(50% + 128px)}
+}
+@media (max-width:899px){
+  .kb-hint{display:none}
+}
+/* reading font scale */
+body{--rd:1}
+body.fs-s{--rd:.94}
+body.fs-l{--rd:1.22}
+body.fs-s .flip-f .ff-word{font-size:calc(26px * var(--rd))}
+body.fs-l .flip-f .ff-word{font-size:calc(26px * var(--rd))}
+body.fs-s .wi-ex .en,body.fs-l .wi-ex .en{font-size:calc(15px * var(--rd));line-height:1.7}
+body.fs-s .word-ex-item .en,body.fs-l .word-ex-item .en{font-size:calc(13px * var(--rd))}
+body.fs-s .dl-text,body.fs-l .dl-text{font-size:calc(14px * var(--rd))}
+.font-scale-seg{display:flex;gap:4px;background:var(--bg2);border:1px solid var(--line);border-radius:10px;padding:3px}
+.font-scale-seg button{padding:6px 12px;border-radius:8px;background:none;color:var(--t3);font-size:12px;font-weight:600}
+.font-scale-seg button.active{background:var(--accent);color:#08300A;font-weight:800}
 
 /* --- collapsible phase groups --- */
 .phase-label .phase-meta{margin-left:auto;font-size:11px;font-weight:700;color:var(--t3);
@@ -1576,9 +1616,8 @@ body{color:var(--t1);font-family:'Inter',-apple-system,BlinkMacSystemFont,"PingF
               <span class="tt-go">开始</span>
             </button>
           </div>
+          <div id="daily-sentence-container"></div>
         </div>
-
-        <div id="daily-sentence-container"></div>
 
         <div id="category-container"></div>
         <div id="category-detail-container" style="display:none"></div>
@@ -1613,6 +1652,10 @@ body{color:var(--t1);font-family:'Inter',-apple-system,BlinkMacSystemFont,"PingF
           <div class="home-action-btn" onclick="startReview()">
             <svg viewBox="0 0 24 24"><path d="M23 4v6h-6M1 20v-6h6M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/></svg>
             <span>今日复习</span>
+          </div>
+          <div class="home-action-btn" onclick="startQuickReview()">
+            <svg viewBox="0 0 24 24"><path d="M13 2L3 14h8l-1 8 11-13h-8l1-7z"/></svg>
+            <span>快复习</span>
           </div>
           <div class="home-action-btn" onclick="openSettings()">
             <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 1v6m0 10v6m11-11h-6M7 12H1"/></svg>
@@ -1649,6 +1692,11 @@ body{color:var(--t1);font-family:'Inter',-apple-system,BlinkMacSystemFont,"PingF
     <div class="wc-mode" id="w-mode-bar"></div>
     <div class="kb-hint" id="kb-hint">空格 翻卡 · ← / → 切换单词 · 1-4 选择答案 · Enter 继续</div>
     <div id="w-content"></div>
+    <div class="word-fixed-bar" id="word-fixed-bar">
+      <button class="wfb-btn" id="wfb-prev" onclick="prevWord()">上一个</button>
+      <span class="wfb-progress" id="wfb-progress">1 / 1</span>
+      <button class="wfb-btn primary" id="wfb-next" onclick="nextWord()">下一个</button>
+    </div>
   </div>
 
   <!-- ===== DIALOG ===== -->
@@ -1709,6 +1757,19 @@ body{color:var(--t1);font-family:'Inter',-apple-system,BlinkMacSystemFont,"PingF
       </div>
 
       <div class="settings-group">
+        <div class="settings-group-title">阅读设置</div>
+        <div class="settings-row" style="display:flex;justify-content:space-between;align-items:center">
+          <div class="settings-label">正文字号</div>
+          <div class="font-scale-seg" id="font-scale-seg">
+            <button data-size="s" onclick="setFontScale('s')">小</button>
+            <button data-size="m" onclick="setFontScale('m')">中</button>
+            <button data-size="l" onclick="setFontScale('l')">大</button>
+          </div>
+        </div>
+        <div class="settings-desc">影响单词、例句和口语台词的字号</div>
+      </div>
+
+      <div class="settings-group">
         <div class="settings-group-title">数据管理</div>
         <div class="btn-row">
           <button class="btn sec" onclick="exportData()">导出数据</button>
@@ -1721,7 +1782,7 @@ body{color:var(--t1);font-family:'Inter',-apple-system,BlinkMacSystemFont,"PingF
         <div class="settings-group-title">关于</div>
         <div class="settings-row">
           <div class="settings-label">版本</div>
-          <div class="settings-value" onclick="voiceDebugTap()" style="-webkit-user-select:none;user-select:none">te_v36</div>
+          <div class="settings-value" onclick="voiceDebugTap()" style="-webkit-user-select:none;user-select:none">te_v37</div>
         </div>
       </div>
     </div>
@@ -2718,6 +2779,18 @@ function nextWord() {
   if (wIdx < curWords.length - 1) { wIdx++; renderWords(); }
   else if (wIdx === curWords.length - 1) { wIdx++; renderWords(); }
 }
+function updateWordBar(show, idx, total) {
+  var bar = document.getElementById('word-fixed-bar');
+  if (!bar) return;
+  if (!show) { bar.classList.remove('show'); return; }
+  bar.classList.add('show');
+  var prev = document.getElementById('wfb-prev');
+  var next = document.getElementById('wfb-next');
+  var prog = document.getElementById('wfb-progress');
+  if (prev) prev.disabled = idx <= 0;
+  if (next) next.textContent = idx >= total - 1 ? '完成' : '下一个';
+  if (prog) prog.textContent = (Math.min(idx + 1, total)) + ' / ' + total;
+}
 
 function renderWords() {
   const words = curWords;
@@ -2737,20 +2810,13 @@ function renderCard() {
   if (wIdx >= words.length) {
     c.innerHTML = '<div class="empty-state"><div class="es-icon"><svg viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="m8.5 12.5 2.5 2.5 4.5-5.5"/></svg></div><div class="es-title">全部学完了！</div><div class="es-desc">已掌握 ' + words.length + ' 个词汇</div>';
     c.innerHTML += '<div class="btn-row" style="margin-top:16px"><button class="btn primary" onclick="finishPractice()">完成返回</button></div></div>';
+    updateWordBar(false);
     return;
   }
   const w = words[wIdx];
   if (!w) { wIdx++; renderWords(); return; }
-  const prevDisabled = wIdx <= 0;
-  const isLast = wIdx >= words.length - 1;
 
-  let html = '<div class="word-nav"><button class="btn sec sm" onclick="prevWord()" ' + (prevDisabled?'disabled':'') + '>上一个</button>';
-  html += '<span class="wn-progress">' + (wIdx+1) + ' / ' + words.length + '</span>';
-  if (isLast) {
-    html += '<button class="btn primary sm" onclick="nextWord()">完成</button></div>';
-  } else {
-    html += '<button class="btn primary sm" onclick="nextWord()">下一个</button></div>';
-  }
+  let html = '';
 
   html += '<div class="swipe-hint"><svg viewBox="0 0 24 24"><path d="M7 16l-4-4 4-4M17 8l4 4-4 4M3 12h18"/></svg>左右滑动切换单词</div>';
 
@@ -2830,9 +2896,11 @@ function renderCard() {
   html += '</div></div>';
 
   c.innerHTML = html;
+  updateWordBar(true, wIdx, words.length);
 }
 
 function renderDict() {
+  updateWordBar(false);
   var words = curWords;
   var c = document.getElementById('w-content');
   if (wIdx >= words.length) {
@@ -2969,6 +3037,7 @@ function dictNext() {
 }
 
 function renderQuiz() {
+  updateWordBar(false);
   const words = curWords;
   const c = document.getElementById('w-content');
   if (!quizState) {
@@ -3029,6 +3098,7 @@ function renderQuiz() {
 var buildState = null;
 
 function renderBuild() {
+  updateWordBar(false);
   var words = curWords;
   var c = document.getElementById("w-content");
   if (!buildState) {
@@ -6747,6 +6817,43 @@ function startMixedReviewFromWords() {
   renderWords();
 }
 
+// V37: 5-minute quick review - error pool > due reviews > notebook
+function getQuickReviewList() {
+  var seen = {}, list = [];
+  function add(w) {
+    if (!w || !w.word) return;
+    var key = w.word.toLowerCase();
+    if (seen[key]) return;
+    seen[key] = 1;
+    var info = findWordInData(w.word) || w;
+    list.push({ word: info.word, translation: info.translation || w.translation || '', exampleEn: '', exampleCn: '' });
+  }
+  var pool = Store.get('errorPool', []);
+  pool.slice().sort(function(a, b) {
+    return (b.errorCount || 0) - (a.errorCount || 0) || (b.lastError || 0) - (a.lastError || 0);
+  }).forEach(add);
+  getReviewWordList().forEach(add);
+  Store.get('notebook', []).forEach(add);
+  return list.slice(0, 12);
+}
+
+function startQuickReview() {
+  var list = getQuickReviewList();
+  if (!list.length) { showToast('暂无待巩固词汇，先学一节课吧'); return; }
+  curDay = null;
+  curCategory = '';
+  curWords = list;
+  wIdx = 0;
+  quizState = null;
+  buildState = null;
+  dictResults = null;
+  wMode = 'quiz';
+  markStudyToday();
+  showPage('pg-words');
+  document.getElementById('w-title').textContent = '5 分钟快复习';
+  renderWords();
+}
+
 // ===== V13: Error Pool (priority review) =====
 function addToErrorPool(word, translation, day) {
   if (!word) return;
@@ -7220,9 +7327,29 @@ function updateRateValue(val) {
   if (el) el.textContent = parseFloat(val).toFixed(2);
 }
 
+function applyFontScale(v) {
+  if (v !== 's' && v !== 'l') v = 'm';
+  document.body.classList.remove('fs-s', 'fs-m', 'fs-l');
+  document.body.classList.add('fs-' + v);
+  var seg = document.getElementById('font-scale-seg');
+  if (seg) {
+    var btns = seg.querySelectorAll('button');
+    for (var i = 0; i < btns.length; i++) {
+      btns[i].classList.toggle('active', btns[i].getAttribute('data-size') === v);
+    }
+  }
+}
+
+function setFontScale(v) {
+  applyFontScale(v);
+  Store.set('fontScale', v);
+}
+
 if (window.speechSynthesis) {
   initVoices();
 }
+
+applyFontScale(Store.get('fontScale', 'm'));
 
 // ===== V30: Hidden voice diagnostics (triple-tap version) =====
 var _dbgTap = 0, _dbgTimer = null;
@@ -7263,7 +7390,7 @@ function openVoiceDebug() {
     return '<div><span style="color:#64748b">' + esc(l.t) + '</span> [' + esc(l.type) + '] ' + esc(l.msg) + '</div>';
   }).join('') : '<div>—</div>';
   panel.innerHTML =
-    '<div class="td-head"><span>语音诊断 V36</span><button onclick="closeVoiceDebug()">关闭</button></div>' +
+    '<div class="td-head"><span>语音诊断 V37</span><button onclick="closeVoiceDebug()">关闭</button></div>' +
     '<div class="td-body">' +
       '<div><b>浏览器：</b>' + esc(navigator.userAgent) + '</div>' +
       '<div><b>支持 SpeechSynthesis：</b>' + (st.supported ? '是' : '否') + '</div>' +
@@ -7419,7 +7546,7 @@ document.addEventListener('keydown', function(e) {
 // ===== PWA / Service Worker =====
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', function() {
-    navigator.serviceWorker.register('service-worker.js?v=36').then(function(reg) {
+    navigator.serviceWorker.register('service-worker.js?v=37').then(function(reg) {
       reg.addEventListener('updatefound', function() {
         var nw = reg.installing;
         if (nw) {
