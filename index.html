@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
-<meta name="theme-color" content="#FFFFFF">
+<meta name="theme-color" content="#FAF8F2">
 <meta name="color-scheme" content="light">
 <meta name="apple-mobile-web-app-title" content="谢飞机">
 <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v8">
@@ -16,9 +16,9 @@
 <link rel="icon" type="image/png" sizes="512x512" href="icon-512.png?v8">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png?v8">
 <link rel="manifest" href="manifest.json">
-<meta name="version" content="te_v40">
+<meta name="version" content="te_v41">
 <title>谢飞机</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Noto+Serif+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{height:100%;overflow:hidden;overscroll-behavior-y:contain}
@@ -1519,6 +1519,188 @@ button:focus:not(:focus-visible){outline:none}
   *,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;
     transition-duration:.001ms!important;scroll-behavior:auto!important}
 }
+
+/* ============================================================
+   V41: Editorial paper theme (reference: 100件小事 / 大学章节)
+   ============================================================ */
+:root{
+  color-scheme:light;
+  --serif:'Noto Serif SC','Songti SC','STSong','SimSun',Georgia,serif;
+  --paper:#FAF8F2;--paper-2:#F4F1E8;
+  --accent:#6E8FAF;--accent-strong:#4E7291;--accent-soft:#EDF3F8;--accent-line:#D5E1EB;
+  --ochre:#A9832F;--ochre-soft:#F7F0DD;--ochre-line:#E8DBB8;
+  --ok:#6F8F6A;--ok-soft:#EFF3EC;--ok-line:#D9E3D4;
+  --amber:#A9832F;--amber-soft:#F7F0DD;
+  --teal:#7C9DA3;--teal-soft:#EFF4F3;
+  --surface:#FFFFFF;--surface-2:#F7F5EF;--line:#E8E3D8;--line-strong:#D8D2C4;
+  --bg:#FAF8F2;--bg2:#F4F1E8;
+  --t1:#1B1A17;--t2:#4A463F;--t3:#7A746A;--t4:#A9A296;
+  --grn:#6F8F6A;--red:#B15A4E;--org:#A9832F;--ylw:#B08A2E;--blue:#6E8FAF;
+  --purp:#8A7C9B;--purp2:#796B8A;--cyan:#6E8FAF;--cyan2:#7C9DBB;
+  --ga:linear-gradient(135deg,#8FA9C2,#6E8FAF);
+  --gb:linear-gradient(135deg,#8FA9C2,#6E8FAF);
+  --gc:linear-gradient(135deg,#8FB0B6,#7C9DA3);
+  --gd:linear-gradient(135deg,#8AA684,#6F8F6A);
+  --go:linear-gradient(135deg,#C4A45E,#A9832F);
+  --gy:linear-gradient(135deg,#C9B26B,#B08A2E);
+  --shadow-sm:0 1px 2px rgba(45,38,26,.03);
+  --shadow-md:0 10px 28px rgba(45,38,26,.07);
+}
+html,body,#app{background:var(--paper)}
+body{color:var(--t1)}
+.page{background:transparent}
+/* serif display type */
+.home-top-bar .htb-title,.home-title .ht-main,.page-title,.hero-title,.dd-title,.tt-title,
+.section-title,.cat-name,.modal-title,.stats-section-title{font-family:var(--serif);font-weight:600;letter-spacing:.02em}
+.htb-title{font-size:22px}
+.page-title{font-size:24px;padding:10px 0 16px}
+/* header pill buttons */
+.htb-btn{background:var(--surface);border:1px solid var(--line);border-radius:999px;box-shadow:none}
+.htb-btn:active{background:var(--surface-2);transform:scale(.96)}
+/* nav */
+.nav{background:rgba(250,248,242,.96);border-top:1px solid var(--line);
+  backdrop-filter:blur(18px) saturate(120%);-webkit-backdrop-filter:blur(18px) saturate(120%)}
+.nav-btn{border-radius:999px;padding:6px 18px}
+.nav-btn.active{background:#EFEBE1}
+.nav-btn svg{stroke:var(--t3)}
+.nav-btn span{color:var(--t3);font-weight:500}
+.nav-btn.active svg{stroke:var(--t1)}
+.nav-btn.active span{color:var(--t1);font-weight:600}
+/* hero: single editorial card */
+.hero-banner{background:var(--surface);border:1px solid var(--line);border-radius:16px 16px 0 0;
+  box-shadow:none;padding:24px 22px 20px;color:var(--t1)}
+.hero-banner::after{display:none}
+.hero-badge{background:var(--surface-2);border:1px solid var(--line);color:var(--t3);
+  font-size:10px;font-weight:600;letter-spacing:.18em;padding:5px 11px}
+.hero-badge-dot{width:5px;height:5px;background:var(--ochre);box-shadow:none}
+.hero-greet{color:var(--t3);font-size:12.5px}
+.hero-title{color:var(--t1);font-size:25px;line-height:1.35;font-weight:600}
+.hero-meta{color:var(--t3);margin-top:13px;padding-top:12px;border-top:1px solid var(--line)}
+.hero-meta b{color:var(--t1);font-weight:600}
+.hero-ring-row{background:var(--surface);border:1px solid var(--line);border-top:none;
+  border-radius:0 0 16px 16px;box-shadow:none}
+.hero-ring{background:conic-gradient(var(--ring-c,#6E8FAF) calc(var(--p)*1%),#EEEBE2 0)}
+.hero-ring::before{background:var(--surface);box-shadow:none}
+.hero-ring-pct{font-size:17px;font-weight:700;color:var(--t1)}
+.hero-ring-lbl{color:var(--t3)}
+.hero-ring.blue{--ring-c:#6E8FAF}
+.hero-ring.teal{--ring-c:#7C9DA3}
+.hero-ring.indigo{--ring-c:#8A7C9B}
+.hero-ring.amber{--ring-c:#B08A2E}
+/* flat ink CTAs */
+.hero-cta{background:#23201A;color:#FBF9F2;border-radius:999px;box-shadow:none;
+  font-weight:600;letter-spacing:.03em}
+.hero-cta:hover{filter:none;background:#332F27}
+.hero-cta:active{transform:translateY(1px);box-shadow:none}
+.hero-cta svg{stroke:#FBF9F2}
+.hero-cta small{color:rgba(251,249,242,.6)}
+.hero-cta.ghost{background:var(--surface);color:var(--t1);border:1px solid var(--line-strong);box-shadow:none}
+.hero-cta.ghost:hover{background:var(--surface-2)}
+.hero-cta.ghost:active{transform:translateY(1px);box-shadow:none}
+.hero-cta.ghost svg{stroke:var(--t1)}
+/* today's tasks */
+.today-tasks{background:var(--surface);border:1px solid var(--line);border-radius:14px;
+  box-shadow:none;padding:16px 16px 14px}
+.tt-title{font-size:16px;font-weight:600}
+.tt-day{background:var(--ochre-soft);color:var(--ochre);border:1px solid var(--ochre-line);font-weight:600}
+.tt-item{background:transparent;border:1px solid var(--line);border-radius:10px;padding:11px 12px}
+.tt-item:active{background:var(--surface-2);transform:none}
+.tt-icon,.tt-icon.green,.tt-icon.sky,.tt-icon.purple{background:var(--surface-2);
+  border:1px solid var(--line);color:var(--t2);border-radius:9px}
+.tt-go{color:var(--accent-strong);font-weight:600}
+.today-tasks .daily-sentence-card{background:var(--paper);border:1px solid var(--line);
+  border-left:2px solid var(--ochre);border-radius:10px}
+.today-tasks .daily-sentence-card .ds-text{font-family:var(--serif);font-weight:500}
+/* section titles with hairline rule */
+.section-header{margin:6px 2px 14px}
+.section-title{display:flex;align-items:center;flex:1;font-size:15.5px;color:var(--t1);
+  letter-spacing:.03em}
+.section-title::before{display:none}
+.section-title::after{content:'';flex:1;height:1px;background:var(--line);margin-left:14px}
+.es-title{font-family:var(--serif);font-weight:600;letter-spacing:.02em}
+/* cards */
+.sq-item,.cat-card,.mc,.day-card,.stats-hero,.stat-card,.stats-section,.nb-word-card,
+.listen-card,.dict-mode-card,.essay-card,.pron-result,.word-preview-section,
+.search-result-item,.wl-tip{box-shadow:none;border-radius:12px}
+.cat-card{padding:18px}
+.cat-icon{background:var(--surface-2);border:1px solid var(--line);border-radius:10px}
+.cat-icon svg{stroke:var(--t2)}
+.cat-arrow{background:transparent}
+.home-action-btn{background:transparent;border:1px solid var(--line);box-shadow:none;border-radius:12px}
+.home-action-btn svg{stroke:var(--t2)}
+.home-action-btn span{color:var(--t2);font-weight:500}
+.sq-num,.stat-card .sc-num,.cat-stat-num,.total-num{font-variant-numeric:tabular-nums}
+/* day cards: small editorial index */
+.dc-num{font-family:'Inter',sans-serif;font-size:10.5px;font-weight:600;letter-spacing:.14em;
+  color:var(--t4);-webkit-text-fill-color:var(--t4);min-width:0;text-align:left;line-height:1.5;text-transform:uppercase}
+.dc-num::before{content:'Day '}
+.dc-title,.mc-title{font-family:var(--serif);font-weight:600;letter-spacing:.02em}
+/* tags */
+.dc-tag,.dd-tag{background:var(--surface-2);border:1px solid var(--line);color:var(--t3);border-radius:999px}
+.dc-tag.purp,.dd-tag.purp,.pbadge.done,.sr-day,.nbw-day,.ri-day.done,.eb-badge.known{
+  background:var(--ochre-soft);color:var(--ochre);border-color:var(--ochre-line)}
+.dd-tag.org,.eb-badge.due,.reminder-banner,.nb-error-card,.dict-ctrl-btn.hint{
+  background:var(--ochre-soft)!important;border-color:var(--ochre-line)!important}
+.dd-tag.org,.eb-badge.due,.nb-error-title,.nb-error-count,.dict-ctrl-btn.hint,.reminder-text .rt-title{
+  color:var(--ochre)!important}
+.dd-tag.ylw{background:var(--paper-2);color:var(--t2);border-color:var(--line)}
+/* progress bars */
+.pbar,.sh-progress,.phase-bar,.freq-bar-wrap,.weak-bar-wrap,.settings-slider{background:var(--surface-2)}
+.pbar,.pbar-fill,.sh-progress,.sh-progress-fill,.phase-bar,.phase-bar-fill,.freq-bar{border-radius:999px}
+.pbar-fill,.sh-progress-fill,.phase-bar-fill,.freq-bar,.dict-dot.correct{background:var(--accent)}
+.heatmap-cell{background:var(--surface-2)}
+.heatmap-cell.l1{background:#EDF2F7}
+.heatmap-cell.l2{background:#D9E4EE}
+.heatmap-cell.l3{background:#B6CDDF}
+.heatmap-cell.l4{background:var(--accent)}
+/* contextual states */
+.qo.correct,.dict-in.correct,.sb-answer-area.correct,.sb-result.correct{
+  border-color:var(--ok);background:var(--ok-soft)}
+.qo.correct{color:#4F6B4B}
+.dict-dot.correct{background:var(--ok)}
+.flip-b{background:#F7F4EC;border-color:var(--line)}
+.flip-b .fb-trans{color:var(--t1)}
+.flip-f .ff-word,.wl-tip-word{font-family:Georgia,'Times New Roman',var(--serif);font-weight:600;letter-spacing:0}
+.flip-f .ff-pinyin{background:var(--ochre-soft);color:var(--ochre);border-radius:999px}
+.flip-f .ff-speak{background:var(--surface-2);border-color:var(--line)}
+.flip-f .ff-speak svg{stroke:var(--t2)}
+.wi-ex{background:var(--paper);border-left:2px solid var(--accent)}
+/* buttons */
+.btn{border-radius:999px;font-weight:600;letter-spacing:.02em}
+.btn.primary,.btn.green,.btn.cyan{background:#23201A;color:#FBF9F2;box-shadow:none}
+.btn.sec{background:var(--surface);border:1px solid var(--line-strong);color:var(--t1)}
+.btn.orange{background:var(--ochre);color:#fff;box-shadow:none}
+.font-scale-seg{border-radius:999px;background:var(--surface-2)}
+.font-scale-seg button{border-radius:999px}
+.font-scale-seg button.active{background:#23201A;color:#FBF9F2}
+.wfb-btn{border-radius:999px;background:transparent;border:1px solid var(--line);font-weight:500}
+.wfb-btn.primary{background:#23201A;color:#FBF9F2;border-color:#23201A;font-weight:600}
+.word-fixed-bar{border:1px solid var(--line-strong);border-radius:999px;
+  box-shadow:0 8px 24px rgba(40,34,24,.10);background:rgba(255,255,255,.97)}
+/* search */
+.search-bar{border:1px solid var(--line);border-radius:999px;box-shadow:none}
+.search-bar:focus-within{border-color:var(--accent);box-shadow:0 0 0 3px rgba(110,143,175,.10)}
+/* phase labels */
+.phase-label{background:transparent;border:none;border-bottom:1px solid var(--line);
+  border-radius:0;padding:4px 2px 10px;margin-bottom:12px;font-size:11px;letter-spacing:.14em;color:var(--t2)}
+.phase-label .phase-meta{background:var(--surface-2);border-color:var(--line);color:var(--t3);font-weight:600}
+/* segmented controls: ink active state */
+.stats-filter-btn{border-radius:999px;padding:8px 14px;font-weight:500}
+.stats-filter-btn.active{background:#23201A;border-color:#23201A;color:#FBF9F2;font-weight:600}
+.wc-mode{border-radius:999px}
+.wc-mode button{border-radius:999px;font-weight:500;font-size:12.5px}
+.wc-mode button.active{background:#23201A;color:#FBF9F2;box-shadow:none}
+/* settings / modal */
+.settings-group-title{letter-spacing:.14em;color:var(--t3)}
+.settings-select,.modal-input,.modal-textarea{border-radius:10px}
+.modal-overlay{background:rgba(35,32,26,.32)}
+.modal{border-radius:16px;box-shadow:0 20px 50px rgba(40,34,24,.16)}
+.toast{background:#26231E}
+.setting-card,.settings-group{box-shadow:none}
+@media (min-width:900px){
+  .nav{background:var(--paper);border-right:1px solid var(--line)}
+  .nav::before{padding-bottom:22px}
+}
 </style>
 </head>
 <body>
@@ -1527,25 +1709,25 @@ button:focus:not(:focus-visible){outline:none}
   <svg style="position:absolute;width:0;height:0">
     <defs>
       <linearGradient id="navGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-        <stop offset="0%" style="stop-color:#2E6B44"/>
-        <stop offset="100%" style="stop-color:#4C9A66"/>
+        <stop offset="0%" style="stop-color:#93AFC7"/>
+        <stop offset="100%" style="stop-color:#6E8FAF"/>
       </linearGradient>
       <!-- V8: Stat icon gradients -->
       <linearGradient id="starGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-        <stop offset="0%" style="stop-color:#2E6B44"/>
-        <stop offset="100%" style="stop-color:#4C9A66"/>
+        <stop offset="0%" style="stop-color:#93AFC7"/>
+        <stop offset="100%" style="stop-color:#6E8FAF"/>
       </linearGradient>
       <linearGradient id="reviewGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-        <stop offset="0%" style="stop-color:#2E6B44"/>
-        <stop offset="100%" style="stop-color:#4C9A66"/>
+        <stop offset="0%" style="stop-color:#93AFC7"/>
+        <stop offset="100%" style="stop-color:#6E8FAF"/>
       </linearGradient>
       <linearGradient id="dialogGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-        <stop offset="0%" style="stop-color:#2E6B44"/>
-        <stop offset="100%" style="stop-color:#4C9A66"/>
+        <stop offset="0%" style="stop-color:#93AFC7"/>
+        <stop offset="100%" style="stop-color:#6E8FAF"/>
       </linearGradient>
       <linearGradient id="bookGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-        <stop offset="0%" style="stop-color:#2E6B44"/>
-        <stop offset="100%" style="stop-color:#4C9A66"/>
+        <stop offset="0%" style="stop-color:#93AFC7"/>
+        <stop offset="100%" style="stop-color:#6E8FAF"/>
       </linearGradient>
     </defs>
   </svg>
@@ -1786,7 +1968,7 @@ button:focus:not(:focus-visible){outline:none}
         <div class="settings-group-title">关于</div>
         <div class="settings-row">
           <div class="settings-label">版本</div>
-          <div class="settings-value" onclick="voiceDebugTap()" style="-webkit-user-select:none;user-select:none">te_v40</div>
+          <div class="settings-value" onclick="voiceDebugTap()" style="-webkit-user-select:none;user-select:none">te_v41</div>
         </div>
       </div>
     </div>
@@ -3021,7 +3203,7 @@ function checkDict() {
   if (!dictResults) dictResults = new Array(curWords.length).fill(null);
   if (val === ans) {
     inp.classList.add('correct');
-    document.getElementById('dict-hint').innerHTML = '<span style="color:#2E6B44;font-weight:700">✓ 正确！</span>';
+    document.getElementById('dict-hint').innerHTML = '<span style="color:#4F6B4B;font-weight:700">✓ 正确！</span>';
     dictResults[wIdx] = true;
     markWordKnown(w.word);
   } else {
@@ -3067,7 +3249,7 @@ function renderQuiz() {
     html += 'background:var(--ga);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">';
     html += quizState.score + '/' + quizState.total + '</div>';
     html += '<div style="color:var(--t2);margin:8px 0 4px;font-size:14px">答对 ' + quizState.score + ' 题 · 正确率 ' + pct + '%</div>';
-    if (pct >= 80) html += '<div style="color:#2E6B44;font-size:13px;margin-bottom:16px">优秀！继续加油</div>';
+    if (pct >= 80) html += '<div style="color:#4F6B4B;font-size:13px;margin-bottom:16px">优秀！继续加油</div>';
     else if (pct >= 60) html += '<div style="color:#B8932E;font-size:13px;margin-bottom:16px">不错，还可以更好</div>';
     else html += '<div style="color:var(--org);font-size:13px;margin-bottom:16px">需要多加练习</div>';
     html += '<div class="btn-row"><button class="btn primary" onclick="finishPractice()">完成返回</button><button class="btn sec" onclick="quizState=null;renderWords()">再来一轮</button></div></div>';
@@ -3147,7 +3329,7 @@ function renderBuild() {
     html += 'background:var(--ga);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">';
     html += buildState.score + '/' + buildState.total + '</div>';
     html += '<div style="color:var(--t2);margin:8px 0 4px;font-size:14px">造句完成 · 正确率 ' + pct + '%</div>';
-    if (pct >= 80) html += '<div style="color:#2E6B44;font-size:13px;margin-bottom:16px">语法掌握很好！</div>';
+    if (pct >= 80) html += '<div style="color:#4F6B4B;font-size:13px;margin-bottom:16px">语法掌握很好！</div>';
     else if (pct >= 60) html += '<div style="color:#B8932E;font-size:13px;margin-bottom:16px">不错，注意语序</div>';
     else html += '<div style="color:#C2544A;font-size:13px;margin-bottom:16px">多读句子，培养语感</div>';
     html += '<div class="btn-row"><button class="btn primary" onclick="finishPractice()">完成返回</button><button class="btn sec" onclick="buildState=null;renderWords()">再来一轮</button></div></div>';
@@ -7394,7 +7576,7 @@ function openVoiceDebug() {
     return '<div><span style="color:#64748b">' + esc(l.t) + '</span> [' + esc(l.type) + '] ' + esc(l.msg) + '</div>';
   }).join('') : '<div>—</div>';
   panel.innerHTML =
-    '<div class="td-head"><span>语音诊断 V40</span><button onclick="closeVoiceDebug()">关闭</button></div>' +
+    '<div class="td-head"><span>语音诊断 V41</span><button onclick="closeVoiceDebug()">关闭</button></div>' +
     '<div class="td-body">' +
       '<div><b>浏览器：</b>' + esc(navigator.userAgent) + '</div>' +
       '<div><b>支持 SpeechSynthesis：</b>' + (st.supported ? '是' : '否') + '</div>' +
@@ -7550,7 +7732,7 @@ document.addEventListener('keydown', function(e) {
 // ===== PWA / Service Worker =====
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', function() {
-    navigator.serviceWorker.register('service-worker.js?v=40').then(function(reg) {
+    navigator.serviceWorker.register('service-worker.js?v=41').then(function(reg) {
       reg.addEventListener('updatefound', function() {
         var nw = reg.installing;
         if (nw) {
