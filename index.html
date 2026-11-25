@@ -16,7 +16,7 @@
 <link rel="icon" type="image/png" sizes="512x512" href="icon-512.png?v8">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png?v8">
 <link rel="manifest" href="manifest.json">
-<meta name="version" content="te_v44">
+<meta name="version" content="te_v45">
 <title>谢飞机</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
 <style>
@@ -1977,6 +1977,17 @@ body{color:var(--t1)}
 .nb-li-cn{display:block;font-size:11.5px;color:var(--t3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:1px}
 .nb-li-meta{font-size:10.5px;color:var(--t4);flex:none}
 .nb-more{width:100%;border:1px dashed var(--line-strong);background:none;border-radius:12px;padding:11px;color:var(--accent-strong);font-size:12.5px;font-weight:700;font-family:inherit;cursor:pointer}
+
+/* ===== V45: cloud sync ===== */
+.sync-status{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--t2);font-weight:600;margin-bottom:10px}
+.sync-dot{width:9px;height:9px;border-radius:50%;flex:none}
+.sync-dot.on{background:#10B981;box-shadow:0 0 0 3px rgba(16,185,129,.18)}
+.sync-dot.off{background:#CBD5E1}
+.sync-code-row{display:flex;gap:8px;width:100%}
+.sync-code{flex:1;min-width:0;background:var(--surface-2);border:1.5px solid var(--line);border-radius:10px;padding:10px 12px;color:var(--t1);font-size:12.5px;font-family:inherit;outline:none;transition:border-color .2s}
+.sync-code:focus{border-color:var(--accent)}
+.lr-sync{display:flex;align-items:center;gap:6px;margin-top:10px;font-size:11px;color:var(--t3);font-weight:600}
+.btn[disabled]{opacity:.55;cursor:not-allowed}
 </style>
 </head>
 <body>
@@ -2234,6 +2245,11 @@ body{color:var(--t1)}
       </div>
 
       <div class="settings-group">
+        <div class="settings-group-title">云端同步</div>
+        <div id="sync-settings-box"></div>
+      </div>
+
+      <div class="settings-group">
         <div class="settings-group-title">数据管理</div>
         <div class="btn-row">
           <button class="btn sec" onclick="exportData()">导出数据</button>
@@ -2246,7 +2262,7 @@ body{color:var(--t1)}
         <div class="settings-group-title">关于</div>
         <div class="settings-row">
           <div class="settings-label">版本</div>
-          <div class="settings-value" onclick="voiceDebugTap()" style="-webkit-user-select:none;user-select:none">te_v44</div>
+          <div class="settings-value" onclick="voiceDebugTap()" style="-webkit-user-select:none;user-select:none">te_v45</div>
         </div>
       </div>
     </div>
@@ -2404,7 +2420,7 @@ const Store = (function() {
   var DB_NAME = 'te_v14_db';
   var STORE_NAME = 'kv';
   var cache = {};
-  var KNOWN_KEYS = ['done', 'lastStudy', 'studyLog', 'notebook', 'reviews', 'ttsSettings', 'learned', 'lastPos', 'learnedMigrated'];
+  var KNOWN_KEYS = ['done', 'lastStudy', 'studyLog', 'notebook', 'reviews', 'ttsSettings', 'learned', 'lastPos', 'learnedMigrated', 'syncCfg', 'syncMeta'];
 
   function initIDB() {
     return new Promise(function(resolve) {
@@ -2495,6 +2511,7 @@ const Store = (function() {
     cache[k] = v;
     if (idbReady) idbSet(k, v);
     lsSet(k, v);
+    try { if (window.__onStoreChange) window.__onStoreChange(k); } catch (e) {}
   }
 
   return { init: init, get: get, set: set };
@@ -2504,6 +2521,264 @@ const Store = (function() {
 if (typeof __v16MigrateDone === 'function') __v16MigrateDone();
 
 const S = Store;
+
+// ===== V45: Cloud Sync (jsonbin.io) =====
+var SYNC_KEYS = ['done','lastStudy','studyLog','notebook','reviews','learned','lastPos','learnedMigrated','errorPool'];
+var SYNC_BASE = (function(){ try { return window.__SYNC_BASE__ || 'https://api.jsonbin.io'; } catch(e){ return 'https://api.jsonbin.io'; } })();
+var __deviceId = 'dev-' + Math.random().toString(36).slice(2, 10) + '-' + Date.now().toString(36);
+var syncReady = false;
+var syncBusy = false;
+var syncTimer = null;
+var syncDirty = false; // a change arrived while a sync was in-flight → re-sync after it finishes
+window.__syncApplying = false;
+
+function syncDefault(k) {
+  if (k === 'notebook' || k === 'errorPool') return [];
+  if (k === 'lastStudy') return 0;
+  if (k === 'lastPos') return null;
+  if (k === 'learnedMigrated') return false;
+  return {};
+}
+function isSyncEnabled() {
+  var c = Store.get('syncCfg', null);
+  return !!(c && c.key && c.binId);
+}
+function getSyncMeta() { return Store.get('syncMeta', {}) || {}; }
+function setSyncMeta(m) { Store.set('syncMeta', m); }
+function getDeviceId() {
+  var c = Store.get('syncCfg', null) || {};
+  return c.device || __deviceId;
+}
+function setSyncReady(v) { syncReady = !!v; }
+
+function buildSyncPayload() {
+  var p = { _meta: { v: 1, device: getDeviceId(), ts: Date.now() } };
+  SYNC_KEYS.forEach(function(k) {
+    try { p[k] = Store.get(k, syncDefault(k)); } catch(e) { p[k] = syncDefault(k); }
+  });
+  return p;
+}
+function uniqArr(a) {
+  var seen = {}, out = [];
+  (a || []).forEach(function(x) { var s = typeof x === 'object' ? JSON.stringify(x) : String(x); if (!seen[s]) { seen[s] = true; out.push(x); } });
+  return out;
+}
+function mergeSyncValue(key, local, remote) {
+  if (remote === undefined || remote === null) return local;
+  if (local === undefined || local === null) return remote;
+  if (key === 'learned') {
+    var out = Object.assign({}, remote);
+    Object.keys(local).forEach(function(w) {
+      var lr = local[w] || {}, rr = out[w] || {};
+      if (!out[w] || (lr.ts || 0) > (rr.ts || 0)) out[w] = lr;
+    });
+    return out;
+  }
+  if (key === 'done') {
+    var o = Object.assign({}, remote);
+    Object.keys(local).forEach(function(k) { if (local[k]) o[k] = true; });
+    return o;
+  }
+  if (key === 'studyLog' || key === 'reviews') {
+    var m = Object.assign({}, remote);
+    Object.keys(local).forEach(function(k) {
+      var la = local[k] || [], ra = m[k] || [];
+      m[k] = uniqArr(ra.concat(la));
+    });
+    return m;
+  }
+  if (key === 'notebook' || key === 'errorPool') {
+    var map = {};
+    (remote || []).concat(local || []).forEach(function(it) { if (it && it.word) map[it.word] = it; });
+    return Object.keys(map).map(function(w) { return map[w]; });
+  }
+  if (key === 'lastPos') return (local.ts || 0) >= (remote.ts || 0) ? local : remote;
+  if (key === 'lastStudy') return Math.max(Number(local) || 0, Number(remote) || 0);
+  if (key === 'learnedMigrated') return !!(local || remote);
+  return remote;
+}
+function mergePayload(remote, local) {
+  var rts = (remote._meta && remote._meta.ts) || 0, lts = (local._meta && local._meta.ts) || 0;
+  var out = { _meta: { v: 1, device: (local._meta && local._meta.device) || getDeviceId(), ts: Math.max(rts, lts, Date.now()) } };
+  SYNC_KEYS.forEach(function(k) { out[k] = mergeSyncValue(k, local[k], remote[k]); });
+  return out;
+}
+function applyRemotePayload(remote) {
+  if (!remote) return;
+  window.__syncApplying = true;
+  try {
+    SYNC_KEYS.forEach(function(k) {
+      if (!(k in remote)) return;
+      var local = Store.get(k, syncDefault(k));
+      Store.set(k, mergeSyncValue(k, local, remote[k]));
+    });
+  } finally { window.__syncApplying = false; }
+}
+
+function syncHeaders(key) { return { 'Content-Type': 'application/json', 'X-Master-Key': key }; }
+function cloudCreateWith(key, payload) {
+  return fetch(SYNC_BASE + '/v3/b', { method: 'POST', cache: 'no-store', headers: syncHeaders(key), body: JSON.stringify(payload) })
+    .then(function(r) { if (!r.ok) throw new Error('创建失败 ' + r.status); return r.json(); })
+    .then(function(d) { var id = d && d.metadata && d.metadata.id; if (!id) throw new Error('未返回 bin id'); return id; });
+}
+function cloudFetchWith(key, binId) {
+  // Cache-busting query param so no intermediate layer (HTTP cache, SW cache, CDN)
+  // ever serves a stale snapshot. SW also bypasses /v3/b paths (see service-worker.js).
+  var bust = '?_t=' + Date.now() + '-' + Math.random().toString(36).slice(2, 7);
+  return fetch(SYNC_BASE + '/v3/b/' + encodeURIComponent(binId) + bust, { method: 'GET', cache: 'no-store', headers: { 'X-Master-Key': key } })
+    .then(function(r) { if (!r.ok) throw new Error('读取失败 ' + r.status); return r.json(); })
+    .then(function(d) { return d && d.record ? d.record : null; });
+}
+function cloudPutWith(key, binId, payload) {
+  return fetch(SYNC_BASE + '/v3/b/' + encodeURIComponent(binId), { method: 'PUT', cache: 'no-store', headers: syncHeaders(key), body: JSON.stringify(payload) })
+    .then(function(r) { if (!r.ok) throw new Error('写入失败 ' + r.status); return r.json(); });
+}
+function cloudFetch() { var c = Store.get('syncCfg', null); return cloudFetchWith(c.key, c.binId); }
+function cloudPut(p) { var c = Store.get('syncCfg', null); return cloudPutWith(c.key, c.binId, p); }
+
+function refreshSyncUI() {
+  renderHome();
+  if (document.getElementById('pg-stats').classList.contains('active')) renderStats();
+  if (document.getElementById('pg-notebook').classList.contains('active')) renderNotebook();
+}
+function syncNow(mode) {
+  mode = mode || 'auto';
+  if (!isSyncEnabled()) { showToast('请先连接云端同步'); renderSyncSettings(); return Promise.resolve(); }
+  syncBusy = true; renderSyncSettings();
+  return cloudFetch().then(function(remote) {
+    var localSnap = buildSyncPayload();
+    if (mode === 'pull') {
+      if (!remote) throw new Error('云端暂无数据');
+      applyRemotePayload(remote);
+    } else if (mode === 'push') {
+      return cloudPut(localSnap);
+    } else {
+      var merged = remote ? mergePayload(remote, localSnap) : localSnap;
+      applyRemotePayload(merged);
+      return cloudPut(merged);
+    }
+  }).then(function() {
+    var meta = getSyncMeta(); meta.lastSync = Date.now(); meta.lastError = ''; setSyncMeta(meta);
+    showToast('同步完成'); refreshSyncUI();
+  }).catch(function(e) {
+    var meta = getSyncMeta(); meta.lastError = String(e && e.message || e); setSyncMeta(meta);
+    showToast('同步失败：' + (e && e.message || e));
+  }).then(function() {
+    syncBusy = false; renderSyncSettings();
+    // If local data changed while this sync was in-flight, push again so the update isn't lost.
+    if (syncDirty) { syncDirty = false; scheduleSync(); }
+  });
+}
+function scheduleSync() {
+  if (!syncReady || !isSyncEnabled() || window.__syncApplying) return;
+  if (syncBusy) { syncDirty = true; return; } // changes during in-flight sync: re-sync when it finishes
+  if (syncTimer) clearTimeout(syncTimer);
+  syncTimer = setTimeout(function() { syncNow('auto'); }, 2000);
+}
+window.__onStoreChange = function(k) { if (SYNC_KEYS.indexOf(k) >= 0) scheduleSync(); };
+
+function encodeSyncCode(key, binId) {
+  try { return btoa(unescape(encodeURIComponent(key + '\n' + binId))); } catch(e) { return key + '|' + binId; }
+}
+function decodeSyncCode(code) {
+  try {
+    var raw = decodeURIComponent(escape(atob(code)));
+    var parts = raw.split('\n');
+    if (parts.length >= 2) return { key: parts[0], binId: parts.slice(1).join('\n') };
+  } catch(e) {}
+  var p = (code || '').split('|');
+  if (p.length >= 2) return { key: p[0], binId: p.slice(1).join('|') };
+  return null;
+}
+function setSyncCfgQuiet(cfg) {
+  window.__syncApplying = true;
+  try { Store.set('syncCfg', cfg); } finally { window.__syncApplying = false; }
+}
+function connectWithKey(key) {
+  key = (key || '').trim();
+  if (!key) { showToast('请输入 Master Key'); return; }
+  setSyncReady(true);
+  cloudCreateWith(key, buildSyncPayload()).then(function(binId) {
+    setSyncCfgQuiet({ key: key, binId: binId, device: getDeviceId() });
+    var meta = getSyncMeta(); meta.lastSync = Date.now(); meta.lastError = ''; setSyncMeta(meta);
+    showToast('云端同步已连接'); renderSyncSettings();
+  }).catch(function(e) { showToast('连接失败：' + (e && e.message || e)); renderSyncSettings(); });
+}
+function connectWithCode(code) {
+  var d = decodeSyncCode(code);
+  if (!d || !d.key || !d.binId) { showToast('同步码无效'); return; }
+  setSyncReady(true);
+  cloudFetchWith(d.key, d.binId).then(function(remote) {
+    setSyncCfgQuiet({ key: d.key, binId: d.binId, device: getDeviceId() });
+    if (remote) applyRemotePayload(remote);
+    return syncNow('auto');
+  }).then(function() { showToast('已连接到云端'); }).catch(function(e) {
+    showToast('连接失败：' + (e && e.message || e)); renderSyncSettings();
+  });
+}
+function disconnectSync() {
+  if (!window.confirm('断开云端同步？本机密钥将被清除（云端数据保留）。')) return;
+  setSyncCfgQuiet(null);
+  var meta = getSyncMeta(); meta.lastError = ''; setSyncMeta(meta);
+  showToast('已断开云端同步'); renderSyncSettings();
+}
+function fmtSyncTime(ts) {
+  if (!ts) return '从未';
+  var d = new Date(ts), now = new Date();
+  function pad(n) { return n < 10 ? '0' + n : '' + n; }
+  if (d.toDateString() === now.toDateString()) return '今天 ' + pad(d.getHours()) + ':' + pad(d.getMinutes());
+  var y = new Date(now.getTime() - 86400000);
+  if (d.toDateString() === y.toDateString()) return '昨天 ' + pad(d.getHours()) + ':' + pad(d.getMinutes());
+  return (d.getMonth() + 1) + '月' + d.getDate() + '日 ' + pad(d.getHours()) + ':' + pad(d.getMinutes());
+}
+function renderSyncSettings() {
+  var box = document.getElementById('sync-settings-box');
+  if (!box) return;
+  var cfg = Store.get('syncCfg', null);
+  var meta = getSyncMeta();
+  var enabled = !!(cfg && cfg.key && cfg.binId);
+  var html = '';
+  if (enabled) {
+    html += '<div class="sync-status"><span class="sync-dot on"></span>已连接云端 · 上次同步 ' + fmtSyncTime(meta.lastSync);
+    if (meta.lastError) html += ' <span style="color:#ef4444">(' + esc(meta.lastError) + ')</span>';
+    html += '</div>';
+    html += '<div class="settings-row" style="align-items:flex-start;flex-direction:column;gap:6px"><div class="settings-label">同步码（在另一台设备粘贴即可同步）</div>';
+    html += '<div class="sync-code-row"><input class="sync-code" id="sync-code-input" readonly value="' + esc(encodeSyncCode(cfg.key, cfg.binId)) + '"><button class="btn sec" onclick="copySyncCode()">复制</button></div></div>';
+    html += '<div class="btn-row" style="margin-top:10px"><button class="btn primary" onclick="syncNow(\'auto\')" ' + (syncBusy ? 'disabled' : '') + '>' + (syncBusy ? '同步中…' : '立即同步') + '</button>';
+    html += '<button class="btn sec" onclick="disconnectSync()">断开同步</button></div>';
+    html += '<div class="settings-desc" style="margin-top:6px">学习中自动同步到云端，两台设备连接后共享进度与已学记录。</div>';
+  } else {
+    html += '<div class="sync-status"><span class="sync-dot off"></span>未连接云端</div>';
+    html += '<div class="settings-row" style="align-items:flex-start;flex-direction:column;gap:6px"><div class="settings-label">方式一：输入 jsonbin Master Key（新建同步）</div>';
+    html += '<div class="sync-code-row"><input class="sync-code" id="sync-key-input" type="password" placeholder="粘贴 Master Key"><button class="btn primary" onclick="submitSyncKey()">连接</button></div></div>';
+    html += '<div class="settings-row" style="align-items:flex-start;flex-direction:column;gap:6px;margin-top:6px"><div class="settings-label">方式二：粘贴另一台设备的同步码</div>';
+    html += '<div class="sync-code-row"><input class="sync-code" id="sync-code2-input" placeholder="粘贴同步码"><button class="btn primary" onclick="submitSyncCode()">连接</button></div></div>';
+    html += '<div class="settings-desc" style="margin-top:6px">免费注册 <a href="https://jsonbin.io" target="_blank" rel="noopener" style="color:var(--accent-strong)">jsonbin.io</a> 获取 Master Key。密钥仅保存在本机，断开即清除。</div>';
+  }
+  box.innerHTML = html;
+}
+function submitSyncKey() { var el = document.getElementById('sync-key-input'); if (el) connectWithKey(el.value); }
+function submitSyncCode() { var el = document.getElementById('sync-code2-input'); if (el) connectWithCode(el.value); }
+function copySyncCode() {
+  var el = document.getElementById('sync-code-input');
+  if (!el) return;
+  el.select();
+  try { document.execCommand('copy'); } catch(e) {}
+  try { if (navigator.clipboard) navigator.clipboard.writeText(el.value); } catch(e) {}
+  showToast('同步码已复制');
+}
+window.renderSyncSettings = renderSyncSettings;
+window.syncNow = syncNow;
+window.connectWithKey = connectWithKey;
+window.connectWithCode = connectWithCode;
+window.disconnectSync = disconnectSync;
+window.submitSyncKey = submitSyncKey;
+window.submitSyncCode = submitSyncCode;
+window.copySyncCode = copySyncCode;
+window.setSyncReady = setSyncReady;
+window.isSyncEnabled = isSyncEnabled;
+window.getSyncMeta = getSyncMeta;
+window.fmtSyncTime = fmtSyncTime;
 
 let curDay = null;
 let curWords = [];
@@ -3187,6 +3462,10 @@ function renderLearnRecords() {
       html += '<button type="button" class="lr-chip more" onclick="switchNav(\'stats\')">+' + (list.length - 10) + ' 更多</button>';
     }
     html += '</div>';
+  }
+  if (typeof isSyncEnabled === 'function' && isSyncEnabled()) {
+    var _meta = (typeof getSyncMeta === 'function') ? getSyncMeta() : {};
+    html += '<div class="lr-sync"><span class="sync-dot on"></span>云端已同步 · ' + (typeof fmtSyncTime === 'function' ? fmtSyncTime(_meta.lastSync) : '') + '</div>';
   }
   html += '<div class="lr-foot"><button type="button" onclick="switchNav(\'stats\')">查看完整学习记录 →</button></div></div>';
   container.innerHTML = html;
@@ -8253,6 +8532,7 @@ function openSettings() {
   if (rateSlider) rateSlider.value = rate;
   if (rateValue) rateValue.textContent = rate.toFixed(2);
   initVoices();
+  if (typeof renderSyncSettings === 'function') renderSyncSettings();
   if (modal) modal.classList.add('show');
 }
 
@@ -8346,7 +8626,7 @@ function openVoiceDebug() {
     return '<div><span style="color:#64748b">' + esc(l.t) + '</span> [' + esc(l.type) + '] ' + esc(l.msg) + '</div>';
   }).join('') : '<div>—</div>';
   panel.innerHTML =
-    '<div class="td-head"><span>语音诊断 V44</span><button onclick="closeVoiceDebug()">关闭</button></div>' +
+    '<div class="td-head"><span>语音诊断 V45</span><button onclick="closeVoiceDebug()">关闭</button></div>' +
     '<div class="td-body">' +
       '<div><b>浏览器：</b>' + esc(navigator.userAgent) + '</div>' +
       '<div><b>支持 SpeechSynthesis：</b>' + (st.supported ? '是' : '否') + '</div>' +
@@ -8389,7 +8669,9 @@ function exportData() {
     lastPos: Store.get('lastPos', null),
     learnedMigrated: Store.get('learnedMigrated', false),
     errorPool: Store.get('errorPool', []),
-    ttsSettings: Store.get('ttsSettings', { rate: 0.85, voice: '' })
+    ttsSettings: Store.get('ttsSettings', { rate: 0.85, voice: '' }),
+    syncCfg: Store.get('syncCfg', null),
+    syncMeta: Store.get('syncMeta', {})
   };
   var json = JSON.stringify(data, null, 2);
   var blob = new Blob([json], { type: 'application/json' });
@@ -8410,21 +8692,27 @@ function importData(file) {
   reader.onload = function(e) {
     try {
       var data = JSON.parse(e.target.result);
-      if (data.done) Store.set('done', data.done);
-      if (data.lastStudy) Store.set('lastStudy', data.lastStudy);
-      if (data.studyLog) Store.set('studyLog', data.studyLog);
-      if (data.notebook) Store.set('notebook', data.notebook);
-      if (data.reviews) Store.set('reviews', data.reviews);
-      if (data.learned) Store.set('learned', data.learned);
-      if (data.lastPos) Store.set('lastPos', data.lastPos);
-      if (typeof data.learnedMigrated !== 'undefined') Store.set('learnedMigrated', data.learnedMigrated);
-      else if (!data.learned) Store.set('learnedMigrated', false);
-      try { backfillLearningRecords(); } catch (e) {}
-      if (data.errorPool) Store.set('errorPool', data.errorPool);
-      if (data.ttsSettings) Store.set('ttsSettings', data.ttsSettings);
+      window.__syncApplying = true;
+      try {
+        if (data.done) Store.set('done', data.done);
+        if (data.lastStudy) Store.set('lastStudy', data.lastStudy);
+        if (data.studyLog) Store.set('studyLog', data.studyLog);
+        if (data.notebook) Store.set('notebook', data.notebook);
+        if (data.reviews) Store.set('reviews', data.reviews);
+        if (data.learned) Store.set('learned', data.learned);
+        if (data.lastPos) Store.set('lastPos', data.lastPos);
+        if (typeof data.learnedMigrated !== 'undefined') Store.set('learnedMigrated', data.learnedMigrated);
+        else if (!data.learned) Store.set('learnedMigrated', false);
+        try { backfillLearningRecords(); } catch (e) {}
+        if (data.errorPool) Store.set('errorPool', data.errorPool);
+        if (data.ttsSettings) Store.set('ttsSettings', data.ttsSettings);
+        if (data.syncCfg) Store.set('syncCfg', data.syncCfg);
+        if (data.syncMeta) Store.set('syncMeta', data.syncMeta);
+      } finally { window.__syncApplying = false; }
       showToast('数据导入成功');
       renderHome();
       if (document.getElementById('pg-stats').classList.contains('active')) renderStats();
+      if (typeof isSyncEnabled === 'function' && isSyncEnabled() && typeof syncNow === 'function') syncNow('auto');
     } catch(err) {
       showToast('导入失败：文件格式错误');
     }
@@ -8510,7 +8798,7 @@ document.addEventListener('keydown', function(e) {
 // ===== PWA / Service Worker =====
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', function() {
-    navigator.serviceWorker.register('service-worker.js?v=44').then(function(reg) {
+    navigator.serviceWorker.register('service-worker.js?v=45').then(function(reg) {
       reg.addEventListener('updatefound', function() {
         var nw = reg.installing;
         if (nw) {
@@ -8534,10 +8822,15 @@ if ('serviceWorker' in navigator) {
 init();
 function init() {
   Store.init().then(() => {
+    setSyncReady(true);
     try { backfillLearningRecords(); } catch (e) {}
     renderHome();
     checkReminder();
     loadVoices();
+    if (isSyncEnabled()) {
+      if (typeof syncTimer !== 'undefined' && syncTimer) clearTimeout(syncTimer);
+      setTimeout(function() { syncNow('auto'); }, 600);
+    }
   });
 }
 </script>

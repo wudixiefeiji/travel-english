@@ -1,5 +1,5 @@
-// Service Worker for 谢飞机 te_v44
-const CACHE = 'te-v44';
+// Service Worker for 谢飞机 te_v45
+const CACHE = 'te-v45';
 const ASSETS = [
   './',
   './index.html',
@@ -37,7 +37,11 @@ self.addEventListener('message', function(e) {
 self.addEventListener('fetch', function(e) {
   if (e.request.method !== 'GET') return;
   var url = new URL(e.request.url);
-  
+
+  // Never intercept/cache cloud-sync API requests — they must always hit the
+  // network for fresh data (cache-first would serve stale snapshots after a PUT).
+  if (url.pathname.indexOf('/v3/b') === 0) return;
+
   // Network-first for HTML documents (always get latest)
   if (e.request.mode === 'navigate' || url.pathname.indexOf('.html') !== -1 || url.pathname === '/') {
     e.respondWith(
