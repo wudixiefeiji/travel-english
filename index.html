@@ -16,7 +16,7 @@
 <link rel="icon" type="image/png" sizes="512x512" href="icon-512.png?v8">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png?v8">
 <link rel="manifest" href="manifest.json">
-<meta name="version" content="te_v45">
+<meta name="version" content="te_v46">
 <title>谢飞机</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
 <style>
@@ -2262,7 +2262,7 @@ body{color:var(--t1)}
         <div class="settings-group-title">关于</div>
         <div class="settings-row">
           <div class="settings-label">版本</div>
-          <div class="settings-value" onclick="voiceDebugTap()" style="-webkit-user-select:none;user-select:none">te_v45</div>
+          <div class="settings-value" onclick="voiceDebugTap()" style="-webkit-user-select:none;user-select:none">te_v46</div>
         </div>
       </div>
     </div>
@@ -6033,8 +6033,12 @@ var TTS = (function() {
     speakOne(queue.shift(), id);
   }
   function launch(id, canceled) {
-    if (!canceled) { nextSegment(id); return; }
-    // Let Safari finish the old cancel before queuing new audio.
+    var isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent || '') ||
+                (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+    // iOS: stay inside the user-gesture call stack. Deferring with setTimeout drops the
+    // gesture and iOS then silently refuses to speak (no audio, no error).
+    if (!canceled || isIOS) { nextSegment(id); return; }
+    // Let desktop Safari finish the old cancel before queuing new audio.
     logAdd('defer', '#' + id + ' 90ms');
     launchTimer = setTimeout(function() {
       launchTimer = null;
@@ -6052,6 +6056,10 @@ var TTS = (function() {
       else splitText(clean).forEach(function(x) { segs.push(x); });
     });
     if (!segs.length) return false;
+    // Refresh voices synchronously here — play() runs inside the user's tap handler, and
+    // iOS only populates getVoices() during a gesture. Without this the first tap stays
+    // on an empty voice list, falls into the async wait path and never produces audio.
+    try { refreshVoices(true); } catch (e) {}
     var canceled = stop('replace');
     var id = ++taskSeq;
     lastError = '';
@@ -6089,6 +6097,7 @@ var TTS = (function() {
       });
     });
     if (!list.length) return false;
+    try { refreshVoices(true); } catch (e) {}
     var canceled = stop('replace');
     var id = ++taskSeq;
     lastError = '';
@@ -6147,6 +6156,27 @@ var TTS = (function() {
 function speak(text, opts) {
   return TTS.play(text, opts || {});
 }
+
+// ===== V46: iOS Safari speech unlock =====
+// On iOS, speechSynthesis stays silent until it is activated by a real user gesture,
+// and getVoices() returns an empty list before that first gesture. We warm up the engine
+// and cache the voice list on the very first touch/click so that playback (including the
+// short async deferrals used elsewhere in this module) can actually produce audio.
+(function () {
+  var ua = (navigator.userAgent || '');
+  var isIOS = /iPad|iPhone|iPod/.test(ua) ||
+              (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+  if (!isIOS || !window.speechSynthesis) return;
+  var armed = false;
+  function arm() {
+    if (armed) return;
+    armed = true;
+    try { TTS.refreshVoices(true); } catch (e) {}
+  }
+  ['touchstart', 'pointerdown', 'click', 'keydown'].forEach(function (ev) {
+    document.addEventListener(ev, arm, { once: true, capture: true, passive: true });
+  });
+})();
 
 function esc(s) {
   if (!s) return '';
@@ -8626,7 +8656,7 @@ function openVoiceDebug() {
     return '<div><span style="color:#64748b">' + esc(l.t) + '</span> [' + esc(l.type) + '] ' + esc(l.msg) + '</div>';
   }).join('') : '<div>—</div>';
   panel.innerHTML =
-    '<div class="td-head"><span>语音诊断 V45</span><button onclick="closeVoiceDebug()">关闭</button></div>' +
+    '<div class="td-head"><span>语音诊断 V46</span><button onclick="closeVoiceDebug()">关闭</button></div>' +
     '<div class="td-body">' +
       '<div><b>浏览器：</b>' + esc(navigator.userAgent) + '</div>' +
       '<div><b>支持 SpeechSynthesis：</b>' + (st.supported ? '是' : '否') + '</div>' +
@@ -8798,7 +8828,7 @@ document.addEventListener('keydown', function(e) {
 // ===== PWA / Service Worker =====
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', function() {
-    navigator.serviceWorker.register('service-worker.js?v=45').then(function(reg) {
+    navigator.serviceWorker.register('service-worker.js?v=46').then(function(reg) {
       reg.addEventListener('updatefound', function() {
         var nw = reg.installing;
         if (nw) {
