@@ -16,7 +16,7 @@
 <link rel="icon" type="image/png" sizes="512x512" href="icon-512.png?v8">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png?v8">
 <link rel="manifest" href="manifest.json">
-<meta name="version" content="te_v42">
+<meta name="version" content="te_v43">
 <title>谢飞机</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
 <style>
@@ -1912,6 +1912,47 @@ body{color:var(--t1)}
   .nav-btn:hover svg{stroke:#fff}
   .nav-btn:hover span{color:#fff}
 }
+/* ===== V43: learning records ===== */
+.lr-card{background:var(--surface);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow-sm);padding:16px;margin-top:14px}
+.lr-head{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.lr-title{font-size:15px;font-weight:700;color:var(--t1);display:flex;align-items:center;gap:8px}
+.lr-title::before{content:'';width:3px;height:15px;border-radius:2px;background:var(--ga)}
+.lr-count{font-size:11px;font-weight:700;color:var(--accent-strong);background:var(--accent-soft);border:1px solid var(--accent-line);border-radius:999px;padding:3px 9px;white-space:nowrap}
+.lr-last{display:flex;align-items:center;gap:7px;margin-top:10px;font-size:12px;color:var(--t3);line-height:1.5}
+.lr-dot{width:6px;height:6px;border-radius:50%;background:var(--accent);flex:none;box-shadow:0 0 0 3px var(--accent-soft)}
+.lr-chips{display:flex;flex-wrap:wrap;gap:7px;margin-top:12px}
+.lr-chip{display:inline-flex;align-items:center;gap:5px;border:1px solid var(--line);background:var(--surface-2);color:var(--t2);border-radius:999px;padding:6px 11px;font-size:12.5px;font-weight:600;font-family:inherit;cursor:pointer;transition:transform .15s,background .15s}
+.lr-chip:active{transform:scale(.96)}
+.lr-chip.more{color:var(--accent-strong);border-color:var(--accent-line);background:var(--accent-soft)}
+.lr-check{color:#3E9B63;font-weight:800;font-size:11px}
+.lr-foot{margin-top:12px;padding-top:10px;border-top:1px solid var(--line);display:flex;justify-content:flex-end}
+.lr-foot button{border:none;background:none;color:var(--accent-strong);font-size:12px;font-weight:700;font-family:inherit;cursor:pointer;padding:2px}
+.mc-progress{height:6px;border-radius:4px;background:var(--bg2);overflow:hidden;margin-top:8px;max-width:220px}
+.mc-progress > span{display:block;height:100%;border-radius:4px;background:var(--ga)}
+.wp-item{position:relative}
+.wp-item.learned{background:#F1FAF4;border-color:#CDEBD8}
+.wp-check{position:absolute;top:8px;right:8px;width:18px;height:18px;border-radius:50%;background:#E3F5EA;color:#3E9B63;font-size:10px;font-weight:800;display:flex;align-items:center;justify-content:center}
+.wc-action-btn.learned{background:var(--surface);border:1px solid var(--line);color:var(--t2)}
+.wc-action-btn.learned.saved{background:#EAF8F0;border-color:#CDEBD8;color:#3E7A52}
+.eb-badge.learned{background:#EAF8F0;color:#3E7A52;border:1px solid #CDEBD8}
+.learn-summary{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+.ls-card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:13px 14px;box-shadow:var(--shadow-sm)}
+.ls-num{font-size:22px;font-weight:800;color:var(--t1);line-height:1.2}
+.ls-num small{font-size:12px;color:var(--t4);font-weight:600}
+.ls-label{font-size:12px;color:var(--t3);margin-top:2px}
+.ls-bar{height:6px;border-radius:4px;background:var(--bg2);overflow:hidden;margin-top:9px}
+.ls-bar span{display:block;height:100%;border-radius:4px;background:var(--ga)}
+.learn-chips{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:16px}
+.day-record{display:flex;align-items:center;gap:12px;padding:11px 0;border-bottom:1px solid var(--line);cursor:pointer}
+.day-record:last-child{border-bottom:none;padding-bottom:0}
+.dr-day{width:38px;height:38px;border-radius:11px;background:var(--accent-soft);border:1px solid var(--accent-line);color:var(--accent-strong);font-size:10px;font-weight:700;display:flex;flex-direction:column;align-items:center;justify-content:center;flex:none;line-height:1}
+.dr-day b{font-size:14px;font-weight:800;margin-top:2px}
+.dr-body{flex:1;min-width:0}
+.dr-title{font-size:13px;font-weight:700;color:var(--t1);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.dr-bar{height:5px;border-radius:3px;background:var(--bg2);overflow:hidden;margin:6px 0 4px}
+.dr-bar span{display:block;height:100%;border-radius:3px;background:var(--ga)}
+.dr-meta{font-size:11px;color:var(--t3)}
+.dr-arrow{color:var(--t4);font-size:16px;flex:none}
 </style>
 </head>
 <body>
@@ -1971,11 +2012,11 @@ body{color:var(--t1)}
             <div class="hero-badge"><span class="hero-badge-dot"></span>MISSION · 谢飞机</div>
             <div class="hero-greet" id="hero-greet">下午好，继续你的英语之旅</div>
             <div class="hero-title" id="hero-title">继续你的英语学习</div>
-            <div class="hero-meta">已完成 <b id="hm-done">0</b> / <span id="hm-total">69</span> 天 · <b id="hm-pct">0</b>% · 连续 <b id="hs-streak">0</b> 天</div>
+            <div class="hero-meta">已完成 <b id="hm-done">0</b> / <span id="hm-total">69</span> 天 · <b id="hm-pct">0</b>% · 连续 <b id="hs-streak">0</b> 天 · 已学 <b id="hm-learned">0</b> 词</div>
           </div>
           <div class="hero-ring-row">
             <div class="hero-ring blue" id="ring-overall" style="--p:0"><div class="hero-ring-inner"><span class="hero-ring-pct" id="ring-overall-pct">0%</span><span class="hero-ring-lbl">整体完成</span></div></div>
-            <div class="hero-ring teal" id="ring-new" style="--p:0"><div class="hero-ring-inner"><span class="hero-ring-pct" id="ring-new-pct">0</span><span class="hero-ring-lbl">今日新词</span></div></div>
+            <div class="hero-ring teal" id="ring-new" style="--p:0"><div class="hero-ring-inner"><span class="hero-ring-pct" id="ring-new-pct">0</span><span class="hero-ring-lbl">已学新词</span></div></div>
             <div class="hero-ring indigo" id="ring-review" style="--p:0"><div class="hero-ring-inner"><span class="hero-ring-pct" id="ring-review-pct">0</span><span class="hero-ring-lbl">复习词汇</span></div></div>
             <div class="hero-ring amber" id="ring-dialog" style="--p:0"><div class="hero-ring-inner"><span class="hero-ring-pct" id="ring-dialog-pct">0</span><span class="hero-ring-lbl">口语句子</span></div></div>
           </div>
@@ -1999,8 +2040,8 @@ body{color:var(--t1)}
           <div class="tt-list">
             <button class="tt-item" type="button" onclick="startTodayTask('words')">
               <span class="tt-icon green"><svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg></span>
-              <div class="tt-body"><div class="tt-name">学习新词</div><div class="tt-sub" id="tt-words-sub">15 个单词</div></div>
-              <span class="tt-go">开始</span>
+              <div class="tt-body"><div class="tt-name">学习新词</div><div class="tt-sub" id="tt-words-sub">15 个单词</div><div class="mc-progress" style="max-width:150px"><span id="tt-words-prog" style="width:0%"></span></div></div>
+              <span class="tt-go" id="tt-words-go">开始</span>
             </button>
             <button class="tt-item" type="button" onclick="startTodayTask('review')">
               <span class="tt-icon sky"><svg viewBox="0 0 24 24"><path d="M23 4v6h-6M1 20v-6h6"/><path d="M3.5 9a9 9 0 0114.9-3.4L23 10M1 14l4.6 4.4A9 9 0 0020.5 15"/></svg></span>
@@ -2015,6 +2056,8 @@ body{color:var(--t1)}
           </div>
           <div id="daily-sentence-container"></div>
         </div>
+
+        <div id="learn-records"></div>
 
         <div id="category-container"></div>
         <div id="category-detail-container" style="display:none"></div>
@@ -2179,7 +2222,7 @@ body{color:var(--t1)}
         <div class="settings-group-title">关于</div>
         <div class="settings-row">
           <div class="settings-label">版本</div>
-          <div class="settings-value" onclick="voiceDebugTap()" style="-webkit-user-select:none;user-select:none">te_v42</div>
+          <div class="settings-value" onclick="voiceDebugTap()" style="-webkit-user-select:none;user-select:none">te_v43</div>
         </div>
       </div>
     </div>
@@ -2337,7 +2380,7 @@ const Store = (function() {
   var DB_NAME = 'te_v14_db';
   var STORE_NAME = 'kv';
   var cache = {};
-  var KNOWN_KEYS = ['done', 'lastStudy', 'studyLog', 'notebook', 'reviews', 'ttsSettings'];
+  var KNOWN_KEYS = ['done', 'lastStudy', 'studyLog', 'notebook', 'reviews', 'ttsSettings', 'learned', 'lastPos'];
 
   function initIDB() {
     return new Promise(function(resolve) {
@@ -2442,6 +2485,7 @@ let curDay = null;
 let curWords = [];
 let wMode = 'card';
 let wIdx = 0;
+let wKind = 'new';
 let quizState = null;
 let swipeStartX = 0;
 let swipeStartY = 0;
@@ -2481,6 +2525,133 @@ function markStudyToday() {
   Store.set('lastStudy', Date.now());
   if (curDay) logStudy(curDay.day, curDay.category || 'travel');
 }
+
+// ===== V43: word learning records =====
+function wordKeyOf(word) {
+  return String(word || '').trim().toLowerCase();
+}
+
+function getLearnedMap() {
+  var m = Store.get('learned', {});
+  return (m && typeof m === 'object') ? m : {};
+}
+
+function isWordLearned(word) {
+  var k = wordKeyOf(word);
+  return !!(k && getLearnedMap()[k]);
+}
+
+function markWordLearned(word, source) {
+  var k = wordKeyOf(word);
+  if (!k) return false;
+  var map = getLearnedMap();
+  var now = Date.now();
+  var rec = map[k] || { word: word, ts: now, count: 0, days: {} };
+  var isNew = !map[k];
+  rec.word = word;
+  rec.ts = now;
+  rec.count = (rec.count || 0) + 1;
+  rec.lastSource = source || 'card';
+  if (!rec.days) rec.days = {};
+  if (curDay) {
+    rec.day = curDay.day;
+    rec.cat = curDay.category || 'travel';
+    // V43: remember which day this word was actually studied on
+    rec.days[(curDay.category || 'travel') + '_' + curDay.day] = now;
+  }
+  map[k] = rec;
+  Store.set('learned', map);
+  markStudyToday();
+  return isNew;
+}
+
+function getLearnedCount() {
+  return Object.keys(getLearnedMap()).length;
+}
+
+function getLearnedList() {
+  var map = getLearnedMap();
+  return Object.keys(map).map(function(k){ return map[k]; })
+    .filter(function(r){ return r && r.word; })
+    .sort(function(a, b){ return (b.ts || 0) - (a.ts || 0); });
+}
+
+function countLearnedInList(list) {
+  var map = getLearnedMap();
+  return (list || []).filter(function(w){ return w && map[wordKeyOf(w.word)]; }).length;
+}
+
+function isWordLearnedOnDay(word, d) {
+  if (!d) return false;
+  var r = getLearnedMap()[wordKeyOf(word)];
+  if (!r) return false;
+  var dayKey = (d.category || 'travel') + '_' + d.day;
+  if (r.days && r.days[dayKey]) return true;
+  return !r.days && r.day === d.day;
+}
+
+function countDayLearned(d, list) {
+  if (!d) return 0;
+  return (list || []).filter(function(w){ return w && isWordLearnedOnDay(w.word, d); }).length;
+}
+
+function getFirstUnlearnedIndex(list) {
+  if (!list) return 0;
+  for (var i = 0; i < list.length; i++) {
+    if (list[i] && !isWordLearned(list[i].word)) return i;
+  }
+  return 0;
+}
+
+function saveLastPos() {
+  if (!curDay) return;
+  var w = curWords[wIdx];
+  Store.set('lastPos', {
+    day: curDay.day,
+    cat: curDay.category || 'travel',
+    kind: wKind,
+    idx: wIdx,
+    word: w ? w.word : '',
+    ts: Date.now()
+  });
+}
+
+function getLastPos() {
+  var p = Store.get('lastPos', null);
+  return (p && p.day) ? p : null;
+}
+
+function findDayByDayCat(day, cat) {
+  for (var i = 0; i < DATA.length; i++) {
+    var d = DATA[i];
+    if (d && d.day === day && (d.category || 'travel') === (cat || 'travel')) return d;
+  }
+  return null;
+}
+
+function openLearnedWord(word) {
+  var info = findWordInData(word);
+  if (!info) { showToast('未找到该单词'); return; }
+  openDayDetail(info.day, info.cat);
+  var d = findDayByDayCat(info.day, info.cat);
+  if (!d) return;
+  var key = wordKeyOf(word);
+  var idxNew = (d.newWords || []).findIndex(function(w){ return w && wordKeyOf(w.word) === key; });
+  var idxRev = (d.reviewWords || []).findIndex(function(w){ return w && wordKeyOf(w.word) === key; });
+  if (idxNew >= 0) openWords(false, idxNew);
+  else if (idxRev >= 0) openWords(true, idxRev);
+}
+
+function markCurrentLearned() {
+  var w = curWords[wIdx];
+  if (!w) return;
+  if (isWordLearned(w.word)) { showToast('这个单词已在学习记录中'); return; }
+  markWordLearned(w.word, 'manual');
+  showToast('已记录：' + w.word);
+  saveLastPos();
+  renderWords();
+}
+
 
 // ===== NAV =====
 function switchNav(tab) {
@@ -2738,14 +2909,37 @@ function getContinueTarget() {
   return first;
 }
 
+function getActiveDay() {
+  var pos = getLastPos();
+  if (pos) {
+    var done = Store.get('done', {});
+    if (!done[(pos.cat || 'travel') + '_' + pos.day]) {
+      var d = findDayByDayCat(pos.day, pos.cat);
+      if (d) return d;
+    }
+  }
+  return getContinueTarget();
+}
+
 function continueLearning() {
-  var t = getContinueTarget();
+  var t = getActiveDay();
   if (!t) { showToast('暂无学习内容'); return; }
-  openDayDetail(t.day, t.category || 'travel');
+  var cat = t.category || 'travel';
+  var pos = getLastPos();
+  var sameDay = pos && pos.day === t.day && (pos.cat || 'travel') === cat;
+  var kind = sameDay && pos.kind === 'review' ? 'review' : 'new';
+  var list = kind === 'review' ? (t.reviewWords || []) : (t.newWords || []);
+  if (!list.length && (t.reviewWords || []).length) { kind = 'review'; list = t.reviewWords; }
+  openDayDetail(t.day, cat);
+  if (!list.length) return;
+  var idx = sameDay && typeof pos.idx === 'number'
+    ? Math.min(Math.max(pos.idx, 0), list.length - 1)
+    : getFirstUnlearnedIndex(list);
+  setTimeout(function() { openWords(kind === 'review', idx); }, 40);
 }
 // Jump straight into one of today's tasks
 function startTodayTask(type) {
-  var t = getContinueTarget();
+  var t = getActiveDay();
   if (!t) { showToast('暂无学习内容'); return; }
   openDayDetail(t.day, t.category || 'travel');
   if (type === 'words') {
@@ -2777,10 +2971,13 @@ function renderHome() {
   if (hmPct) hmPct.textContent = allPct;
   var hsStreak = document.getElementById('hs-streak');
   if (hsStreak) hsStreak.textContent = getStudyStreak();
+  var hmLearned = document.getElementById('hm-learned');
+  if (hmLearned) hmLearned.textContent = getLearnedCount();
 
   // today's lesson drives the three activity rings
-  var target = getContinueTarget();
+  var target = getActiveDay();
   var todayNew = target ? (target.newWords || []).length : 0;
+  var todayLearned = target ? countDayLearned(target, target.newWords) : 0;
   var todayReview = target ? (target.reviewWords || []).length : 0;
   var todayDialog = target ? (target.dialog || []).filter(function(l){ return l && l.role && l.role.toUpperCase() === 'YOU'; }).length : 0;
   function ring(elId, pctElId, pct, text) {
@@ -2790,7 +2987,7 @@ function renderHome() {
     if (pctEl) pctEl.textContent = text;
   }
   ring('ring-overall','ring-overall-pct', allPct, allPct + '%');
-  ring('ring-new','ring-new-pct', todayNew / 20 * 100, todayNew);
+  ring('ring-new','ring-new-pct', todayNew ? todayLearned / todayNew * 100 : 0, todayLearned);
   ring('ring-review','ring-review-pct', todayReview / 10 * 100, todayReview);
   ring('ring-dialog','ring-dialog-pct', todayDialog / 5 * 100, todayDialog);
 
@@ -2808,12 +3005,26 @@ function renderHome() {
   if (target) {
     var allDone = allTotal > 0 && allDoneCount >= allTotal;
     if (heroTitle) heroTitle.textContent = allDone ? '全部课程已完成，来复习一下吧' : 'Day ' + target.day + ' · ' + (target.dayTitle || '继续学习');
-    if (heroNext) heroNext.textContent = allDone ? '回顾你的学习数据' : '第 ' + target.day + ' 天 · 点击开始';
+    if (heroNext) {
+      var _pos = getLastPos();
+      var _posDay = _pos ? findDayByDayCat(_pos.day, _pos.cat) : null;
+      if (!allDone && _posDay && _pos.word && _pos.day === target.day) {
+        var _posTotal = _pos.kind === 'review' ? (_posDay.reviewWords || []).length : (_posDay.newWords || []).length;
+        heroNext.textContent = '上次学到 Day ' + _pos.day + (_posTotal ? ' · 第 ' + Math.min(_pos.idx + 1, _posTotal) + '/' + _posTotal + ' 个' : '') + ' · 点击继续';
+      } else {
+        heroNext.textContent = allDone ? '回顾你的学习数据' : '第 ' + target.day + ' 天 · 点击开始';
+      }
+    }
     // today's task checklist
     var ttDay = document.getElementById('tt-day');
     if (ttDay) ttDay.textContent = 'Day ' + target.day;
     var ttWords = document.getElementById('tt-words-sub');
-    if (ttWords) ttWords.textContent = todayNew + ' 个新单词';
+    var ttLearned = todayLearned;
+    if (ttWords) ttWords.textContent = ttLearned ? '已学 ' + ttLearned + ' / ' + todayNew + ' 个' : todayNew + ' 个新单词';
+    var ttProg = document.getElementById('tt-words-prog');
+    if (ttProg) ttProg.style.width = (todayNew ? Math.round(ttLearned / todayNew * 100) : 0) + '%';
+    var ttWordsGo = document.getElementById('tt-words-go');
+    if (ttWordsGo) ttWordsGo.textContent = (todayNew && ttLearned >= todayNew) ? '复习' : (ttLearned ? '继续' : '开始');
     var ttReview = document.getElementById('tt-review-sub');
     if (ttReview) ttReview.textContent = todayReview ? todayReview + ' 个待复习词汇' : '今天没有待复习词汇';
     var ttReviewGo = document.getElementById('tt-review-go');
@@ -2834,6 +3045,7 @@ function renderHome() {
   renderDailySentence();
   renderDailyReview();
   renderMixedReview();
+  renderLearnRecords();
   
   // V16: Update quick stats
   var totalNew = 0, totalReview = 0, totalDialog = 0;
@@ -2858,6 +3070,33 @@ function renderHome() {
     if (catDetail) catDetail.style.display = 'none';
     renderCategoryCards();
   }
+}
+
+function renderLearnRecords() {
+  var container = document.getElementById('learn-records');
+  if (!container) return;
+  var list = getLearnedList();
+  var pos = getLastPos();
+  var html = '<div class="lr-card"><div class="lr-head"><div class="lr-title">学习记录</div><span class="lr-count">已学 ' + list.length + ' 词</span></div>';
+  if (pos) {
+    var posDay = findDayByDayCat(pos.day, pos.cat);
+    var posTotal = posDay ? (pos.kind === 'review' ? (posDay.reviewWords || []).length : (posDay.newWords || []).length) : 0;
+    html += '<div class="lr-last"><span class="lr-dot"></span>上次学到 Day ' + pos.day + (posDay && posDay.dayTitle ? ' · ' + esc(posDay.dayTitle) : '') + (posTotal ? ' · 第 ' + Math.min(pos.idx + 1, posTotal) + ' / ' + posTotal + ' 个' : '') + '</div>';
+  } else {
+    html += '<div class="lr-last"><span class="lr-dot"></span>还没有学习记录，打开任意一天开始学习</div>';
+  }
+  if (list.length) {
+    html += '<div class="lr-chips">';
+    list.slice(0, 10).forEach(function(r) {
+      html += '<button type="button" class="lr-chip" onclick="openLearnedWord(\'' + String(r.word).replace(/'/g, "\\'") + '\')"><span class="lr-check">✓</span>' + esc(r.word) + '</button>';
+    });
+    if (list.length > 10) {
+      html += '<button type="button" class="lr-chip more" onclick="switchNav(\'stats\')">+' + (list.length - 10) + ' 更多</button>';
+    }
+    html += '</div>';
+  }
+  html += '<div class="lr-foot"><button type="button" onclick="switchNav(\'stats\')">查看完整学习记录 →</button></div></div>';
+  container.innerHTML = html;
 }
 
 function renderCategoryCards() {
@@ -3022,6 +3261,11 @@ function renderDay() {
 
   const nw = d.newWords || [];
   const rw = d.reviewWords || [];
+  // V43: per-day learned progress
+  const nwLearned = countDayLearned(d, nw);
+  const rwLearned = countDayLearned(d, rw);
+  const nwPct = nw.length ? Math.round(nwLearned / nw.length * 100) : 0;
+  const rwPct = rw.length ? Math.round(rwLearned / rw.length * 100) : 0;
   const dlg = d.dialog || [];
   const essay = d.essay || {};
   const sentences = essay.sentences || [];
@@ -3053,10 +3297,10 @@ function renderDay() {
   html += '</div></div>';
 
   if (nw.length) {
-    html += '<div class="mc" onclick="openWords(false)"><div class="mc-icon words"><svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg></div><div class="mc-body"><div class="mc-title">今日新词</div><div class="mc-desc">' + nw.length + ' 个新单词</div></div><div class="mc-arrow">→</div></div>';
+    html += '<div class="mc" onclick="openWords(false)"><div class="mc-icon words"><svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg></div><div class="mc-body"><div class="mc-title">今日新词</div><div class="mc-desc">已学 ' + nwLearned + ' / ' + nw.length + ' 个新词</div><div class="mc-progress"><span style="width:' + nwPct + '%"></span></div></div><div class="mc-arrow">→</div></div>';
   }
   if (rw.length) {
-    html += '<div class="mc" onclick="openWords(true)"><div class="mc-icon review"><svg viewBox="0 0 24 24"><path d="M23 4v6h-6M1 20v-6h6"/><path d="M3.5 9a9 9 0 0114.9-3.4L23 10M1 14l4.6 4.4A9 9 0 0020.5 15"/></svg></div><div class="mc-body"><div class="mc-title">艾宾浩斯复习</div><div class="mc-desc">' + rw.length + ' 个词汇巩固</div></div><div class="mc-arrow">→</div></div>';
+    html += '<div class="mc" onclick="openWords(true)"><div class="mc-icon review"><svg viewBox="0 0 24 24"><path d="M23 4v6h-6M1 20v-6h6"/><path d="M3.5 9a9 9 0 0114.9-3.4L23 10M1 14l4.6 4.4A9 9 0 0020.5 15"/></svg></div><div class="mc-body"><div class="mc-title">艾宾浩斯复习</div><div class="mc-desc">已学 ' + rwLearned + ' / ' + rw.length + ' 个词汇</div><div class="mc-progress"><span style="width:' + rwPct + '%"></span></div></div><div class="mc-arrow">→</div></div>';
   }
   if (dlg.length) {
     const youLines = dlg.filter(l => l && l.role && l.role.toUpperCase() === 'YOU');
@@ -3071,11 +3315,13 @@ function renderDay() {
   // Word preview list with pinyin
   if (nw.length) {
     html += '<div class="word-preview-section">';
-    html += '<div class="wp-title">今日新词 <span class="wp-count">' + nw.length + '</span></div>';
+    html += '<div class="wp-title">今日新词 <span class="wp-count">已学 ' + nwLearned + ' / ' + nw.length + '</span></div>';
     html += '<div class="wp-grid">';
     nw.forEach(function(w, i) {
       var py = getPinyin(w.word);
-      html += '<div class="wp-item" onclick="openWords(false);setTimeout(function(){wIdx=' + i + ';renderCard();},50)">';
+      var lr = isWordLearnedOnDay(w.word, d);
+      html += '<div class="wp-item' + (lr ? ' learned' : '') + '" onclick="openWords(false, ' + i + ')">';
+      if (lr) html += '<span class="wp-check">✓</span>';
       html += '<div class="wp-word">' + esc(w.word) + '</div>';
       if (py) html += '<div class="wp-pinyin">谐音: ' + esc(py) + '</div>';
       html += '<div class="wp-trans">' + esc(w.translation || '') + '</div>';
@@ -3085,11 +3331,13 @@ function renderDay() {
   }
   if (rw.length) {
     html += '<div class="word-preview-section">';
-    html += '<div class="wp-title">复习词汇 <span class="wp-count">' + rw.length + '</span></div>';
+    html += '<div class="wp-title">复习词汇 <span class="wp-count">已学 ' + rwLearned + ' / ' + rw.length + '</span></div>';
     html += '<div class="wp-grid">';
     rw.forEach(function(w, i) {
       var py = getPinyin(w.word);
-      html += '<div class="wp-item" onclick="openWords(true);setTimeout(function(){wIdx=' + i + ';renderCard();},50)">';
+      var lr = isWordLearnedOnDay(w.word, d);
+      html += '<div class="wp-item' + (lr ? ' learned' : '') + '" onclick="openWords(true, ' + i + ')">';
+      if (lr) html += '<span class="wp-check">✓</span>';
       html += '<div class="wp-word">' + esc(w.word) + '</div>';
       if (py) html += '<div class="wp-pinyin">谐音: ' + esc(py) + '</div>';
       html += '<div class="wp-trans">' + esc(w.translation || '') + '</div>';
@@ -3128,12 +3376,19 @@ function unmarkDayDone() {
 }
 
 // ===== WORDS =====
-function openWords(isReview) {
+function openWords(isReview, startIdx) {
   curWords = isReview ? (curDay.reviewWords||[]) : (curDay.newWords||[]);
   if (!curWords.length) { showToast('没有可学习的词汇'); return; }
-  wIdx = 0;
+  wKind = isReview ? 'review' : 'new';
+  if (typeof startIdx === 'number' && startIdx >= 0 && startIdx < curWords.length) {
+    wIdx = startIdx;
+  } else {
+    // V43: new words resume at the first unlearned word
+    wIdx = isReview ? 0 : getFirstUnlearnedIndex(curWords);
+  }
   wMode = 'card';
   quizState = null;
+  saveLastPos();
   document.getElementById('w-title').textContent = isReview ? '复习词汇' : '今日新词';
   showPage('pg-words');
   renderWords();
@@ -3153,8 +3408,13 @@ function setupSwipe() {
     const dx = e.changedTouches[0].clientX - swipeStartX;
     const dy = e.changedTouches[0].clientY - swipeStartY;
     if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy)) {
-      if (dx < 0 && wIdx < curWords.length - 1) { wIdx++; renderWords(); }
-      else if (dx > 0 && wIdx > 0) { wIdx--; renderWords(); }
+      if (dx < 0 && wIdx < curWords.length - 1) {
+        markWordLearned(curWords[wIdx].word, 'swipe');
+        wIdx++;
+        saveLastPos();
+        renderWords();
+      }
+      else if (dx > 0 && wIdx > 0) { wIdx--; saveLastPos(); renderWords(); }
     }
   }, {passive: true});
 }
@@ -3162,7 +3422,7 @@ function setupSwipe() {
 function setWordMode(m) {
   if (window.TTS) TTS.stop('mode');
   wMode = m;
-  wIdx = 0;
+  if (wIdx >= curWords.length) wIdx = 0;
   quizState = null;
   dictResults = null;
   buildState = null;
@@ -3171,12 +3431,14 @@ function setWordMode(m) {
 
 function prevWord() {
   if (window.TTS) TTS.stop('prev');
-  if (wIdx > 0) { wIdx--; renderWords(); }
+  if (wIdx > 0) { wIdx--; saveLastPos(); renderWords(); }
 }
 function nextWord() {
   if (window.TTS) TTS.stop('next');
-  if (wIdx < curWords.length - 1) { wIdx++; renderWords(); }
-  else if (wIdx === curWords.length - 1) { wIdx++; renderWords(); }
+  var w = curWords[wIdx];
+  if (w) markWordLearned(w.word, 'card');
+  if (wIdx < curWords.length - 1) { wIdx++; saveLastPos(); renderWords(); }
+  else if (wIdx === curWords.length - 1) { wIdx++; saveLastPos(); renderWords(); }
 }
 function updateWordBar(show, idx, total) {
   var bar = document.getElementById('word-fixed-bar');
@@ -3207,7 +3469,7 @@ function renderCard() {
   const words = curWords;
   const c = document.getElementById('w-content');
   if (wIdx >= words.length) {
-    c.innerHTML = '<div class="empty-state"><div class="es-icon"><svg viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="m8.5 12.5 2.5 2.5 4.5-5.5"/></svg></div><div class="es-title">全部学完了！</div><div class="es-desc">已掌握 ' + words.length + ' 个词汇</div>';
+    c.innerHTML = '<div class="empty-state"><div class="es-icon"><svg viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="m8.5 12.5 2.5 2.5 4.5-5.5"/></svg></div><div class="es-title">全部学完了！</div><div class="es-desc">本组 ' + words.length + ' 个词汇已记录</div>';
     c.innerHTML += '<div class="btn-row" style="margin-top:16px"><button class="btn primary" onclick="finishPractice()">完成返回</button></div></div>';
     updateWordBar(false);
     return;
@@ -3285,6 +3547,9 @@ function renderCard() {
   } else if (ebStatus === 'known') {
     html += '<div class="eb-badge known">已掌握</div>';
   }
+  // V43: learning record badge
+  var wLearned = isWordLearned(w.word);
+  if (wLearned) html += '<div class="eb-badge learned">✓ 已学</div>';
 
   // V10: Bookmark button
   var inNb = isInNotebook(w.word);
@@ -3292,6 +3557,10 @@ function renderCard() {
   html += '<div class="wc-action-btn bookmark ' + (inNb?'saved':'') + '" onclick="event.stopPropagation();onBookmarkClick()">';
   html += '<svg viewBox="0 0 24 24"><path d="M19 21l-7-5-7 5V5a2 2 0 012-2h10a2 2 0 012 2z"/></svg>';
   html += inNb ? '已收藏' : '收藏';
+  html += '</div>';
+  html += '<div class="wc-action-btn learned ' + (wLearned?'saved':'') + '" onclick="event.stopPropagation();markCurrentLearned()">';
+  html += '<svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>';
+  html += wLearned ? '已记录' : '标记已学';
   html += '</div></div>';
 
   c.innerHTML = html;
@@ -3419,6 +3688,7 @@ function checkDict() {
     document.getElementById('dict-hint').innerHTML = '<span style="color:#4F6B4B;font-weight:700">✓ 正确！</span>';
     dictResults[wIdx] = true;
     markWordKnown(w.word);
+    markWordLearned(w.word, 'dict');
   } else {
     inp.classList.add('wrong');
     dictResults[wIdx] = false;
@@ -3431,7 +3701,10 @@ function checkDict() {
 }
 
 function dictNext() {
+  var w = curWords[wIdx];
+  if (w) markWordLearned(w.word, 'dict');
   wIdx++;
+  saveLastPos();
   renderWords();
 }
 
@@ -3736,7 +4009,7 @@ function answerQuiz(el, picked, correct) {
   var q = quizState.questions[quizState.round];
   if (picked === correct) {
     el.classList.add('correct'); quizState.score++;
-    if (q) markWordKnown(q.word);
+    if (q) { markWordKnown(q.word); markWordLearned(q.word, 'quiz'); }
   } else {
     el.classList.add('wrong');
     document.querySelectorAll('.qo')[correct].classList.add('correct');
@@ -3991,6 +4264,12 @@ document.addEventListener('click', function(e) {
 
 // ===== STATS with SVG icons =====
 var statsFilter = 'all'; // 'all', 'travel', 'daily'
+var learnedShowAll = false;
+
+function toggleLearnedAll() {
+  learnedShowAll = !learnedShowAll;
+  renderStats();
+}
 
 function getStatsData() {
   if (statsFilter === 'all') return DATA;
@@ -4016,6 +4295,10 @@ function getPhaseLabel(p, cat) {
   return names[p] || p;
 }
 
+function openDayDetailFromStats(day, cat) {
+  openDayDetail(day, cat);
+}
+
 function renderStats() {
   var statsData = getStatsData();
   const done = Store.get('done', {});
@@ -4035,6 +4318,32 @@ function renderStats() {
     if (d.essay && d.essay.sentences) totalEssay += d.essay.sentences.length;
     if (d.essayEn) totalEssay += d.essayEn.length;
   });
+
+  // V43: learning records data
+  var learnedList = getLearnedList();
+  if (statsFilter !== 'all') {
+    learnedList = learnedList.filter(function(r){ return (r.cat || 'travel') === statsFilter; });
+  }
+  var learnedCount = learnedList.length;
+  var learnedPct = totalNew > 0 ? Math.min(100, Math.round(learnedCount / totalNew * 100)) : 0;
+  var lastPos = getLastPos();
+  var lastPosDay = lastPos ? findDayByDayCat(lastPos.day, lastPos.cat) : null;
+  var lastPosTotal = lastPosDay ? (lastPos.kind === 'review' ? (lastPosDay.reviewWords || []).length : (lastPosDay.newWords || []).length) : 0;
+
+  var dayRecs = [];
+  statsData.forEach(function(d) {
+    if (!d) return;
+    var cnt = countDayLearned(d, d.newWords);
+    if (!cnt) return;
+    var ts = 0;
+    var map = getLearnedMap();
+    (d.newWords || []).forEach(function(w) {
+      var r = map[wordKeyOf(w.word)];
+      if (r && (r.ts || 0) > ts) ts = r.ts || 0;
+    });
+    dayRecs.push({ d: d, count: cnt, ts: ts });
+  });
+  dayRecs.sort(function(a, b) { return b.ts - a.ts; });
 
   let html = '';
 
@@ -4094,6 +4403,48 @@ function renderStats() {
 
   html += '</div>';
 
+  // V43: learning records
+  html += '<div class="stats-section"><div class="stats-section-title">学习记录</div>';
+  html += '<div class="learn-summary">';
+  html += '<div class="ls-card"><div class="ls-num">' + learnedCount + '<small> / ' + totalNew + ' 词</small></div><div class="ls-label">已学单词</div><div class="ls-bar"><span style="width:' + learnedPct + '%"></span></div></div>';
+  if (lastPos) {
+    html += '<div class="ls-card"><div class="ls-num">Day ' + lastPos.day + '</div><div class="ls-label">上次学到这里</div><div style="font-size:12px;color:var(--t3);margin-top:7px">' + esc(lastPosDay ? (lastPosDay.dayTitle || '') : '') + (lastPosTotal ? ' · 第 ' + Math.min(lastPos.idx + 1, lastPosTotal) + ' / ' + lastPosTotal + ' 个' : '') + '</div></div>';
+  } else {
+    html += '<div class="ls-card"><div class="ls-num">未开始</div><div class="ls-label">上次学到这里</div><div style="font-size:12px;color:var(--t3);margin-top:7px">从 Day 1 开始你的学习</div></div>';
+  }
+  html += '</div>';
+
+  if (learnedList.length) {
+    html += '<div class="learn-chips">';
+    var shownLearned = learnedShowAll ? learnedList : learnedList.slice(0, 16);
+    shownLearned.forEach(function(r) {
+      html += '<button type="button" class="lr-chip" onclick="openLearnedWord(\'' + String(r.word).replace(/'/g, "\\'") + '\')"><span class="lr-check">✓</span>' + esc(r.word) + '</button>';
+    });
+    if (learnedList.length > 16) {
+      html += '<button type="button" class="lr-chip more" onclick="toggleLearnedAll()">' + (learnedShowAll ? '收起' : '+' + (learnedList.length - 16) + ' 更多') + '</button>';
+    }
+    html += '</div>';
+  } else {
+    html += '<div style="font-size:12px;color:var(--t3);margin:0 0 14px">还没有学过的单词，打开任意一天开始学习。</div>';
+  }
+
+  if (dayRecs.length) {
+    dayRecs.slice(0, 8).forEach(function(item) {
+      var d = item.d;
+      var total = (d.newWords || []).length;
+      var pctDay = total ? Math.round(item.count / total * 100) : 0;
+      var isDoneDay = !!done[(d.category || 'travel') + '_' + d.day];
+      var status = isDoneDay ? '已完成' : (item.count >= total ? '单词已学完' : '进行中');
+      html += '<div class="day-record" onclick="openDayDetailFromStats(' + d.day + ', \'' + (d.category || 'travel') + '\')">';
+      html += '<div class="dr-day">D<b>' + d.day + '</b></div>';
+      html += '<div class="dr-body"><div class="dr-title">' + esc(d.dayTitle || '') + '</div>';
+      html += '<div class="dr-bar"><span style="width:' + pctDay + '%"></span></div>';
+      html += '<div class="dr-meta">已学 ' + item.count + ' / ' + total + ' 个新词 · ' + status + '</div></div>';
+      html += '<div class="dr-arrow">→</div></div>';
+    });
+  }
+  html += '</div>';
+
   // V17: Phase breakdown - normalized
   var dominantCat = statsFilter === 'all' ? 'travel' : statsFilter;
   const phases = {};
@@ -4115,18 +4466,7 @@ function renderStats() {
   });
   html += '</div>';
 
-  // V17: Recent days - fixed done key
-  const recentDays = statsData.slice(-5).reverse();
-  html += '<div class="stats-section"><div class="stats-section-title">最近学习</div>';
-  recentDays.forEach(d => {
-    if (!d) return;
-    const isDone = done[(d.category||'travel') + '_' + d.day];
-    var catTag = statsFilter === 'all' ? '<span style="font-size:10px;color:var(--t4);margin-right:4px">' + (d.category==='daily'?'日常':d.category==='easy'?'基础':'旅行') + '</span>' : '';
-    html += '<div class="recent-item"><div class="ri-day ' + (isDone?'done':'pending') + '">' + d.day + '</div>';
-    html += '<div class="ri-title">' + catTag + esc(d.dayTitle||'') + '</div>';
-    html += '<div class="ri-status ' + (isDone?'done':'') + '">' + (isDone?'✓ 已完成':'未完成') + '</div></div>';
-  });
-  html += '</div>';
+  // V43: day records replace the old generic "recent days" list
 
   // Totals
   html += '<div class="stats-section"><div class="stats-section-title">学习总量</div>';
@@ -7842,6 +8182,8 @@ function exportData() {
     studyLog: Store.get('studyLog', {}),
     notebook: Store.get('notebook', []),
     reviews: Store.get('reviews', {}),
+    learned: Store.get('learned', {}),
+    lastPos: Store.get('lastPos', null),
     errorPool: Store.get('errorPool', []),
     ttsSettings: Store.get('ttsSettings', { rate: 0.85, voice: '' })
   };
@@ -7869,6 +8211,8 @@ function importData(file) {
       if (data.studyLog) Store.set('studyLog', data.studyLog);
       if (data.notebook) Store.set('notebook', data.notebook);
       if (data.reviews) Store.set('reviews', data.reviews);
+      if (data.learned) Store.set('learned', data.learned);
+      if (data.lastPos) Store.set('lastPos', data.lastPos);
       if (data.errorPool) Store.set('errorPool', data.errorPool);
       if (data.ttsSettings) Store.set('ttsSettings', data.ttsSettings);
       showToast('数据导入成功');
