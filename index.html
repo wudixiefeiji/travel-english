@@ -16,7 +16,7 @@
 <link rel="icon" type="image/png" sizes="512x512" href="icon-512.png?v8">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png?v8">
 <link rel="manifest" href="manifest.json">
-<meta name="version" content="te_v46">
+<meta name="version" content="te_v47">
 <title>谢飞机</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
 <style>
@@ -2262,7 +2262,7 @@ body{color:var(--t1)}
         <div class="settings-group-title">关于</div>
         <div class="settings-row">
           <div class="settings-label">版本</div>
-          <div class="settings-value" onclick="voiceDebugTap()" style="-webkit-user-select:none;user-select:none">te_v46</div>
+          <div class="settings-value" onclick="voiceDebugTap()" style="-webkit-user-select:none;user-select:none">te_v47</div>
         </div>
       </div>
     </div>
@@ -5899,23 +5899,22 @@ var TTS = (function() {
       }
       rv.reason = 'voices-unavailable';
     }
+    // V47: Do not abort when no explicit English voice is found. Many iOS devices still
+    // have a usable default English voice even though getVoices() returns empty (very
+    // common before/around the first gesture). Fall back to speaking with lang only.
     if (!rv.voice) {
-      var reason = rv.reason || 'no-english-voice';
-      var message = reason === 'saved-voice-unavailable' ?
-        '保存的英语语音已不可用，请在设置中重新选择' : '未检测到英语语音，请在系统设置中添加英语语音';
-      if (voiceNotice !== reason) {
-        voiceNotice = reason;
-        if (typeof showToast === 'function') showToast(message);
+      var novoiceReason = rv.reason || 'no-english-voice';
+      if (voiceNotice !== novoiceReason) {
+        voiceNotice = novoiceReason;
+        logAdd('novoice-fallback', novoiceReason);
       }
-      abort(id, reason);
-      return;
     }
     active.voiceWaitAt = 0;
-    active.voice = rv.voice;
+    active.voice = rv.voice || null;
     active.currentText = text;
     var u = new SpeechSynthesisUtterance(text);
-    u.voice = rv.voice;
-    u.lang = rv.voice.lang || 'en-US';
+    if (rv.voice) { u.voice = rv.voice; u.lang = rv.voice.lang || 'en-US'; }
+    else { u.lang = 'en-US'; }
     u.rate = active.rate;
     u.pitch = active.pitch;
     u.volume = active.volume;
@@ -5925,7 +5924,7 @@ var TTS = (function() {
     var boundaryLogged = false;
     var startupAt = Date.now();
 
-    logAdd('uttr', '#' + id + ' ' + rv.voice.name + '/' + rv.voice.lang +
+    logAdd('uttr', '#' + id + ' ' + (rv.voice ? (rv.voice.name + '/' + rv.voice.lang) : 'default/en-US') +
       ' r=' + active.rate + ' p=' + active.pitch + ' v=' + active.volume);
 
     function clearGuard() {
@@ -6140,6 +6139,7 @@ var TTS = (function() {
       voiceError: rv.reason || '',
       fallback: false,
       lastError: lastError,
+      allVoiceCount: refreshVoices().length,
       voices: refreshVoices().filter(isEnglish).map(function(v) {
         return { name: v.name, lang: v.lang, local: !!v.localService, default: !!v.default, uri: v.voiceURI || v.name };
       }),
@@ -8656,10 +8656,11 @@ function openVoiceDebug() {
     return '<div><span style="color:#64748b">' + esc(l.t) + '</span> [' + esc(l.type) + '] ' + esc(l.msg) + '</div>';
   }).join('') : '<div>—</div>';
   panel.innerHTML =
-    '<div class="td-head"><span>语音诊断 V46</span><button onclick="closeVoiceDebug()">关闭</button></div>' +
+    '<div class="td-head"><span>语音诊断 V47</span><button onclick="closeVoiceDebug()">关闭</button></div>' +
     '<div class="td-body">' +
       '<div><b>浏览器：</b>' + esc(navigator.userAgent) + '</div>' +
       '<div><b>支持 SpeechSynthesis：</b>' + (st.supported ? '是' : '否') + '</div>' +
+      '<div><b>系统语音总数：</b>' + (st.allVoiceCount || 0) + ' · 英语语音 ' + st.voices.length + '</div>' +
       '<div><b>引擎状态：</b>speaking=' + (st.speaking ? 'true' : 'false') + ' · pending=' + (st.pending ? 'true' : 'false') + '</div>' +
       '<div><b>当前任务：</b>' + (st.active ? ('已启动 ' + (st.active.started ? '是' : '否') + ' · ' + st.active.mode + ' · rate=' + st.active.rate.toFixed(2) + ' · pitch=' + st.active.pitch + ' · volume=' + st.active.volume + ' · 剩余 ' + st.active.remaining) : '空闲') + '</div>' +
       '<div><b>当前文本：</b>' + (st.active && st.active.currentText ? esc(st.active.currentText) : '—') + '</div>' +
@@ -8828,7 +8829,7 @@ document.addEventListener('keydown', function(e) {
 // ===== PWA / Service Worker =====
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', function() {
-    navigator.serviceWorker.register('service-worker.js?v=46').then(function(reg) {
+    navigator.serviceWorker.register('service-worker.js?v=47').then(function(reg) {
       reg.addEventListener('updatefound', function() {
         var nw = reg.installing;
         if (nw) {
