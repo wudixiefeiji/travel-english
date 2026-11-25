@@ -16,7 +16,7 @@
 <link rel="icon" type="image/png" sizes="512x512" href="icon-512.png?v8">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png?v8">
 <link rel="manifest" href="manifest.json">
-<meta name="version" content="te_v43">
+<meta name="version" content="te_v44">
 <title>谢飞机</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
 <style>
@@ -1920,6 +1920,7 @@ body{color:var(--t1)}
 .lr-count{font-size:11px;font-weight:700;color:var(--accent-strong);background:var(--accent-soft);border:1px solid var(--accent-line);border-radius:999px;padding:3px 9px;white-space:nowrap}
 .lr-last{display:flex;align-items:center;gap:7px;margin-top:10px;font-size:12px;color:var(--t3);line-height:1.5}
 .lr-dot{width:6px;height:6px;border-radius:50%;background:var(--accent);flex:none;box-shadow:0 0 0 3px var(--accent-soft)}
+.lr-note{font-size:11px;color:var(--t4);margin-top:8px;padding-left:13px}
 .lr-chips{display:flex;flex-wrap:wrap;gap:7px;margin-top:12px}
 .lr-chip{display:inline-flex;align-items:center;gap:5px;border:1px solid var(--line);background:var(--surface-2);color:var(--t2);border-radius:999px;padding:6px 11px;font-size:12.5px;font-weight:600;font-family:inherit;cursor:pointer;transition:transform .15s,background .15s}
 .lr-chip:active{transform:scale(.96)}
@@ -1953,6 +1954,29 @@ body{color:var(--t1)}
 .dr-bar span{display:block;height:100%;border-radius:3px;background:var(--ga)}
 .dr-meta{font-size:11px;color:var(--t3)}
 .dr-arrow{color:var(--t4);font-size:16px;flex:none}
+
+/* ===== V44: notebook tabs + full learned records ===== */
+.nb-tabs{display:flex;gap:5px;background:var(--surface-2);border:1px solid var(--line);border-radius:13px;padding:4px;margin-bottom:14px}
+.nb-tab{flex:1;border:none;background:none;border-radius:10px;padding:9px 6px;font-family:inherit;font-size:12.5px;font-weight:700;color:var(--t3);cursor:pointer;transition:background .18s,color .18s,box-shadow .18s}
+.nb-tab.active{background:var(--surface);color:var(--accent-strong);box-shadow:var(--shadow-sm)}
+.nb-tab b{font-weight:800;margin-left:2px}
+.nb-learn-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:12px 14px;box-shadow:var(--shadow-sm)}
+.nb-learn-sum{font-size:12.5px;color:var(--t3);line-height:1.55}
+.nb-learn-sum b{color:var(--accent-strong);font-weight:800}
+.nb-continue{border:none;background:var(--ga);color:#fff;border-radius:999px;padding:9px 14px;font-size:12.5px;font-weight:700;font-family:inherit;cursor:pointer;white-space:nowrap;flex:none}
+.nb-continue:active{transform:scale(.96)}
+.nb-learn-group{margin-bottom:14px}
+.nb-learn-group-head{display:flex;align-items:center;gap:8px;margin:0 2px 8px;min-width:0}
+.nb-learn-day{font-size:11px;font-weight:800;color:var(--accent-strong);background:var(--accent-soft);border:1px solid var(--accent-line);border-radius:999px;padding:3px 9px;white-space:nowrap;flex:none}
+.nb-learn-title{font-size:12px;color:var(--t3);font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.nb-learn-item{display:flex;align-items:center;gap:10px;width:100%;text-align:left;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:10px 12px;margin-bottom:7px;font-family:inherit;cursor:pointer;transition:transform .15s}
+.nb-learn-item:active{transform:scale(.985)}
+.nb-li-check{width:20px;height:20px;border-radius:50%;background:#EAF7EF;color:#3E9B63;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;flex:none}
+.nb-li-body{flex:1;min-width:0;display:block}
+.nb-li-word{display:block;font-size:14px;font-weight:700;color:var(--t1);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.nb-li-cn{display:block;font-size:11.5px;color:var(--t3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:1px}
+.nb-li-meta{font-size:10.5px;color:var(--t4);flex:none}
+.nb-more{width:100%;border:1px dashed var(--line-strong);background:none;border-radius:12px;padding:11px;color:var(--accent-strong);font-size:12.5px;font-weight:700;font-family:inherit;cursor:pointer}
 </style>
 </head>
 <body>
@@ -2032,6 +2056,8 @@ body{color:var(--t1)}
           </div>
         </div>
 
+        <div id="learn-records"></div>
+
         <div class="today-tasks" id="today-tasks">
           <div class="tt-head">
             <div class="tt-title">今日任务</div>
@@ -2056,8 +2082,6 @@ body{color:var(--t1)}
           </div>
           <div id="daily-sentence-container"></div>
         </div>
-
-        <div id="learn-records"></div>
 
         <div id="category-container"></div>
         <div id="category-detail-container" style="display:none"></div>
@@ -2222,7 +2246,7 @@ body{color:var(--t1)}
         <div class="settings-group-title">关于</div>
         <div class="settings-row">
           <div class="settings-label">版本</div>
-          <div class="settings-value" onclick="voiceDebugTap()" style="-webkit-user-select:none;user-select:none">te_v43</div>
+          <div class="settings-value" onclick="voiceDebugTap()" style="-webkit-user-select:none;user-select:none">te_v44</div>
         </div>
       </div>
     </div>
@@ -2380,7 +2404,7 @@ const Store = (function() {
   var DB_NAME = 'te_v14_db';
   var STORE_NAME = 'kv';
   var cache = {};
-  var KNOWN_KEYS = ['done', 'lastStudy', 'studyLog', 'notebook', 'reviews', 'ttsSettings', 'learned', 'lastPos'];
+  var KNOWN_KEYS = ['done', 'lastStudy', 'studyLog', 'notebook', 'reviews', 'ttsSettings', 'learned', 'lastPos', 'learnedMigrated'];
 
   function initIDB() {
     return new Promise(function(resolve) {
@@ -2652,6 +2676,72 @@ function markCurrentLearned() {
   renderWords();
 }
 
+// ===== V44: backfill history from days already marked done =====
+// 老版本只记录"哪天完成"，没有单词级记录。首次升级时按完成的天把该天新词
+// 补进学习记录，并从 studyLog 推导"上次学到哪里"，避免老用户看到"已学 0 词"。
+function backfillLearningRecords() {
+  if (Store.get('learnedMigrated', false)) return false;
+  var done = Store.get('done', {});
+  var log = Store.get('studyLog', {});
+  var map = getLearnedMap();
+  var lastSeen = {};
+  Object.keys(log).forEach(function(dstr) {
+    var t = new Date(dstr).getTime();
+    (log[dstr] || []).forEach(function(k) {
+      if (!lastSeen[k] || (lastSeen[k].t || 0) < t) lastSeen[k] = { t: t, d: dstr };
+    });
+  });
+  var doneKeys = Object.keys(done).filter(function(k) { return done[k] && k.indexOf('_') > 0; });
+  var now = Date.now();
+  var baseTs = now - doneKeys.length * 86400000;
+  var changed = false;
+  doneKeys.forEach(function(k, i) {
+    var parts = k.split('_');
+    var cat = parts[0] || 'travel';
+    var dayNum = parseInt(parts[1], 10);
+    var d = findDayByDayCat(dayNum, cat);
+    if (!d) return;
+    var ts = lastSeen[k] ? lastSeen[k].t : (baseTs + i * 3600000);
+    (d.newWords || []).forEach(function(w) {
+      if (!w || !w.word) return;
+      var wk = wordKeyOf(w.word);
+      var rec = map[wk];
+      if (!rec) {
+        rec = map[wk] = { word: w.word, ts: ts, count: 1, days: {}, day: dayNum, cat: cat, lastSource: 'backfill' };
+        changed = true;
+      }
+      if (!rec.days) rec.days = {};
+      var dk = cat + '_' + dayNum;
+      if (!rec.days[dk]) rec.days[dk] = ts;
+      if (!rec.ts || rec.ts < ts) rec.ts = ts;
+      if (rec.day == null) { rec.day = dayNum; rec.cat = cat; }
+    });
+  });
+  if (changed) Store.set('learned', map);
+  if (!Store.get('lastPos', null)) {
+    var latestKey = '', latestTime = 0;
+    Object.keys(log).forEach(function(dstr) {
+      var t = new Date(dstr).getTime();
+      var arr = log[dstr] || [];
+      if (arr.length && t > latestTime) { latestTime = t; latestKey = arr[arr.length - 1]; }
+    });
+    if (latestKey) {
+      var p = latestKey.split('_');
+      var pCat = p[0] || 'travel';
+      var pDay = parseInt(p[1], 10);
+      var pd = findDayByDayCat(pDay, pCat);
+      if (pd) {
+        var pw = pd.newWords || [];
+        var pIdx = getFirstUnlearnedIndex(pw);
+        // 这天已经全部学完时，定位到最后一个词，避免显示成"第 1 个"
+        if (pw.length && countDayLearned(pd, pw) >= pw.length) pIdx = pw.length - 1;
+        Store.set('lastPos', { day: pDay, cat: pCat, kind: 'new', idx: pIdx, word: pw[pIdx] ? pw[pIdx].word : '', ts: latestTime });
+      }
+    }
+  }
+  Store.set('learnedMigrated', true);
+  return changed;
+}
 
 // ===== NAV =====
 function switchNav(tab) {
@@ -3008,7 +3098,7 @@ function renderHome() {
     if (heroNext) {
       var _pos = getLastPos();
       var _posDay = _pos ? findDayByDayCat(_pos.day, _pos.cat) : null;
-      if (!allDone && _posDay && _pos.word && _pos.day === target.day) {
+      if (!allDone && _posDay && _pos.word && _pos.day === target.day && (_pos.cat || 'travel') === (target.category || 'travel')) {
         var _posTotal = _pos.kind === 'review' ? (_posDay.reviewWords || []).length : (_posDay.newWords || []).length;
         heroNext.textContent = '上次学到 Day ' + _pos.day + (_posTotal ? ' · 第 ' + Math.min(_pos.idx + 1, _posTotal) + '/' + _posTotal + ' 个' : '') + ' · 点击继续';
       } else {
@@ -3084,6 +3174,9 @@ function renderLearnRecords() {
     html += '<div class="lr-last"><span class="lr-dot"></span>上次学到 Day ' + pos.day + (posDay && posDay.dayTitle ? ' · ' + esc(posDay.dayTitle) : '') + (posTotal ? ' · 第 ' + Math.min(pos.idx + 1, posTotal) + ' / ' + posTotal + ' 个' : '') + '</div>';
   } else {
     html += '<div class="lr-last"><span class="lr-dot"></span>还没有学习记录，打开任意一天开始学习</div>';
+  }
+  if (list.some(function(r) { return r.lastSource === 'backfill'; })) {
+    html += '<div class="lr-note">已按历史完成的天数自动补入学习记录</div>';
   }
   if (list.length) {
     html += '<div class="lr-chips">';
@@ -7704,18 +7797,128 @@ function onBookmarkClick() {
   renderCard();
 }
 
+var nbView = 'words';
+var nbLearnedLimit = 60;
+var __wordInfoCache = null;
+
+function setNbView(v) {
+  if (v !== 'words' && v !== 'learned') return;
+  nbView = v;
+  renderNotebook();
+  var page = document.getElementById('pg-notebook');
+  if (page) page.scrollTop = 0;
+}
+
+function nbLearnMore() {
+  nbLearnedLimit += 60;
+  renderNotebook();
+}
+
+function getWordInfoMap() {
+  if (__wordInfoCache) return __wordInfoCache;
+  var m = {};
+  DATA.forEach(function(d) {
+    if (!d) return;
+    (d.newWords || []).concat(d.reviewWords || []).forEach(function(w) {
+      if (!w || !w.word) return;
+      var k = wordKeyOf(w.word);
+      if (!m[k]) m[k] = { translation: w.translation || '', day: d.day, cat: d.category || 'travel', title: d.dayTitle || '' };
+    });
+  });
+  __wordInfoCache = m;
+  return m;
+}
+
+function fmtLearnedTime(ts) {
+  if (!ts) return '';
+  var d = new Date(ts), n = new Date();
+  if (d.toDateString() === n.toDateString()) return '今天';
+  var y = new Date(n.getTime() - 86400000);
+  if (d.toDateString() === y.toDateString()) return '昨天';
+  return (d.getMonth() + 1) + '/' + d.getDate();
+}
+
+function renderNotebookLearned() {
+  var list = getLearnedList();
+  var pos = getLastPos();
+  var infoMap = getWordInfoMap();
+  var html = '';
+  var posDay = pos ? findDayByDayCat(pos.day, pos.cat) : null;
+  var posTotal = posDay ? (pos.kind === 'review' ? (posDay.reviewWords || []).length : (posDay.newWords || []).length) : 0;
+  html += '<div class="nb-learn-head"><div class="nb-learn-sum">已学 <b>' + list.length + '</b> 个单词';
+  if (pos) {
+    html += '<br>上次学到 <b>Day ' + pos.day + '</b>' + (posDay && posDay.dayTitle ? ' · ' + esc(posDay.dayTitle) : '') + (posTotal ? ' · 第 ' + Math.min(pos.idx + 1, posTotal) + ' / ' + posTotal + ' 个' : '');
+  } else {
+    html += '<br>还没有学习记录';
+  }
+  html += '</div><button type="button" class="nb-continue" onclick="continueLearning()">' + (pos ? '继续学习' : '开始学习') + '</button></div>';
+  if (!list.length) {
+    html += '<div class="empty-state"><div class="es-title">还没有已学单词</div><div class="es-desc">滑动单词卡、答对题目或点击“标记已学”后，单词会自动记录在这里</div></div>';
+    return html;
+  }
+  var groups = [], idxByKey = {};
+  list.forEach(function(r) {
+    var k = wordKeyOf(r.word);
+    var info = infoMap[k] || {};
+    var day = r.day || info.day || '?';
+    var cat = r.cat || info.cat || 'travel';
+    var gk = cat + '_' + day;
+    if (!idxByKey[gk]) {
+      idxByKey[gk] = { day: day, cat: cat, title: info.title || '', items: [], maxTs: 0 };
+      groups.push(idxByKey[gk]);
+    }
+    var g = idxByKey[gk];
+    if ((r.ts || 0) > g.maxTs) g.maxTs = r.ts || 0;
+    if (!g.title && info.title) g.title = info.title;
+    g.items.push({ r: r, info: info });
+  });
+  groups.sort(function(a, b) { return b.maxTs - a.maxTs; });
+  var shown = 0;
+  groups.forEach(function(g) {
+    var itemsHtml = '';
+    g.items.forEach(function(x) {
+      if (shown >= nbLearnedLimit) return;
+      shown++;
+      var r = x.r;
+      var py = getPinyin(r.word);
+      var sub = py ? '谐音 ' + py : ((x.info || {}).translation || '');
+      itemsHtml += '<button type="button" class="nb-learn-item" onclick="openLearnedWord(\'' + String(r.word).replace(/'/g, "\\'") + '\')">' +
+        '<span class="nb-li-check">✓</span>' +
+        '<span class="nb-li-body"><span class="nb-li-word">' + esc(r.word) + '</span><span class="nb-li-cn">' + esc(sub) + '</span></span>' +
+        '<span class="nb-li-meta">' + fmtLearnedTime(r.ts) + '</span></button>';
+    });
+    if (itemsHtml) {
+      html += '<div class="nb-learn-group"><div class="nb-learn-group-head"><span class="nb-learn-day">Day ' + g.day + '</span><span class="nb-learn-title">' + esc(g.title) + '</span></div>' + itemsHtml + '</div>';
+    }
+  });
+  if (list.length > shown) {
+    html += '<button type="button" class="nb-more" onclick="nbLearnMore()">显示更多已学单词（还有 ' + (list.length - shown) + ' 个）</button>';
+  }
+  return html;
+}
+
 function renderNotebook() {
   var notebook = Store.get('notebook', []);
   var errorPool = Store.get('errorPool', []);
   var container = document.getElementById('nb-content');
   var countEl = document.getElementById('nb-count');
-  if (countEl) countEl.textContent = (notebook.length + errorPool.length) + ' 词';
+  var learnedCount = getLearnedCount();
+  if (countEl) countEl.textContent = '已学 ' + learnedCount + ' 词';
   if (!container) return;
-  if (!notebook.length && !errorPool.length) {
-    container.innerHTML = '<div class="empty-state"><div class="es-icon"><svg viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg></div><div class="es-title">生词本为空</div><div class="es-desc">在卡片、听写或选择题中答错的单词会自动加入</div></div>';
+  var tabs = '<div class="nb-tabs">' +
+    '<button type="button" class="nb-tab ' + (nbView === 'words' ? 'active' : '') + '" onclick="setNbView(\'words\')">生词本 <b>' + (notebook.length + errorPool.length) + '</b></button>' +
+    '<button type="button" class="nb-tab ' + (nbView === 'learned' ? 'active' : '') + '" onclick="setNbView(\'learned\')">已学记录 <b>' + learnedCount + '</b></button>' +
+    '</div>';
+  if (nbView === 'learned') {
+    container.innerHTML = tabs + renderNotebookLearned();
     return;
   }
-  var html = '';
+  var html = tabs;
+  if (!notebook.length && !errorPool.length) {
+    html += '<div class="empty-state"><div class="es-icon"><svg viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg></div><div class="es-title">生词本为空</div><div class="es-desc">在卡片、听写或选择题中答错的单词会自动加入</div></div>';
+    container.innerHTML = html;
+    return;
+  }
   // Error pool section
   if (errorPool.length) {
     html += '<div class="nb-error-section">';
@@ -8143,7 +8346,7 @@ function openVoiceDebug() {
     return '<div><span style="color:#64748b">' + esc(l.t) + '</span> [' + esc(l.type) + '] ' + esc(l.msg) + '</div>';
   }).join('') : '<div>—</div>';
   panel.innerHTML =
-    '<div class="td-head"><span>语音诊断 V42</span><button onclick="closeVoiceDebug()">关闭</button></div>' +
+    '<div class="td-head"><span>语音诊断 V44</span><button onclick="closeVoiceDebug()">关闭</button></div>' +
     '<div class="td-body">' +
       '<div><b>浏览器：</b>' + esc(navigator.userAgent) + '</div>' +
       '<div><b>支持 SpeechSynthesis：</b>' + (st.supported ? '是' : '否') + '</div>' +
@@ -8184,6 +8387,7 @@ function exportData() {
     reviews: Store.get('reviews', {}),
     learned: Store.get('learned', {}),
     lastPos: Store.get('lastPos', null),
+    learnedMigrated: Store.get('learnedMigrated', false),
     errorPool: Store.get('errorPool', []),
     ttsSettings: Store.get('ttsSettings', { rate: 0.85, voice: '' })
   };
@@ -8213,6 +8417,9 @@ function importData(file) {
       if (data.reviews) Store.set('reviews', data.reviews);
       if (data.learned) Store.set('learned', data.learned);
       if (data.lastPos) Store.set('lastPos', data.lastPos);
+      if (typeof data.learnedMigrated !== 'undefined') Store.set('learnedMigrated', data.learnedMigrated);
+      else if (!data.learned) Store.set('learnedMigrated', false);
+      try { backfillLearningRecords(); } catch (e) {}
       if (data.errorPool) Store.set('errorPool', data.errorPool);
       if (data.ttsSettings) Store.set('ttsSettings', data.ttsSettings);
       showToast('数据导入成功');
@@ -8303,7 +8510,7 @@ document.addEventListener('keydown', function(e) {
 // ===== PWA / Service Worker =====
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', function() {
-    navigator.serviceWorker.register('service-worker.js?v=42').then(function(reg) {
+    navigator.serviceWorker.register('service-worker.js?v=44').then(function(reg) {
       reg.addEventListener('updatefound', function() {
         var nw = reg.installing;
         if (nw) {
@@ -8327,6 +8534,7 @@ if ('serviceWorker' in navigator) {
 init();
 function init() {
   Store.init().then(() => {
+    try { backfillLearningRecords(); } catch (e) {}
     renderHome();
     checkReminder();
     loadVoices();
