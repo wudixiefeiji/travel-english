@@ -16,7 +16,7 @@
 <link rel="icon" type="image/png" sizes="512x512" href="icon-512.png?v8">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png?v8">
 <link rel="manifest" href="manifest.json">
-<meta name="version" content="te_v47">
+<meta name="version" content="te_v48">
 <title>谢飞机</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
 <style>
@@ -2229,6 +2229,9 @@ body{color:var(--t1)}
           <button class="btn sec" onclick="previewSelectedVoice()">试听所选语音</button>
           <button class="btn primary" onclick="saveTtsSettings()">保存</button>
         </div>
+        <div class="btn-row" style="margin-top:8px">
+          <button class="btn sec" onclick="openVoiceDebug()">🔧 语音诊断（Mac 无声/失真请点这里）</button>
+        </div>
       </div>
 
       <div class="settings-group">
@@ -2262,7 +2265,7 @@ body{color:var(--t1)}
         <div class="settings-group-title">关于</div>
         <div class="settings-row">
           <div class="settings-label">版本</div>
-          <div class="settings-value" onclick="voiceDebugTap()" style="-webkit-user-select:none;user-select:none">te_v47</div>
+          <div class="settings-value" onclick="voiceDebugTap()" style="-webkit-user-select:none;user-select:none">te_v48</div>
         </div>
       </div>
     </div>
@@ -8640,6 +8643,49 @@ function runVoiceAcceptance(all) {
   }
   setTimeout(openVoiceDebug, 140);
 }
+function resetVoiceAndTest() {
+  // Clear the saved voice so resolveVoice() falls back to the system default English
+  // voice. Useful to isolate whether a specific selected voice is the cause of
+  // distortion / "electronic" sound on macOS.
+  Store.set('ttsSettings', { rate: 0.95, voice: '', voiceURI: '' });
+  try { TTS.refreshVoices(true); } catch (e) {}
+  if (typeof loadVoices === 'function') { try { loadVoices(); } catch (e) {} }
+  TTS.play('I am happy today.', { rate: 1, split: false, mode: 'preview' });
+  setTimeout(openVoiceDebug, 350);
+}
+function copyVoiceDebugInfo() {
+  var st = TTS.getState();
+  var pref = Store.get('ttsSettings', { rate: 0.95, voice: '', voiceURI: '' }) || {};
+  var info = {
+    ua: navigator.userAgent,
+    platform: navigator.platform,
+    maxTouchPoints: navigator.maxTouchPoints,
+    supported: st.supported,
+    allVoiceCount: st.allVoiceCount || 0,
+    englishCount: (st.voices || []).length,
+    currentVoice: st.currentVoice || null,
+    voiceError: st.voiceError || '',
+    lastError: st.lastError || '',
+    savedRate: pref.rate,
+    savedVoice: pref.voice || '',
+    savedVoiceURI: pref.voiceURI || '',
+    active: st.active || null,
+    voices: st.voices || [],
+    log: st.log || []
+  };
+  var text = JSON.stringify(info, null, 2);
+  function fallback() {
+    var ta = document.createElement('textarea');
+    ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+    document.body.appendChild(ta); ta.focus(); ta.select();
+    try { document.execCommand('copy'); showToast('诊断信息已复制，粘贴发给我即可'); }
+    catch (e) { showToast('复制失败，请截图诊断面板发给我'); }
+    document.body.removeChild(ta);
+  }
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text).then(function () { showToast('诊断信息已复制，粘贴发给我即可'); }, fallback);
+  } else { fallback(); }
+}
 function openVoiceDebug() {
   var st = TTS.getState();
   var panel = document.getElementById('tts-debug-panel');
@@ -8656,7 +8702,7 @@ function openVoiceDebug() {
     return '<div><span style="color:#64748b">' + esc(l.t) + '</span> [' + esc(l.type) + '] ' + esc(l.msg) + '</div>';
   }).join('') : '<div>—</div>';
   panel.innerHTML =
-    '<div class="td-head"><span>语音诊断 V47</span><button onclick="closeVoiceDebug()">关闭</button></div>' +
+    '<div class="td-head"><span>语音诊断 V48</span><button onclick="closeVoiceDebug()">关闭</button></div>' +
     '<div class="td-body">' +
       '<div><b>浏览器：</b>' + esc(navigator.userAgent) + '</div>' +
       '<div><b>支持 SpeechSynthesis：</b>' + (st.supported ? '是' : '否') + '</div>' +
@@ -8673,8 +8719,8 @@ function openVoiceDebug() {
       '<div class="td-list">' + voiceRows + '</div>' +
       '<div style="margin-top:8px"><b>播放日志</b></div>' +
       '<div class="td-list">' + logRows + '</div>' +
-      '<div class="td-actions"><button onclick="openVoiceDebug()">刷新</button><button onclick="runVoiceAcceptance(false)">单句 1.0</button><button onclick="runVoiceAcceptance(true)">四句各 3 遍</button><button onclick="TTS.stop(\'user\')">停止</button></div>' +
-      '<div class="td-note">事件测试可自动记录；颤音、断音和自然度仍需在 Mac Safari 人工试听。</div>' +
+      '<div class="td-actions"><button onclick="openVoiceDebug()">刷新</button><button onclick="runVoiceAcceptance(false)">单句 1.0</button><button onclick="runVoiceAcceptance(true)">四句各 3 遍</button><button onclick="resetVoiceAndTest()">重置默认语音并试听</button><button onclick="copyVoiceDebugInfo()">复制诊断信息</button><button onclick="TTS.stop(\'user\')">停止</button></div>' +
+      '<div class="td-note">Mac 出现“电音/失真”时：先点「重置默认语音并试听」对比默认语音是否正常；若默认正常、所选语音异常→换一个语音；若都异常→去「系统设置→辅助功能→朗读内容→声音」下载/切换英语语音，或检查「音频 MIDI 设置」输出采样率是否为 44100 Hz。把诊断信息复制发给我可进一步定位。</div>' +
     '</div>';
   panel.classList.add('show');
 }
@@ -8829,7 +8875,7 @@ document.addEventListener('keydown', function(e) {
 // ===== PWA / Service Worker =====
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', function() {
-    navigator.serviceWorker.register('service-worker.js?v=47').then(function(reg) {
+    navigator.serviceWorker.register('service-worker.js?v=48').then(function(reg) {
       reg.addEventListener('updatefound', function() {
         var nw = reg.installing;
         if (nw) {
