@@ -16,7 +16,7 @@
 <link rel="icon" type="image/png" sizes="512x512" href="icon-512.png?v8">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png?v8">
 <link rel="manifest" href="manifest.json">
-<meta name="version" content="te_v49">
+<meta name="version" content="te_v50">
 <title>谢飞机</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
 <style>
@@ -2265,7 +2265,7 @@ body{color:var(--t1)}
         <div class="settings-group-title">关于</div>
         <div class="settings-row">
           <div class="settings-label">版本</div>
-          <div class="settings-value" onclick="voiceDebugTap()" style="-webkit-user-select:none;user-select:none">te_v49</div>
+          <div class="settings-value" onclick="voiceDebugTap()" style="-webkit-user-select:none;user-select:none">te_v50</div>
         </div>
       </div>
     </div>
@@ -3868,8 +3868,9 @@ function renderCard() {
   html += '<svg viewBox="0 0 24 24"><path d="M11 5L6 9H2v6h4l5 4V5zM15.5 8.5a5 5 0 010 7M19 5a9 9 0 010 14"/></svg>';
   html += '</div>';
   if (parts.length > 1) {
+    var _isPhrase = /[\s-]/.test(String(w.word || ''));
     html += '<div class="ff-breakdown" onclick="event.stopPropagation()">';
-    html += '<div class="ff-bd-label">单词拆解</div>';
+    html += '<div class="ff-bd-label">' + (_isPhrase ? '单词拆解' : '音节拆解') + '</div>';
     html += '<div class="ff-bd-parts">';
     parts.forEach(function(p, i) {
       html += '<span class="ff-bd-part" onclick="event.stopPropagation();speakTextStr(\'' + p.replace(/'/g,"\\'") + '\')">' + esc(p) + '</span>';
@@ -5556,6 +5557,63 @@ var PINYIN_MAP = {
   "zoom":"祖姆"
 };
 
+// V50: 谐音补充表 —— 覆盖「日常交流 / 日常基础」等新增词汇（旅行英语原有 528 词已在 PINYIN_MAP 中）。
+// 键统一小写；加载时合并进 PINYIN_MAP（不覆盖已有条目，保证与原数据兼容）。
+var PINYIN_EXTRA = {
+  "absolutely":"埃布瑟鲁特利","acquaintance":"阿奎恩腾斯","action item":"阿克申 艾特姆","active listening":"阿克提夫 里斯宁","add to playlist":"艾德 图 普雷利斯特","addictive":"阿迪克提夫","adventure":"阿德文彻",
+  "afford":"阿福德","afraid":"阿弗雷德","after-party":"阿夫特 帕提","agenda":"阿金达","agree":"阿格利","algorithm":"阿尔戈里泽姆","ambition":"安比申","ancestry":"安塞斯特利","angry":"昂格利","anxious":"昂克舍斯",
+  "appetite":"阿皮泰特","apple":"埃剖","argue":"阿格优","articulate":"阿提丘利特","aspire":"阿斯派尔","assignment":"阿斯艾恩门特","assist":"阿西斯特","baby":"贝比","background":"拜克格朗德","bad":"巴德",
+  "bake":"贝克","baking":"贝京","banana":"巴纳纳","bargain":"巴根","bathroom":"巴斯鲁姆","be into":"比 因图","beautiful":"彪提福","because":"比考兹","bed":"贝德","better":"贝特",
+  "between":"比吞","beverage":"贝弗里吉","biased":"拜厄斯特","big":"比格","bike":"拜克","binge-watch":"宾吉 沃奇","bird":"伯德","black":"布莱克","blockbuster":"布洛克巴斯特","blue":"布卢",
+  "bond":"邦德","boss":"波斯","bother":"巴泽","box office":"博克斯 奥菲斯","boy":"波伊","brainstorm":"布瑞恩斯托姆","bread":"布瑞德","break the ice":"布瑞克 泽 艾斯","breaking news":"布瑞京 纽兹","breathtaking":"布瑞斯泰京",
+  "breeze":"布瑞兹","brief":"布瑞夫","bring along":"布林 阿朗","bring up":"布林 阿普","brother":"布拉泽","buffet":"布菲","burden":"伯登","busy":"比兹","but":"巴特","buy":"拜",
+  "can you hear me":"坎 优 希尔 米","car":"卡尔","career path":"卡瑞尔 帕斯","cast":"卡斯特","cat":"卡特","catch up":"凯奇 阿普","catchy":"凯奇","celebrate":"塞勒布瑞特","chair":"切尔","challenge":"恰伦吉",
+  "check-up":"切克 阿普","child":"柴尔德","chilly":"奇利","chores":"乔尔兹","chronic":"克罗尼克","class":"克拉斯","clean":"克林","close":"克洛斯","close-knit":"克洛斯 尼特","cloud":"克劳德",
+  "colleague":"考利格","come":"卡姆","common ground":"卡门 格朗德","commute":"科缪特","comprehension":"康普瑞亨申","compromise":"康普罗麦兹","confident":"康菲登特","confrontation":"康弗伦泰申","consensus":"康森瑟斯","consistency":"康西斯坦西",
+  "constructive":"康斯特拉克提夫","content":"康腾特","controversial":"康特罗沃舍尔","convince":"康文斯","cook":"库克","count me in":"康特 米 因","count on":"康特 昂","countdown":"康特当","coverage":"卡弗里吉","crispy":"克里斯皮",
+  "critically acclaimed":"克里提克利 阿克莱姆德","cuisine":"奎金","cultural awareness":"卡尔彻罗 阿维尔尼斯","currently":"卡伦特利","dance":"丹斯","daughter":"多特","day":"戴","decorations":"德克瑞申斯","defective":"迪菲克提夫","delegate":"德利格特",
+  "determine":"迪特敏","device":"迪瓦斯","dial":"戴尔","differ":"迪弗","diffuse":"迪菲优兹","digital detox":"迪吉托 迪托克斯","diplomatic":"迪普洛马提克","disagree":"迪斯阿格利","dog":"多格","door":"多尔",
+  "dose":"多斯","down":"当","downtown":"当汤","drink":"准克","driver":"准弗","drop":"卓普","ear":"伊尔","eat":"伊特","egg":"埃格","eloquent":"埃洛昆特",
+  "encounter":"因康特","engage":"因盖吉","enroll":"因罗尔","envision":"因维申","envy":"恩维","escalate":"艾斯卡雷特","exhausted":"伊格佐斯提德","extension":"伊克斯滕申","eye":"艾","face":"菲斯",
+  "fact-check":"法克特 切克","family":"法米利","far":"法尔","farmer":"法尔默","fast":"法斯特","father":"法泽","favor":"菲弗","feast":"菲斯特","feedback":"菲德拜克","fine":"法因",
+  "fish":"菲什","fitting room":"菲汀 鲁姆","flower":"弗劳尔","fluent":"弗卢恩特","follower":"法洛尔","food":"福德","foot":"富特","forgive":"弗吉夫","formal":"福马尔","free":"弗利",
+  "freeze":"弗利兹","friend":"弗伦德","fruit":"弗鲁特","frustrated":"弗拉斯崔特德","fulfilling":"福菲尔英","full":"福尔","gadget":"盖吉特","gardening":"加德宁","gather":"盖泽","generation":"杰尼瑞申",
+  "genre":"让热","get along with":"盖特 阿朗 维斯","get to know":"盖特 图 诺","get together":"盖特 图盖泽","gift-giving":"吉夫特 吉文","girl":"格尔","give":"吉夫","give it a try":"吉夫 伊特 阿 椿","give me":"吉夫 米","go":"够",
+  "go viral":"够 维拉尔","good":"古德","good afternoon":"古德 阿夫特努恩","good evening":"古德 伊夫宁","good morning":"古德 莫宁","graceful":"格瑞斯福","grade":"格瑞德","graduation":"格拉杜艾申","grateful":"格瑞特福","great":"格瑞特",
+  "green":"格林","greet":"格利特","groceries":"格罗瑟瑞兹","hair":"赫尔","hand":"汉德","hang out":"汉 奥特","hate":"赫特","head":"赫德","headline":"赫德莱恩","heavy":"赫维",
+  "here":"希尔","hi":"嗨","hierarchy":"海厄拉奇","highlight":"海莱特","hold on":"霍尔德 昂","home":"霍姆","home-cooked":"霍姆 库克特","horse":"霍斯","hospitality":"霍斯皮塔利提","house":"豪斯",
+  "how have you been":"豪 哈夫 优 宾","how is it going":"豪 伊兹 伊特 够英","how old":"豪 奥尔德","humidity":"修米迪提","hungry":"昂格利","hurt":"赫特","husband":"哈兹本德","hydration":"海德瑞申","icebreaker":"艾斯布瑞克","impressive":"因普瑞西夫",
+  "improvise":"因普罗麦兹","in charge of":"因 恰吉 奥夫","infection":"因菲克申","informal":"因福马尔","ingredient":"因格瑞迪恩特","inherit":"因赫瑞特","irritated":"伊利泰特德","journalist":"杰诺利斯特","keep in touch":"基普 因 塔奇","kick off":"基克 奥夫",
+  "kind":"卡因德","knitting":"尼汀","kpi":"凯 匹 艾","landmark":"兰德马克","learn":"勒恩","lecturer":"莱克切勒","left":"莱夫特","leg":"莱格","let me check":"莱特 米 切克","let us":"莱特 阿斯",
+  "lifelong learning":"莱夫朗 勒宁","light":"莱特","like":"莱克","listen":"利森","long time no see":"朗 泰姆 诺 西","long-term":"朗 特姆","look up to":"卢克 阿普 图","looking forward to":"卢京 福沃德 图","love":"拉夫","lovely":"拉夫利",
+  "luxury":"拉克舍瑞","lyrics":"利瑞克斯","major":"梅杰","make it up to":"梅克 伊特 阿普 图","make sense":"梅克 森斯","man":"曼","manage":"曼尼吉","marinate":"马瑞内特","master":"马斯特","maybe":"梅比",
+  "meat":"米特","media literacy":"米迪亚 利特勒西","meditation":"梅迪泰申","memorable":"梅摩拉波","memorize":"梅摩莱兹","metabolism":"梅塔波利泽姆","milestone":"麦尔斯通","mindfulness":"麦因德福尼斯","mingle":"明格","minutes":"米尼茨",
+  "miserable":"米泽拉波","misinformation":"米斯因福梅申","miss":"米斯","misunderstanding":"米斯安德斯坦丁","moderation":"莫德瑞申","money":"马尼","month":"曼斯","moody":"穆迪","mother":"马泽","motivated":"莫提维特德",
+  "mouth":"毛斯","mute":"缪特","my fault":"麦 福尔特","natural":"纳彻罗","navigate":"纳维盖特","near":"尼尔","new":"纽","next to":"内克斯特 图","no":"诺","no worries":"诺 沃瑞兹",
+  "nose":"诺兹","now":"闹","number":"南波","nutritious":"纽崔舍斯","observe":"奥布泽夫","off the beaten path":"奥夫 泽 比腾 帕斯","offer":"奥弗","office":"奥菲斯","ok":"欧克","old":"奥尔德",
+  "on behalf of":"昂 比哈夫 奥夫","on the other hand":"昂 泽 阿泽 汉德","one":"万","open":"欧朋","opportunity":"奥波丘尼提","opposite":"奥波泽特","orange":"奥伦吉","originally":"奥瑞吉纳利","out of stock":"奥特 奥夫 斯托克","overcast":"欧弗卡斯特",
+  "overtime":"欧弗泰姆","overwhelmed":"欧弗维尔姆德","owe you one":"欧 优 万","paper":"佩波","parent":"佩伦特","passion":"帕申","passionate about":"帕申特 阿包特","pastime":"帕斯泰姆","path":"帕斯","people":"皮剖",
+  "perspective":"泼斯派克提夫","plane":"普莱恩","play":"普雷","pleasant":"普雷曾特","plot":"普洛特","plus one":"普拉斯 万","point out":"波因特 奥特","point taken":"波因特 泰肯","portion":"波申","portion control":"波申 康特罗尔",
+  "posture":"波斯彻","potato":"波泰托","potluck":"波特拉克","pouring":"波林","presentation":"普瑞神泰申","privacy":"普莱弗西","productive":"普若达克提夫","promotion":"普若莫申","proposal":"普若波泽尔","proud":"普劳德",
+  "punctuality":"旁克丘阿利提","pursue":"泼苏","put on hold":"普特 昂 霍尔德","quality time":"夸利提 泰姆","rain":"瑞恩","raise":"瑞兹","rapport":"拉波尔","reachable":"瑞奇波","read":"瑞德","really":"瑞利",
+  "recently moved":"瑞森特利 穆夫德","recharge":"瑞恰吉","recipe":"瑞瑟皮","red":"瑞德","regret":"瑞格瑞特","relative":"瑞勒提夫","relaxing":"瑞拉克辛","reliable source":"瑞莱波 索斯","relieved":"瑞利夫德","responsible for":"瑞斯邦瑟波 福",
+  "reunion":"瑞优尼恩","reunion dinner":"瑞优尼恩 迪诺","rewarding":"瑞沃丁","rice":"瑞斯","right":"莱特","river":"瑞弗","room":"鲁姆","round":"朗德","routine":"鲁廷","rsvp":"阿尔 艾斯 维 匹",
+  "run":"软","run into":"软 因图","sad":"萨德","salary":"萨勒瑞","scholarship":"斯科勒希普","school":"斯库尔","scorching":"斯科庆","screen time":"斯克瑞恩 泰姆","seasoning":"西森宁","sedentary":"塞登泰瑞",
+  "see you":"西 优","self-taught":"塞夫 托特","seminar":"塞米纳尔","sensitive":"森西提夫","setback":"塞特拜克","shoe":"舒","shop":"稍普","short-term":"稍特 特姆","show me":"晓 米","sibling":"西布林",
+  "sick":"西克","sincere":"辛希尔","sing":"辛","sister":"西斯特","sit":"西特","skill set":"斯基尔 塞特","sleep":"斯利普","slow":"斯洛","small":"斯莫尔","snow":"斯诺",
+  "so":"搜","someone":"萨姆万","son":"桑","song":"桑","soundtrack":"桑德特拉克","sour":"骚尔","specialize in":"斯派舍莱兹 因","specialty":"斯派舍尔提","spoiler":"斯波伊勒","square":"斯克维尔",
+  "stakeholder":"斯泰克霍尔德","stand":"斯坦德","standpoint":"斯坦德波因特","stay informed":"斯泰 因福姆德","steam":"斯提姆","step by step":"斯泰普 拜 斯泰普","stir-fry":"斯特 弗莱","straight":"斯特瑞特","stressful":"斯特瑞斯福","stretch":"斯特瑞奇",
+  "struggle with":"斯特拉格 维斯","student":"斯图登特","study":"斯达迪","sugarcoat":"舒格科特","suit":"苏特","sun":"桑","sunrise":"桑莱兹","supportive":"瑟波提夫","sure":"舒尔","sweet":"斯威特",
+  "swim":"斯威姆","swollen":"斯沃伦","syllabus":"西勒伯斯","sympathetic":"辛帕瑟提克","table":"泰波","tactful":"泰克特福","take":"泰克","take after":"泰克 阿夫特","take responsibility":"泰克 瑞斯邦瑟比利提","take up":"泰克 阿普",
+  "takeout":"泰克奥特","teacher":"提切","team player":"提姆 普雷尔","tell me":"泰尔 米","ten":"腾","tender":"腾德","thanks":"桑克斯","there":"泽尔","thesis":"西西斯","thoughtful":"索特福",
+  "three":"斯瑞","thrilled":"斯瑞尔德","time":"泰姆","toast":"托斯特","today":"图戴","together":"图盖泽","tomato":"图梅托","tomorrow":"图莫罗","tone":"托恩","tonight":"图奈特",
+  "transition":"椿西申","tree":"椿","trend":"椿德","trending":"椿丁","try":"椿","tuition":"图伊申","turn left":"特恩 莱夫特","turning point":"特宁 波因特","twist":"特威斯特","two":"图",
+  "typical":"提皮考","unplug":"安普拉格","unpredictable":"安普瑞迪克特波","up":"阿普","update":"阿普戴特","venue":"维纽","versatile":"维瑟泰尔","viral":"维拉尔","vision":"维申","vital signs":"维托 赛恩斯",
+  "volunteer":"瓦伦提尔","wait":"维特","walk":"沃克","wander":"旺德","warranty":"沃伦提","watch":"沃奇","wear":"维尔","week":"维克","weekend":"维克恩德","well":"维尔",
+  "wellness":"维尔尼斯","what is up":"瓦特 伊兹 阿普","when":"文","where":"维尔","white":"怀特","who":"胡","why":"怀","wife":"怀夫","wind":"温德","window":"温多",
+  "woman":"乌曼","work":"沃克","work out":"沃克 奥特","wrap up":"拉普 阿普","write":"赖特","year":"伊尔","yellow":"耶洛","yes":"耶斯","yesterday":"耶斯特戴"
+};
+Object.keys(PINYIN_EXTRA).forEach(function(k){ if(!PINYIN_MAP[k]) PINYIN_MAP[k] = PINYIN_EXTRA[k]; });
 function getPinyin(word){
   if(!word) return '';
   var w=word.toLowerCase().trim();
@@ -5577,6 +5635,36 @@ function toggleFlip(el) { el.classList.toggle('flipped'); }
 function speakWord(el) { speak(el.dataset.word); }
 function escAttr(s) { if (!s) return ''; return String(s).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 
+// V50: 单字音节拆分（近似音节）。让单个单词也能“拆读”。
+// 规则：以元音组为核心；元音间 1 个辅音归后、2 个辅音对分、3+ 个辅音只把第一个留给前音节；
+// 末尾把单字母碎片并入前一音节，避免 “mo-ne-y” 这类碎片。
+function syllabify(word) {
+  var w = String(word || '').toLowerCase().replace(/[^a-z]/g, '');
+  if (!w || w.length < 3) return [];
+  var V = 'aeiouy';
+  function isV(c) { return V.indexOf(c) > -1; }
+  var n = w.length, out = [], start = 0, i = 0;
+  while (i < n) {
+    if (!isV(w[i])) { i++; continue; }
+    while (i < n && isV(w[i])) i++;          // 跳过一个元音组
+    var c = i;
+    while (c < n && !isV(w[c])) c++;         // 数后面的辅音
+    if (c >= n) break;                       // 后面没有元音了，剩余整体归最后音节
+    var consLen = c - i;
+    var splitAt = consLen <= 1 ? i : i + 1;  // V-CV 归后；VCCV 对分
+    if (splitAt > start) { out.push(w.slice(start, splitAt)); start = splitAt; }
+    i = splitAt;
+  }
+  if (start < n) out.push(w.slice(start));
+  out = out.filter(function (x) { return x; });
+  var merged = [];
+  for (var k = 0; k < out.length; k++) {
+    if (out[k].length === 1 && merged.length) merged[merged.length - 1] += out[k];
+    else merged.push(out[k]);
+  }
+  return merged;
+}
+
 function getWordParts(word) {
   if (!word) return [];
   var w = String(word).replace(/\s+/g, ' ').trim();
@@ -5595,6 +5683,11 @@ function getWordParts(word) {
     }
   });
   parts = parts.filter(function(p) { return /[A-Za-z]/.test(p); });
+  if (parts.length === 1) {
+    // V50: 单个单词按音节拆分，使单字也能“拆读”
+    var syl = syllabify(parts[0]);
+    return syl.length > 1 ? syl : [];
+  }
   if (parts.length < 2 || parts.length > 7) return [];
   return parts;
 }
@@ -8724,7 +8817,7 @@ function openVoiceDebug() {
     return '<div><span style="color:#64748b">' + esc(l.t) + '</span> [' + esc(l.type) + '] ' + esc(l.msg) + '</div>';
   }).join('') : '<div>—</div>';
   panel.innerHTML =
-    '<div class="td-head"><span>语音诊断 V49</span><button onclick="closeVoiceDebug()">关闭</button></div>' +
+    '<div class="td-head"><span>语音诊断 V50</span><button onclick="closeVoiceDebug()">关闭</button></div>' +
     '<div class="td-body">' +
       '<div><b>浏览器：</b>' + esc(navigator.userAgent) + '</div>' +
       '<div><b>支持 SpeechSynthesis：</b>' + (st.supported ? '是' : '否') + '</div>' +
@@ -8897,7 +8990,7 @@ document.addEventListener('keydown', function(e) {
 // ===== PWA / Service Worker =====
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', function() {
-    navigator.serviceWorker.register('service-worker.js?v=49').then(function(reg) {
+    navigator.serviceWorker.register('service-worker.js?v=50').then(function(reg) {
       reg.addEventListener('updatefound', function() {
         var nw = reg.installing;
         if (nw) {
