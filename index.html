@@ -16,7 +16,7 @@
 <link rel="icon" type="image/png" sizes="512x512" href="icon-512.png?v8">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png?v8">
 <link rel="manifest" href="manifest.json">
-<meta name="version" content="te_v48">
+<meta name="version" content="te_v49">
 <title>谢飞机</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
 <style>
@@ -2265,7 +2265,7 @@ body{color:var(--t1)}
         <div class="settings-group-title">关于</div>
         <div class="settings-row">
           <div class="settings-label">版本</div>
-          <div class="settings-value" onclick="voiceDebugTap()" style="-webkit-user-select:none;user-select:none">te_v48</div>
+          <div class="settings-value" onclick="voiceDebugTap()" style="-webkit-user-select:none;user-select:none">te_v49</div>
         </div>
       </div>
     </div>
@@ -5767,14 +5767,36 @@ var TTS = (function() {
   }
   function isEnglish(v) { return !!v && !!v.lang && /^en([-_]|$)/i.test(v.lang); }
   function isUS(v) { return isEnglish(v) && /^en[-_]US$/i.test(String(v.lang)); }
+  // V49: Curated voice preference. On macOS Chrome, getVoices() often returns NO voice
+  // with default=true (seen on Chrome 157 / macOS 10.15), so the old fallback picked the
+  // alphabetically-first en-US voice ("Albert") which renders distorted/"electronic".
+  // Prefer the modern enhanced/neural voices and Samantha; de-prioritize novelty voices.
+  var VOICE_PREF_ENUS = ['Sandy', 'Shelley', 'Reed', 'Rocko', 'Eddy', 'Flo', 'Grandma', 'Grandpa', 'Samantha'];
+  var VOICE_PREF_EN = ['Sandy', 'Shelley', 'Reed', 'Rocko', 'Eddy', 'Flo', 'Grandma', 'Grandpa', 'Samantha', 'Daniel', 'Karen', 'Moira', 'Tessa', 'Rishi'];
+  var NOVELTY_VOICES = ['Bad News', 'Bahh', 'Bells', 'Boing', 'Bubbles', 'Cellos', 'Good News', 'Jester', 'Junior', 'Organ', 'Superstar', 'Trinoids', 'Whisper', 'Wobble', 'Zarvox'];
+  function isNovelty(v) { return NOVELTY_VOICES.indexOf(String(v && v.name || '').trim()) !== -1; }
+  function pickPreferred(list, pref) {
+    for (var p = 0; p < pref.length; p++) {
+      for (var i = 0; i < list.length; i++) {
+        if (String(list[i].name || '').indexOf(pref[p]) === 0) return list[i];
+      }
+    }
+    return null;
+  }
   function bestEnglish() {
-    // Use system metadata and stable OS order, never infer quality from a voice name.
     var list = refreshVoices().filter(isEnglish);
     var us = list.filter(isUS);
+    var usClean = us.filter(function (v) { return !isNovelty(v); });
+    var listClean = list.filter(function (v) { return !isNovelty(v); });
+    // 1) Preferred curated voice (en-US first, then any English)
+    var hit = pickPreferred(usClean, VOICE_PREF_ENUS) || pickPreferred(listClean, VOICE_PREF_EN);
+    if (hit) return hit;
+    // 2) A voice the OS flags as default (if any)
     var i;
     for (i = 0; i < us.length; i++) if (us[i].default) return us[i];
     for (i = 0; i < list.length; i++) if (list[i].default) return list[i];
-    return us[0] || list[0] || null;
+    // 3) First non-novelty en-US, else any en-US, else any non-novelty English
+    return usClean[0] || us[0] || listClean[0] || list[0] || null;
   }
   function savedPref() {
     var s = Store.get('ttsSettings', { rate: 0.95, voice: '', voiceURI: '' });
@@ -8702,7 +8724,7 @@ function openVoiceDebug() {
     return '<div><span style="color:#64748b">' + esc(l.t) + '</span> [' + esc(l.type) + '] ' + esc(l.msg) + '</div>';
   }).join('') : '<div>—</div>';
   panel.innerHTML =
-    '<div class="td-head"><span>语音诊断 V48</span><button onclick="closeVoiceDebug()">关闭</button></div>' +
+    '<div class="td-head"><span>语音诊断 V49</span><button onclick="closeVoiceDebug()">关闭</button></div>' +
     '<div class="td-body">' +
       '<div><b>浏览器：</b>' + esc(navigator.userAgent) + '</div>' +
       '<div><b>支持 SpeechSynthesis：</b>' + (st.supported ? '是' : '否') + '</div>' +
@@ -8875,7 +8897,7 @@ document.addEventListener('keydown', function(e) {
 // ===== PWA / Service Worker =====
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', function() {
-    navigator.serviceWorker.register('service-worker.js?v=48').then(function(reg) {
+    navigator.serviceWorker.register('service-worker.js?v=49').then(function(reg) {
       reg.addEventListener('updatefound', function() {
         var nw = reg.installing;
         if (nw) {
